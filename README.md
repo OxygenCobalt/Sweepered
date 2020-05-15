@@ -1,2 +1,3 @@
 # Sweepered
-Minesweeper clone in Java
+
+A Minesweeper clone in Java. Current work-in-progress.
