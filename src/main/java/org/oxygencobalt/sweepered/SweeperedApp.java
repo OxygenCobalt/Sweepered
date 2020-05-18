@@ -1,4 +1,7 @@
-package com.oxygencobalt.sweepered;
+// Sweepered
+// A Minesweeper clone in Java
+
+package org.oxygencobalt.sweepered;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -6,6 +9,8 @@ import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 import javafx.scene.Group;
+
+import scenes.MineScene;
 
 public class SweeperedApp extends Application {
     private Stage window;
@@ -18,12 +23,12 @@ public class SweeperedApp extends Application {
         window.setResizable(false);
         window.setTitle("Sweepered");
 
-        Group root = new Group();
-        Scene scene = new Scene(root, 400, 500);
+        // Load scenes [MineScene is the main game scene loaded for now]
+        MineScene mainScene = new MineScene(new Group(), 400, 500);
 
-        scene.setFill(Color.BLACK);
+        mainScene.setFill(Color.BLACK);
 
-        window.setScene(scene);
+        window.setScene(mainScene);
         window.show();
     }
 
@@ -31,3 +36,5 @@ public class SweeperedApp extends Application {
         launch();
     }
 }
+
+// OxygenCobalt
