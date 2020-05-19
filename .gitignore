@@ -1,4 +1,8 @@
+# Instead of blacklisting all the files in /target,
+# I just added the directory, works okay.
 target/
+
+# Other basic java stuff
 *.jar
 *.class
 *.lst

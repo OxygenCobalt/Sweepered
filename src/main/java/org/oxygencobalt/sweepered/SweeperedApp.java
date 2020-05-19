@@ -6,11 +6,7 @@ package org.oxygencobalt.sweepered;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import javafx.scene.paint.Color;
-import javafx.scene.Scene;
-import javafx.scene.Group;
-
-import scenes.MineScene;
+import scenes.GameScene;
 
 public class SweeperedApp extends Application {
     private Stage window;
@@ -23,12 +19,10 @@ public class SweeperedApp extends Application {
         window.setResizable(false);
         window.setTitle("Sweepered");
 
-        // Load scenes [MineScene is the main game scene loaded for now]
-        MineScene mainScene = new MineScene(new Group(), 400, 500);
+        // Load scenes
+        GameScene mainScene = new GameScene(new Group(), 308, 358);
 
-        mainScene.setFill(Color.BLACK);
-
-        window.setScene(mainScene);
+        window.setScene(mainScene); // Currently the main scene loaded is just GameScene
         window.show();
     }
 
