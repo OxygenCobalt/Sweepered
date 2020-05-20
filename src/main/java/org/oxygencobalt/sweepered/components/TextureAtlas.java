@@ -23,6 +23,8 @@ public class TextureAtlas {
 	// I wish I had a better way to set this up.
 	private static Map<String, Map<String, Map<String, Rectangle2D>>> textureCoords = Map.ofEntries(
 		entry("tiles_ss", Map.ofEntries(
+			// Plain tiles
+			// Simple states of every tile
 			entry("tiles", Map.ofEntries(
 				entry("tile_normal", new Rectangle2D(0, 0, 32, 32)),
 				entry("tile_flagged", new Rectangle2D(32, 0, 32, 32)),
@@ -31,6 +33,8 @@ public class TextureAtlas {
 				entry("tile_exploded", new Rectangle2D(0, 32, 32, 32))
 			)),
 
+			// Near Numbers
+			// Tiles that display how many mines are in the radius of that block
 			entry("tiles_near", Map.ofEntries(
 				entry("0", new Rectangle2D(32, 32, 32, 32)),
 				entry("1", new Rectangle2D(32, 32, 32, 32)),

@@ -1,8 +1,6 @@
 // Sweepered
 // A Minesweeper clone in Java
 
-// Make sure to use -S for all commits from now on :)
-
 package org.oxygencobalt.sweepered;
 
 import javafx.application.Application;

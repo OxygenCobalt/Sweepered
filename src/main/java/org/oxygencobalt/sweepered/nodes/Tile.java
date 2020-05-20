@@ -60,7 +60,7 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 
 		getChildren().addAll(nearTile);
 
-		isUncovered = true;
+		isUncovered = true; // Now that the tile is uncovered, prevent any more clicks on it
 	}
 
 	private void onPress(MouseEvent event) {
@@ -68,12 +68,13 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 	}
 
 	private void onRelease(MouseEvent event) {
+		// Find if the mouse pointer is still within the rect2d
 		Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
 
 		if (isInBox) {
 			uncover();
 		} else {
-			normalTile.toFront();
+			normalTile.toFront(); // If not, revert to normal tile appearance.
 		}
 	}
 
@@ -82,6 +83,7 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 		String type = String.valueOf(event.getEventType());
 
 		if (!isUncovered) {
+			// JavaFX polls the last pressed button, making switch/else ifs impossible.
 			if (type.equals("MOUSE_PRESSED")) {onPress(event);}
 			if (type.equals("MOUSE_RELEASED")) {onRelease(event);}
 		}

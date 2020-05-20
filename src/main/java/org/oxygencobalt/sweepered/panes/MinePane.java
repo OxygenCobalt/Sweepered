@@ -35,7 +35,9 @@ public class MinePane extends StackPane {
 		getChildren().add(root);
 	}
 
-	private void generateMines(int mineWidth, int mineHeight, int offset) {	
+	private void generateMines(int mineWidth, int mineHeight, int offset) {
+		// Simply iterate through all the X and Y coordinates on the board, 
+		// and generate a tile for them all
 		for (int x = 0; x<mineWidth; x++) {
 			for (int y = 0; y<mineHeight; y++) {
 				root.getChildren().add(new Tile(x, y, offset, false));
