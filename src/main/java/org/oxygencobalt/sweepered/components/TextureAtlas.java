@@ -12,9 +12,11 @@ import javafx.scene.image.ImageView;
 import javafx.geometry.Rectangle2D;
 
 public class TextureAtlas {
+	private static String resPath = "file:src/main/resources/";
 	// Images
 	// These are loaded instead of a new image  being generated to save memory
-	private static Image tiles_ss = new Image("file:src/main/resources/tiles_ss.png");
+	private static Image tiles_ss = new Image(resPath + "tiles_ss.png");
+	private static Image grid_ss = new Image(resPath + "grid_ss.png");
 
 	// Coordinate list
 	// This contains every coordinate for every image on the spritesheet, albeit very ugly
@@ -30,6 +32,7 @@ public class TextureAtlas {
 			)),
 
 			entry("tiles_near", Map.ofEntries(
+				entry("0", new Rectangle2D(32, 32, 32, 32)),
 				entry("1", new Rectangle2D(32, 32, 32, 32)),
 				entry("2", new Rectangle2D(64, 32, 32, 32)),
 				entry("3", new Rectangle2D(96, 32, 32, 32)),
@@ -40,7 +43,7 @@ public class TextureAtlas {
 				entry("8", new Rectangle2D(0, 96, 32, 32))
 			))
 		))
-	);
+	); // TODO: Could possibly iterate through a different list to generate the Map
 
 	public static ImageView get(String path) { // To retreive an image, you format your argument as this/and/this, like a file path
 		ImageView crop = new ImageView();
