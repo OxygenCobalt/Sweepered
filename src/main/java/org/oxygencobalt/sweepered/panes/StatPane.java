@@ -24,3 +24,5 @@ public class StatPane extends StackPane {
 		setStyle("-fx-background-color: white;");
 	}
 }
+
+// OxygenCobalt

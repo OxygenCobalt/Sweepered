@@ -6,11 +6,13 @@ package panes;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Region;
 
+import nodes.Tile;
+
 public class MinePane extends StackPane {
 	public final int width;
 	public final int height;
 
-	public MinePane(int mineWidth, int mineHeight, int offset) { // Width/Height is given not as pixels, but as the amount of tiles
+	public MinePane(int mineWidth, int mineHeight, int offset) { // Width/Height is given as the amount of tiles, not pixels
 		width = mineWidth * 32; // Since w/h is based on mine count, its multiplied by the dimensions of the tiles to get the size in pixels
 		height = mineHeight * 32;
 
@@ -28,3 +30,5 @@ public class MinePane extends StackPane {
 		return; // TODO: Actually generate the mines.
 	}
 }
+
+// OxygenCobalt

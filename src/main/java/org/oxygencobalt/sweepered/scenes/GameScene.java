@@ -8,6 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import components.TextureAtlas;
+
 import panes.MinePane;
 import panes.StatPane;
 
@@ -16,7 +21,7 @@ public class GameScene extends Scene {
 
 	private StatPane bar;
 	private MinePane board;
-    private final Color backgroundColor = Color.rgb(192, 192, 192);
+	private final Color backgroundColor = Color.rgb(192, 192, 192);
 
 	public GameScene(Group group, int width, int height) {
 		// Call super to construct Scene(), and then add passed group to class.
