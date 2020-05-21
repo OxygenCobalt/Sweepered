@@ -15,7 +15,7 @@ public class GameScene extends Scene {
 
 	private StatPane bar;
 	private MinePane board;
-	private final Color backgroundColor = Color.rgb(192, 192, 192);
+	private final Color backgroundColor = Color.rgb(50, 50, 50);
 
 	public GameScene(Group group, int mineWidth, int mineHeight) {
 		// Call super to construct Scene(), and then add passed group to class.

@@ -14,6 +14,7 @@ public class MinePane extends StackPane {
 	public final int height;
 
 	private Group root;
+	// private final Border border;
 	// private Tile[][] tiles;
 
 	public MinePane(int mineWidth, int mineHeight, int offset) { // Width/Height is given as the amount of tiles, not pixels
@@ -27,8 +28,6 @@ public class MinePane extends StackPane {
 		setPrefSize(width, height);
 		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing
 		relocate(offset, (offset * 2) + 40); // Offset is used to create "Gutters" between StatPane and MinePane
-
-		setStyle("-fx-background-color: black;");
 
 		generateMines(mineWidth, mineHeight, offset);
 

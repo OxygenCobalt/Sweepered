@@ -11,14 +11,16 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.image.ImageView;
-
 import javafx.geometry.Rectangle2D;
 
-import components.TextureAtlas;
+import components.Media;
 
 public class Tile extends StackPane implements EventHandler<MouseEvent> {
-	private final int width = 32;
-	private final int height = 32;
+	private final int width;
+	private final int height;
+
+	private final int x;
+	private final int y;
 
 	private Rectangle2D mouseRect;
 
@@ -32,38 +34,59 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 	private ImageView mineTile;
 	private ImageView explodedTile;
 	private ImageView nearTile;
+	private ImageView gridTile;
 
-	public Tile(int x, int y, int offset, Boolean isMine) {
-		setPrefSize(32, 32);
+	public Tile(int argX, int argY, int offset, Boolean isMine) {
+		width = 32;
+		height = 32;
+
+		x = argX * 32;
+		y = argY * 32;
+
+		setPrefSize(width, height);
 		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		relocate(x * 32, y * 32);
+		relocate(x, y);
 
 		// mouseRect is used to detect when the mouse has been released *outside* of the tile
 		// Offset is applied in order to create a rect relative to the scene, as I cant poll mouse positions relative to MinePane
-		mouseRect = new Rectangle2D(offset + (x * 32), (offset * 2) + (y * 32) + 40, 32, 32);
-
-		// These tiles are common, so theyre loaded in the class constructor
-		normalTile = TextureAtlas.get("tiles_ss/tiles/tile_normal");
-		flaggedTile = TextureAtlas.get("tiles_ss/tiles/tile_flagged");
-		pressedTile = TextureAtlas.get("tiles_ss/tiles/tile_pressed");
-
-		getChildren().addAll(pressedTile, flaggedTile, normalTile);
+		mouseRect = new Rectangle2D(offset + x, (offset * 2) + 40 + y, 32, 32);
+		loadTextures();
 
 		setOnMousePressed(this);
 		setOnMouseReleased(this);
 	}
 
+	private void loadTextures() {
+		normalTile = Media.getTexture(Media.tiles_ss, "tileNormal");
+		flaggedTile = Media.getTexture(Media.tiles_ss, "tileFlagged");
+		pressedTile = Media.getTexture(Media.tiles_ss, "tilePressed");
+
+		getChildren().addAll(pressedTile, flaggedTile, normalTile);
+	}
+
 	// TODO: Add sounds to these presses/releases
 	private void uncover() {
-		nearTile = TextureAtlas.get("tiles_ss/tiles_near/0");
-		nearTile.toFront();
+		// Border tiles are constructed by using right angles,
+		// but in some cases at the upper left areas, this creates
+		// an unneccisary border. other forms of the grid with only
+		// one axis are indexed here.
+		int gridX = (x >= 1) ? 1 : 0; // Return int form of a boolean
+		int gridY = (y >= 1) ? 1 : 0; 
 
-		getChildren().addAll(nearTile);
+		// Format ints into an index for getTexture()
+		String gridIndex = String.valueOf(gridX) + "x" + String.valueOf(gridY) + "y";
+
+		gridTile = Media.getTexture(Media.grid_ss, "grid" + gridIndex);
+		nearTile = Media.getTexture(Media.tiles_ss, "tileNear0");
+
+		getChildren().addAll(nearTile, gridTile);
 
 		isUncovered = true; // Now that the tile is uncovered, prevent any more clicks on it
 	}
 
 	private void onPress(MouseEvent event) {
+		Media.releaseSound.stop();
+
 		pressedTile.toFront();
 	}
 
@@ -72,10 +95,11 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 		Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
 
 		if (isInBox) {
-			uncover();
+			uncover();	
 		} else {
 			normalTile.toFront(); // If not, revert to normal tile appearance.
 		}
+		Media.releaseSound.play();
 	}
 
 	@Override
