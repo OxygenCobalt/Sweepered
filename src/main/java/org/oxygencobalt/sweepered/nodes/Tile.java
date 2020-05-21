@@ -11,9 +11,12 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.geometry.Rectangle2D;
 
-import components.Media;
+import media.TextureAtlas;
+import media.Sprite;
+import media.Audio;
 
 public class Tile extends StackPane implements EventHandler<MouseEvent> {
 	private final int width;
@@ -57,27 +60,27 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 	}
 
 	private void loadTextures() {
-		normalTile = Media.getTexture(Media.tiles_ss, "tileNormal");
-		flaggedTile = Media.getTexture(Media.tiles_ss, "tileFlagged");
-		pressedTile = Media.getTexture(Media.tiles_ss, "tilePressed");
+		// normalTile = new ImageView(TextureAtlas.tileAtlas);
+		normalTile = TextureAtlas.get(TextureAtlas.tileNormal);
+		flaggedTile = TextureAtlas.get(TextureAtlas.tileFlagged);
+		pressedTile = TextureAtlas.get(TextureAtlas.tilePressed);
 
 		getChildren().addAll(pressedTile, flaggedTile, normalTile);
 	}
 
-	// TODO: Add sounds to these presses/releases
 	private void uncover() {
-		// Border tiles are constructed by using right angles,
-		// but in some cases at the upper left areas, this creates
-		// an unneccisary border. other forms of the grid with only
-		// one axis are indexed here.
-		int gridX = (x >= 1) ? 1 : 0; // Return int form of a boolean
-		int gridY = (y >= 1) ? 1 : 0; 
+		Sprite gridSprite = new Sprite(TextureAtlas.gridAtlas, 1, 1);
 
-		// Format ints into an index for getTexture()
-		String gridIndex = String.valueOf(gridX) + "x" + String.valueOf(gridY) + "y";
+		if (x == 0) {
+			gridSprite.setX(0);
+		}
 
-		gridTile = Media.getTexture(Media.grid_ss, "grid" + gridIndex);
-		nearTile = Media.getTexture(Media.tiles_ss, "tileNear0");
+		if (y == 0) {
+			gridSprite.setY(0);
+		}
+
+		nearTile = TextureAtlas.get(TextureAtlas.uncoveredNear0);
+		gridTile = TextureAtlas.get(gridSprite);
 
 		getChildren().addAll(nearTile, gridTile);
 
@@ -85,13 +88,13 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 	}
 
 	private void onPress(MouseEvent event) {
-		Media.releaseSound.stop();
+		Audio.clickSound.stop();
 
 		pressedTile.toFront();
 	}
 
 	private void onRelease(MouseEvent event) {
-		// Find if the mouse pointer is still within the rect2d
+		// Find if the mouse pointer is still within the Rect2D
 		Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
 
 		if (isInBox) {
@@ -99,7 +102,7 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 		} else {
 			normalTile.toFront(); // If not, revert to normal tile appearance.
 		}
-		Media.releaseSound.play();
+		Audio.clickSound.play();
 	}
 
 	@Override
@@ -107,7 +110,7 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 		String type = String.valueOf(event.getEventType());
 
 		if (!isUncovered) {
-			// JavaFX polls the last pressed button, making switch/else ifs impossible.
+			// JavaFX polls the last pressed button, making switch statements impossible.
 			if (type.equals("MOUSE_PRESSED")) {onPress(event);}
 			if (type.equals("MOUSE_RELEASED")) {onRelease(event);}
 		}

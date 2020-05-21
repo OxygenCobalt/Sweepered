@@ -28,7 +28,7 @@ public class MinePane extends StackPane {
 		setPrefSize(width, height);
 		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing
 		relocate(offset, (offset * 2) + 40); // Offset is used to create "Gutters" between StatPane and MinePane
-
+		setStyle("-fx-background-color: #565656");
 		generateMines(mineWidth, mineHeight, offset);
 
 		getChildren().add(root);
