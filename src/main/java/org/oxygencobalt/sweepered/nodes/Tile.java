@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
 import javafx.geometry.Rectangle2D;
 
 import media.TextureAtlas;
@@ -71,13 +70,8 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 	private void uncover() {
 		Sprite gridSprite = new Sprite(TextureAtlas.gridAtlas, 1, 1);
 
-		if (x == 0) {
-			gridSprite.setX(0);
-		}
-
-		if (y == 0) {
-			gridSprite.setY(0);
-		}
+		if (x == 0) {gridSprite.setX(0);}
+		if (y == 0) {gridSprite.setY(0);}
 
 		nearTile = TextureAtlas.get(TextureAtlas.uncoveredNear0);
 		gridTile = TextureAtlas.get(gridSprite);

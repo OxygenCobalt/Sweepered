@@ -13,11 +13,24 @@ public class Sprite {
 	private int x;
 	private int y;
 
-	public Sprite(Image argParentImage, int argX, int argY) {
+	private final int width;
+	private final int height; 
+
+	public Sprite(Image argParentImage, int argX, int argY, int... size) {
+		parentImage = argParentImage;
+
 		x = argX;
 		y = argY;
 
-		parentImage = argParentImage;
+		// Size is an optional argument, so if no argument is provided the w/h immediately defaults to 32
+		if (size.length == 2) {
+			width = size[0];
+			height = size[1];
+
+		} else {
+			width = 32;
+			height = 32;
+		}
 	}
 
 	public void setX(int argX) {
@@ -29,7 +42,7 @@ public class Sprite {
 	}
 
 	public Rectangle2D getRect2D() {
-		return new Rectangle2D(x * 32, y * 32, 32, 32);
+		return new Rectangle2D(x * width, y * height, width, height);
 	}
 
 	public Image getParentImage() {

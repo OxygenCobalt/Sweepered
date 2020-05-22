@@ -20,7 +20,7 @@ public class SweeperedApp extends Application {
         window.setTitle("Sweepered");
 
         // Load scenes
-        GameScene mainScene = new GameScene(new Group(), 9, 9);
+        GameScene mainScene = new GameScene(new Group(), 15, 15);
 
         window.setScene(mainScene); // Currently the main scene loaded is just GameScene
         window.show();

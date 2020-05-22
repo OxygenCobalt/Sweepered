@@ -3,10 +3,10 @@
 
 package panes;
 
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-public class StatPane extends StackPane {
+public class StatPane extends Pane {
 	public final int height;
 	public final int width;
 
@@ -15,10 +15,10 @@ public class StatPane extends StackPane {
 		width = argWidth;
 
 		setPrefSize(width, height);
-		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing by HBox/VBox
+		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing
 		relocate(offset, offset); // Offset is used to create "Gutters" between StatPane and MinePane
 
-		setStyle("-fx-background-color: white;");
+		setStyle("-fx-background-color: #565656");
 	}
 }
 
