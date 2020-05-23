@@ -5,6 +5,9 @@
 package media;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
+
 import javafx.geometry.Rectangle2D;
 
 public class Sprite {
@@ -49,3 +52,5 @@ public class Sprite {
 		return parentImage;
 	}
 }
+
+// OxygenCobalt

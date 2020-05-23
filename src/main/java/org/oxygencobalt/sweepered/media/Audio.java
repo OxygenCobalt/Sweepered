@@ -10,3 +10,5 @@ public class Audio {
 	public static final AudioClip clickSound = new AudioClip(resPath + "click.wav");
 	public static final AudioClip explodeSound = new AudioClip(resPath + "explode.wav");
 }
+
+// OxygenCobalt

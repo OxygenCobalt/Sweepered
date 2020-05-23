@@ -11,32 +11,26 @@ import javafx.scene.paint.Color;
 
 import panes.MinePane;
 import panes.StatPane;
-import panes.BorderPane;
-
-import media.TextureAtlas;
-import media.Sprite;
 
 public class GameScene extends Scene {
 	private Group root;
 
 	private StatPane bar;
 	private MinePane board;
-	private BorderPane border;
 
-	private final Color backgroundColor = Color.rgb(0, 0, 0);
+	private final Color backgroundColor = Color.web("3d3d3d");
 
-	public GameScene(Group group, int mineWidth, int mineHeight) {
+	public GameScene(Group group, int mineWidth, int mineHeight, int offset) {
 		// Call super to construct Scene(), and then add passed group to class.
-		super(group, (mineWidth * 32) + 20, (mineHeight * 32) + 70);
+		super(group, (mineWidth * 32) + (14 + offset), (mineHeight * 32) + (72 + offset));
 		setFill(backgroundColor);
 
 		// Load the main panes
-		bar = new StatPane(40, (mineWidth * 32), 10, 0);
-		board = new MinePane(mineWidth, mineHeight, 10);
-		border = new BorderPane(getWidth(), getHeight());
+		bar = new StatPane(40, (mineWidth * 32), offset, 0);
+		board = new MinePane(mineWidth, mineHeight, offset);
 
 		root = group;
-		root.getChildren().addAll(border, bar, board);
+		root.getChildren().addAll(bar, board);
 	}
 }
 

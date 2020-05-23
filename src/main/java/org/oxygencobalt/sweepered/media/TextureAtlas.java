@@ -42,15 +42,10 @@ public class TextureAtlas {
 	public static final Sprite uncoveredNear7 = new Sprite(uncoveredAtlas, 2, 3);
 	public static final Sprite uncoveredNear8 = new Sprite(uncoveredAtlas, 3, 3);
 
+	public static final Image cornerAtlas = new Image(resPath + "cornerAtlas.png");
+
 	// Grid is a special case, as Tile actually generates the Sprites for this atlas.
 	public static final Image gridAtlas = new Image(resPath + "gridAtlas.png");
-
-	// Gutters
-	public static final Image borderAtlas = new Image(resPath + "borderAtlas.png");
-	public static final Sprite borderNormal = new Sprite(borderAtlas, 0, 0, 320, 10);
-	public static final Sprite borderBetween = new Sprite(borderAtlas, 0, 1, 320, 10);
-	public static final Sprite borderCorner = new Sprite(borderAtlas, 0, 2, 10, 10);
-	public static final Sprite borderDualCorner = new Sprite(borderAtlas, 1, 2, 10, 10);
 }
 
 // OxygenCobalt

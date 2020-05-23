@@ -22,9 +22,16 @@ public class MinePane extends Pane {
 
 		setPrefSize(width, height);
 		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing
-		relocate(offset, (offset * 2) + 40); // Offset is used to create "Gutters" between StatPane and MinePane
+		relocate(offset, (offset * 2) + 44); // Offset is used to create "Gutters" between StatPane and MinePane
 
-		setStyle("-fx-background-color: #565656");
+		setStyle(
+			"-fx-background-color: #3d3d3d;"
+			+ "-fx-border-width: 4px;"
+			+ "-fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;" 
+			+ "-fx-border-style: solid outside line-join miter;"
+			+ "-fx-border-radius: 5;"
+		);
+
 		generateMines(mineWidth, mineHeight, offset);
 	}
 

@@ -3,7 +3,7 @@
 
 package nodes;
 
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.Group;
 
@@ -17,7 +17,7 @@ import media.TextureAtlas;
 import media.Sprite;
 import media.Audio;
 
-public class Tile extends StackPane implements EventHandler<MouseEvent> {
+public class Tile extends Pane implements EventHandler<MouseEvent> {
 	private final int width;
 	private final int height;
 
@@ -42,8 +42,8 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 		width = 32;
 		height = 32;
 
-		x = argX * 32;
-		y = argY * 32;
+		x = (argX * 32);
+		y = (argY * 32);
 
 		setPrefSize(width, height);
 		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
@@ -51,7 +51,7 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 
 		// mouseRect is used to detect when the mouse has been released *outside* of the tile
 		// Offset is applied in order to create a rect relative to the scene, as I cant poll mouse positions relative to MinePane
-		mouseRect = new Rectangle2D(offset + x, (offset * 2) + 40 + y, 32, 32);
+		mouseRect = new Rectangle2D(x + (offset), y + ((offset* 2) + 44), 32, 32);
 		loadTextures();
 
 		setOnMousePressed(this);
@@ -91,11 +91,9 @@ public class Tile extends StackPane implements EventHandler<MouseEvent> {
 		// Find if the mouse pointer is still within the Rect2D
 		Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
 
-		if (isInBox) {
-			uncover();	
-		} else {
-			normalTile.toFront(); // If not, revert to normal tile appearance.
-		}
+		if (isInBox) {uncover();} 
+		else {normalTile.toFront();} // If not, revert to normal tile appearance.
+
 		Audio.clickSound.play();
 	}
 
