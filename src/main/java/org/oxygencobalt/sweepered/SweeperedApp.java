@@ -1,5 +1,5 @@
 // Sweepered
-// A Minesweeper clone in Java
+// A Minesweeper clone in Java 
 
 package org.oxygencobalt.sweepered;
 
@@ -20,7 +20,9 @@ public class SweeperedApp extends Application {
         window.setTitle("Sweepered");
 
         // Load scenes
-        GameScene mainScene = new GameScene(new Group(), 9, 9, 14);
+
+        // Offset is used to create "Gutters" between StatPane and MinePane
+        GameScene mainScene = new GameScene(new Group(), 9, 9, 10); 
 
         window.setScene(mainScene); // Currently the main scene loaded is just GameScene
         window.show();

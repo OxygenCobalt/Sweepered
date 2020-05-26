@@ -1,6 +1,8 @@
 // GameScene
 // Main Minesweeper game scene, only mode as of now is 9x9, but more will be added.
 
+// TODO: Readd corner tiles, but as self-contained MinePane and statpane objects [?]
+
 package scenes;
 
 import javafx.scene.Scene;
@@ -18,12 +20,14 @@ public class GameScene extends Scene {
 	private StatPane bar;
 	private MinePane board;
 
-	private final Color backgroundColor = Color.web("3d3d3d");
+	private final int offset;
 
-	public GameScene(Group group, int mineWidth, int mineHeight, int offset) {
+	public GameScene(Group group, int mineWidth, int mineHeight, int argOffset) {
 		// Call super to construct Scene(), and then add passed group to class.
-		super(group, (mineWidth * 32) + (14 + offset), (mineHeight * 32) + (72 + offset));
-		setFill(backgroundColor);
+		super(group, (mineWidth * 32) + (18 + argOffset), (mineHeight * 32) + (76 + argOffset));
+		setFill(Color.web("3d3d3d")); // Background color matches w/the tile color, mostly
+
+		offset = argOffset + 4; // 4 is added to make up for borders
 
 		// Load the main panes
 		bar = new StatPane(40, (mineWidth * 32), offset, 0);

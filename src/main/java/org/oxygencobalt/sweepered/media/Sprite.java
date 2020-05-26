@@ -1,13 +1,11 @@
 // Sprite
 // A class I wrote to have a Rect2D-like object that I could also place an image inside, for TextureAtlas.
-// X-Y coordinates are stored as simplified representations, as in 32x 64y would become 1x 2y.
+// X-Y coordinates are stored as simplified representations based on their width and height, 
+// So, a 32x32 sprite with coordinates at 32x/64y would become 1x/2y.
 
 package media;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.WritableImage;
-
 import javafx.geometry.Rectangle2D;
 
 public class Sprite {
@@ -44,12 +42,12 @@ public class Sprite {
 		y = argY;
 	}
 
-	public Rectangle2D getRect2D() {
-		return new Rectangle2D(x * width, y * height, width, height);
-	}
-
 	public Image getParentImage() {
 		return parentImage;
+	}
+
+	public Rectangle2D getRect2D() {
+		return new Rectangle2D(x * width, y * height, width, height);
 	}
 }
 

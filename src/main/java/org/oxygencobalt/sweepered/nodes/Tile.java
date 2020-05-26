@@ -5,7 +5,6 @@ package nodes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.Group;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -17,6 +16,7 @@ import media.TextureAtlas;
 import media.Sprite;
 import media.Audio;
 
+// TODO: Find a way to get tiles to communicate w/one another
 public class Tile extends Pane implements EventHandler<MouseEvent> {
 	private final int width;
 	private final int height;
@@ -38,7 +38,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 	private ImageView nearTile;
 	private ImageView gridTile;
 
-	public Tile(int argX, int argY, int offset, Boolean isMine) {
+	public Tile(int argX, int argY, int paneX, int paneY, Boolean isMine) {
 		width = 32;
 		height = 32;
 
@@ -50,8 +50,8 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 		relocate(x, y);
 
 		// mouseRect is used to detect when the mouse has been released *outside* of the tile
-		// Offset is applied in order to create a rect relative to the scene, as I cant poll mouse positions relative to MinePane
-		mouseRect = new Rectangle2D(x + (offset), y + ((offset* 2) + 44), 32, 32);
+		// The panes location is used to create a location relative to the scene, as I cant do that w/MouseEvent
+		mouseRect = new Rectangle2D(x + paneX, y + paneY, 32, 32);
 		loadTextures();
 
 		setOnMousePressed(this);
@@ -59,7 +59,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 	}
 
 	private void loadTextures() {
-		// normalTile = new ImageView(TextureAtlas.tileAtlas);
 		normalTile = TextureAtlas.get(TextureAtlas.tileNormal);
 		flaggedTile = TextureAtlas.get(TextureAtlas.tileFlagged);
 		pressedTile = TextureAtlas.get(TextureAtlas.tilePressed);
