@@ -19,8 +19,11 @@ public class SweeperedApp extends Application {
         window.setResizable(false);
         window.setTitle("Sweepered");
 
-        // Load scenes
-        // Offset is used to create "Gutters" between StatPane and MinePane
+        // Arguments are passed to GameScene as followed:
+        // group - for the super() contructor to function
+        // width, height - specified board size [in mines, not pixels]
+        // mine count - number of mines on the board
+        // offset - the spacing between each pane in GameScene
         GameScene mainScene = new GameScene(new Group(), 9, 9, 35, 10); 
 
         window.setScene(mainScene); // Currently the main scene loaded is just GameScene

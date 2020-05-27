@@ -32,15 +32,18 @@ public class TextureAtlas {
 	public static final Sprite uncoveredExploded = new Sprite(uncoveredAtlas, 0, 1);
 
 	// Uncovered Number-Tiles
-	public static final Sprite uncoveredNear0 = new Sprite(uncoveredAtlas, 3, 1); // TODO: If you add anims, please point this sprite to another blank tile.
-	public static final Sprite uncoveredNear1 = new Sprite(uncoveredAtlas, 0, 2);
-	public static final Sprite uncoveredNear2 = new Sprite(uncoveredAtlas, 1, 2);
-	public static final Sprite uncoveredNear3 = new Sprite(uncoveredAtlas, 2, 2);
-	public static final Sprite uncoveredNear4 = new Sprite(uncoveredAtlas, 3, 2);
-	public static final Sprite uncoveredNear5 = new Sprite(uncoveredAtlas, 0, 3);
-	public static final Sprite uncoveredNear6 = new Sprite(uncoveredAtlas, 1, 3);
-	public static final Sprite uncoveredNear7 = new Sprite(uncoveredAtlas, 2, 3);
-	public static final Sprite uncoveredNear8 = new Sprite(uncoveredAtlas, 3, 3);
+	// These are indexed by mineCount [See: MinePanes onUncover()], so they arent specific variables
+	public static final Sprite[] uncoveredNear = new Sprite[]{
+		new Sprite(uncoveredAtlas, 3, 1), // TODO: If you add anims, please point this sprite to another blank tile.
+		new Sprite(uncoveredAtlas, 0, 2),
+		new Sprite(uncoveredAtlas, 1, 2),
+		new Sprite(uncoveredAtlas, 2, 2),
+		new Sprite(uncoveredAtlas, 3, 2),
+		new Sprite(uncoveredAtlas, 0, 3),
+		new Sprite(uncoveredAtlas, 1, 3),
+		new Sprite(uncoveredAtlas, 2, 3),
+		new Sprite(uncoveredAtlas, 3, 3)
+	};
 
 	// Grid/Corners are special cases, as their respective nodes generate their own sprite objects
 	public static final Image gridAtlas = new Image(resPath + "gridAtlas.png");
