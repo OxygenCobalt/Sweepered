@@ -20,9 +20,8 @@ public class SweeperedApp extends Application {
         window.setTitle("Sweepered");
 
         // Load scenes
-
         // Offset is used to create "Gutters" between StatPane and MinePane
-        GameScene mainScene = new GameScene(new Group(), 9, 9, 10); 
+        GameScene mainScene = new GameScene(new Group(), 9, 9, 35, 10); 
 
         window.setScene(mainScene); // Currently the main scene loaded is just GameScene
         window.show();

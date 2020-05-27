@@ -12,9 +12,9 @@ public class StatPane extends Pane {
 	public final int height;
 	public final int width;
 
-	public StatPane(int argHeight, int argWidth, int offset, int mineCount) { // MineCount is given by MinePane.mines [To be added]
-		height = argHeight;
-		width = argWidth;
+	public StatPane(int height, int width, int offset, int mineCount) { // MineCount is given by MinePane.mines [To be added]
+		this.height = height;
+		this.width = width;
 
 		setPrefSize(width, height);
 		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing
@@ -33,13 +33,16 @@ public class StatPane extends Pane {
 	}
 
 	private void generateCorners() {
-		// Like minepane, iterate through every corner of the pane
+		// Iterate through every corner of the pane
 		// and generate a corner for them all
 		for (int cX = 0; cX < 2; cX++) {
+
 			for (int cY = 0; cY < 2; cY++) {
 				getChildren().add(new Corner(cX, cY, width, height));
 			}
+
 		}
+
 	}
 }
 

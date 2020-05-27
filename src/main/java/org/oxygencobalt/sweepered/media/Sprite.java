@@ -17,11 +17,11 @@ public class Sprite {
 	private final int width;
 	private final int height; 
 
-	public Sprite(Image argParentImage, int argX, int argY, int... size) {
-		parentImage = argParentImage;
+	public Sprite(Image parentImage, int x, int y, int... size) {
+		this.parentImage = parentImage;
 
-		x = argX;
-		y = argY;
+		this.x = x;
+		this.y = y;
 
 		// Size is an optional argument, so if no argument is provided the w/h immediately defaults to 32
 		if (size.length == 2) {
@@ -35,11 +35,11 @@ public class Sprite {
 	}
 
 	public void setX(int argX) {
-		x = argX;
+		this.x = x;
 	}
 
 	public void setY(int argY) {
-		y = argY;
+		this.y = y;
 	}
 
 	public Image getParentImage() {

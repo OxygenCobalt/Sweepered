@@ -42,8 +42,7 @@ public class TextureAtlas {
 	public static final Sprite uncoveredNear7 = new Sprite(uncoveredAtlas, 2, 3);
 	public static final Sprite uncoveredNear8 = new Sprite(uncoveredAtlas, 3, 3);
 
-	// Grid is a special case, as Tile actually generates the Sprites for this atlas.
-	// Corner is only one image, so it isnt labeled an Axis at all.
+	// Grid/Corners are special cases, as their respective nodes generate their own sprite objects
 	public static final Image gridAtlas = new Image(resPath + "gridAtlas.png");
 	public static final Image cornerAtlas = new Image(resPath + "cornerAtlas.png");
 }

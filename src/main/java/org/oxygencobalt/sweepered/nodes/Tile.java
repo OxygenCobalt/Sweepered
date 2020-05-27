@@ -16,6 +16,8 @@ import media.TextureAtlas;
 import media.Sprite;
 import media.Audio;
 
+import observer.TileBoolean;
+
 // TODO: Find a way to get tiles to communicate w/one another
 public class Tile extends Pane implements EventHandler<MouseEvent> {
 	private final int width;
@@ -26,32 +28,37 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
 	private Rectangle2D mouseRect;
 
-	private Boolean isUncovered = false;
+	private Boolean isUncovered;
+	public TileBoolean uncoveredStart;
 
 	// ImageViews are left uninitialized to optimize the game
 	// Images are only loaded when they are needed
 	private ImageView normalTile;
 	private ImageView flaggedTile;
 	private ImageView pressedTile;
-	private ImageView mineTile;
+	private ImageView minedTile;
 	private ImageView explodedTile;
 	private ImageView nearTile;
 	private ImageView gridTile;
 
-	public Tile(int argX, int argY, int paneX, int paneY, Boolean isMine) {
+	public Tile(int simpleX, int simpleY, int paneX, int paneY) {
+		x = (simpleX * 32);
+		y = (simpleY * 32);
+
 		width = 32;
 		height = 32;
-
-		x = (argX * 32);
-		y = (argY * 32);
-
-		setPrefSize(width, height);
-		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		relocate(x, y);
 
 		// mouseRect is used to detect when the mouse has been released *outside* of the tile
 		// The panes location is used to create a location relative to the scene, as I cant do that w/MouseEvent
 		mouseRect = new Rectangle2D(x + paneX, y + paneY, 32, 32);
+
+		isUncovered = false;
+		uncoveredStart = new TileBoolean(false, simpleX, simpleY);
+
+		relocate(x, y);
+		setPrefSize(width, height);
+		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
 		loadTextures();
 
 		setOnMousePressed(this);
@@ -66,7 +73,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 		getChildren().addAll(pressedTile, flaggedTile, normalTile);
 	}
 
-	private void uncover() {
+	private void uncover(boolean doClear) {
 		Sprite gridSprite = new Sprite(TextureAtlas.gridAtlas, 1, 1);
 
 		if (x == 0) {gridSprite.setX(0);}
@@ -78,6 +85,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 		getChildren().addAll(nearTile, gridTile);
 
 		isUncovered = true; // Now that the tile is uncovered, prevent any more clicks on it
+		uncoveredStart.setValue(true);
 	}
 
 	private void onPress(MouseEvent event) {
@@ -90,7 +98,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 		// Find if the mouse pointer is still within the Rect2D
 		Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
 
-		if (isInBox) {uncover();} 
+		if (isInBox) {uncover(false);} 
 		else {normalTile.toFront();} // If not, revert to normal tile appearance.
 
 		Audio.clickSound.play();
