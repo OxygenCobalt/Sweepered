@@ -180,9 +180,9 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
                 for (int uY = (obsY - 1); uY < (obsY + 2); uY++) {
 
                     isNotOutOfBounds = (uX != mineWidth && uX >= 0) && (uY != mineHeight && uY >= 0);
-                    tile = tiles[uX][uY];
 
                     if (isNotOutOfBounds) {
+                        tile = tiles[uX][uY];
 
                         isMine = tile.getMineStatus();
                         isNotCenter = !(uX == obsX && uY == obsY);
@@ -193,9 +193,9 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
                             if (isMine) {mineCount++;}
                         }
 
-                    }
+                        recursiveList.add(tile);
 
-                    recursiveList.add(tile);
+                    }
 
                 }
 
