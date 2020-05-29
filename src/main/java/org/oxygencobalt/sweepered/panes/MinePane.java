@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import events.EventBoolean;
 
+import media.Audio;
+
 import nodes.Tile;
 import nodes.Corner;
 
@@ -27,21 +29,24 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
     private final int x;
     private final int y;
 
+    private int remainingTiles;
     private final int mineCount;
 
     private String gameState; // TODO: Make this an enum?
 
     private Tile[][] tiles;
 
-    public MinePane(int mineWidth, int mineHeight, int mineCount, int offset) { // Width/Height is given as the amount of tiles, not pixels
+    public MinePane(int tileWidth, int tileHeight, int mineCount, int offset) { // Width/Height is given as the amount of tiles, not pixels
         x = offset;
         y = (offset * 2) + 44; // The added 44 is to account for the width of stackpane and the border of minepane.
 
-        width = mineWidth * 32; // Since w/h is based on mine count, its multiplied by the dimensions of the tiles to get the size in pixels
-        height = mineHeight * 32;
+        width = tileWidth * 32; // Since w/h is based on mine count, its multiplied by the dimensions of the tiles to get the size in pixels
+        height = tileHeight * 32;
 
-        this.mineWidth = mineWidth;
-        this.mineHeight = mineHeight;
+        this.mineWidth = tileWidth;
+        this.mineHeight = tileHeight;
+
+        remainingTiles = (tileWidth * tileHeight) - mineCount; // Find the amount of remaining [Safe] tiles, for the win condition
 
         this.mineCount = mineCount;
 
@@ -83,9 +88,9 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
                         y
                 );
 
-                tiles[tX][tY].getUncovered().addListener(this);
+                tiles[tileX][tileY].getUncovered().addListener(this);
 
-                getChildren().add(tiles[tX][tY]);
+                getChildren().add(tiles[tileX][tileY]);
             }
 
         }
@@ -101,8 +106,8 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
         double ratio = (1.0 / mineWidth) * 100;
         Random randGenerator = new Random();
 
-        boolean inSafeZone;
-        boolean isMine;
+        Boolean inSafeZone;
+        Boolean isMine;
 
         while (generatedMines != mineCount) {
 
@@ -135,6 +140,7 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
             }
 
         }
+
     }
 
     private void generateCorners() {
@@ -165,7 +171,6 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
     private void onUncover(EventBoolean observable) {
         // Find the stored x/y values from whatever tile was activated
-
         switch (gameState) {
             case "Started": clearTile(observable); break;
             case "Unstarted": startGame(observable); break;
@@ -175,21 +180,7 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
     }
 
     private void onExplode(EventBoolean observable) {
-        int originX = observable.getX();
-        int originY = observable.getY();
-
-        for (Tile[] tileColumn : tiles) {
-
-            for (Tile tile : tileColumn) {
-
-                // Let the tiles know about the tiles explosion, w/its location
-                tile.notifyOfGameEnd("Explosion", originX, originY);
-
-            }
-
-        }
-
-        gameState = "Ended";
+        endGame(observable, "Explosion");
     }
 
     private void clearTile(EventBoolean observable) {
@@ -206,9 +197,9 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
             // Tile reference/Tile-Specific requirements
             Tile nearTile;
-            boolean isMine;
-            boolean isNotCenter;
-            boolean isNotOutOfBounds;
+            Boolean isMine;
+            Boolean isNotCenter;
+            Boolean isNotOutOfBounds;
 
             recursiveList.clear(); // Clear list to prevent old tiles from being cleared again.
 
@@ -247,6 +238,12 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
                 recursiveList.forEach((t) -> t.setUncovered(true));
             }
 
+            remainingTiles--;
+
+            if (remainingTiles == 0) {
+                endGame(observable, "Cleared");
+            }
+
         } else { // If the tile is a mine, simply explode it.
             uncoveredTile.explode();
         }
@@ -268,6 +265,29 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
         // the recursive looping for the first tile.
         generateMines(constraintsX, constraintsY);
         onUncover(observable);        
+    }
+
+    private void endGame(EventBoolean observable, String type) {
+        gameState = type;
+
+        int originX = observable.getX();
+        int originY = observable.getY();
+
+        // Its MinePane's job to track the remaining tiles, not the tile itself,
+        // so when the board is cleared MinePane plays the sound instead of the tile
+        // playing the sound in an explosion case.
+        if (type == "Cleared") {Audio.clearSound.play();}
+
+        for (Tile[] tileColumn : tiles) {
+
+            for (Tile tile : tileColumn) {
+
+                // Let the tiles know about the tiles explosion, w/its location
+                tile.notifyOfGameEnd(type, originX, originY);
+
+            }
+
+        }
     }
 }
 

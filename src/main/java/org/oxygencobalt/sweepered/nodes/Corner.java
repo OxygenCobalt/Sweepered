@@ -48,3 +48,5 @@ public class Corner extends Pane {
         getChildren().add(cornerImage);
     }
 }
+
+// OxygenCobalt

@@ -11,7 +11,7 @@ public class EventBoolean extends SimpleBooleanProperty {
 	private final int x;
 	private final int y;
 
-	public EventBoolean(boolean value, String type, int x, int y) {
+	public EventBoolean(Boolean value, String type, int x, int y) {
 		super(value); // Give the boolean value to the inherited class
 
 		this.type = type;

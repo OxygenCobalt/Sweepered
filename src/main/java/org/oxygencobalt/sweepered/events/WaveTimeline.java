@@ -11,45 +11,56 @@ import javafx.geometry.Point2D;
 
 import javafx.util.Duration;
 
-public class ShockwaveTimeline {
+public class WaveTimeline {
 	private Timeline timeline;
 
 	private ImageView waveTile;
 	private ImageView minedTile;
+	private ImageView flaggedTile;
 
-	boolean isFlagged;
+	Boolean isFlagged;
 
-	public ShockwaveTimeline(ImageView waveTile, ImageView minedTile, boolean isFlagged, Point2D location, Point2D origin) {
+	String type;
+
+	// TODO: Trim these arguments down HARD.
+	public WaveTimeline(ImageView waveTile, ImageView minedTile, ImageView flaggedTile, Boolean isFlagged, Point2D location, Point2D origin, String type) {
 		// Distance is measured in the time it will take for the shockwave to reach the tile itself.
 		double distanceTime = location.distance(origin) * 0.1;
 
 		// Store given imageview for the other functions
 		this.waveTile = waveTile;
 		this.minedTile = minedTile;
+		this.flaggedTile = flaggedTile;
 
 		this.isFlagged = isFlagged;
 
+		this.type = type;
+
 		timeline = new Timeline(
 			new KeyFrame(Duration.ZERO,                        event -> inactive()),
-            new KeyFrame(Duration.seconds(distanceTime), event -> active()),
+            new KeyFrame(Duration.seconds(distanceTime),       event -> active()),
             new KeyFrame(Duration.seconds(distanceTime + 0.1), event -> fade()),            
             new KeyFrame(Duration.seconds(distanceTime + 0.2), event -> inactive())
 		);
 	}
 	
-	private void fade() {
-		waveTile.setOpacity(0.5);
-	}
-
 	private void active() {
-		// Show tile's mine when the wave reaches it [if it has one]
-		// Also check for the tiles flag status, as they should not change to reveal their mine status.
+		// Check if the tile is mined [If it isnt, then it would have never loaded minedTile]
 		if (minedTile != null && !isFlagged) {
-			minedTile.toFront(); 
+			switch (type) {
+				case "Explosion": minedTile.toFront(); break; // Any mined tile should have their mine shown if a mine explodes
+				case "Cleared": flaggedTile.toFront(); break; // Any remaining mines should be flagged if the board is cleared
+
+				default: System.out.println("This shouldnt happen."); // > mfw this does happen
+			}
 		}
 
 		waveTile.setOpacity(1);
 		waveTile.toFront();
+	}
+
+	private void fade() {
+		waveTile.setOpacity(0.5);
 	}
 
 	private void inactive() {
@@ -61,3 +72,5 @@ public class ShockwaveTimeline {
 		return timeline;
 	}
 }
+
+// Oxygencobalt

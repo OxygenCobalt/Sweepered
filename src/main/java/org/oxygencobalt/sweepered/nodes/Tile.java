@@ -14,13 +14,12 @@ import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
 
 import events.EventBoolean;
-import events.ShockwaveTimeline;
+import events.WaveTimeline;
 
 import media.TextureAtlas;
 import media.Sprite;
 import media.Audio;
 
-// TODO: Find a way to get tiles to communicate w/one another
 public class Tile extends Pane implements EventHandler<MouseEvent> {
     private final int width;
     private final int height;
@@ -28,16 +27,16 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     private final int x;
     private final int y;
 
-    public final int simpleX;
-    public final int simpleY;
+    private final int simpleX;
+    private final int simpleY;
 
     private Rectangle2D mouseRect;
 
-    private ShockwaveTimeline shockwave;
+    private WaveTimeline shockwave;
 
-    private boolean isMine;
-    private boolean isFlagged;
-    private boolean isDisabled;
+    private Boolean isMine;
+    private Boolean isFlagged;
+    private Boolean isDisabled;
 
     private EventBoolean isUncovered;
     private EventBoolean hasExploded;
@@ -109,21 +108,18 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     }
 
     public void uncover(int nearMines) {
-        // First, check if mine is safe to uncover
-        if (!isMine) {
-            // Determine which grid state to use depending on the Y coordinates,
-            // to prevent odd grid borders at the top left tiles.
-            Sprite gridSprite = new Sprite(TextureAtlas.gridAtlas, 1, 1);
+        // Determine which grid state to use depending on the Y coordinates,
+        // to prevent odd grid borders at the top left tiles.
+        Sprite gridSprite = new Sprite(TextureAtlas.gridAtlas, 1, 1);
 
-            if (x == 0) {gridSprite.setX(0);}
-            if (y == 0) {gridSprite.setY(0);}
+        if (x == 0) {gridSprite.setX(0);}
+        if (y == 0) {gridSprite.setY(0);}
 
-            // Create grid tile and calcualate nearTile based off number of surrounding mines [given by MinePane]
-            gridTile = TextureAtlas.get(gridSprite);
-            nearTile = TextureAtlas.get(TextureAtlas.uncoveredNear[nearMines]);
+        // Create grid tile and calcualate nearTile based off number of surrounding mines [given by MinePane]
+        gridTile = TextureAtlas.get(gridSprite);
+        nearTile = TextureAtlas.get(TextureAtlas.uncoveredNear[nearMines]);
 
-            getChildren().addAll(nearTile, gridTile);
-        }
+        getChildren().addAll(nearTile, gridTile);
     }
 
     public void becomeMine() {
@@ -165,15 +161,17 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         getChildren().add(waveTile);
 
-        shockwave = new ShockwaveTimeline(
+        shockwave = new WaveTimeline(
             waveTile,
             minedTile,
+            flaggedTile,
             isFlagged,
             new Point2D(simpleX, simpleY),
-            new Point2D(explodeX, explodeY)
+            new Point2D(explodeX, explodeY),
+            type
         );
 
-        // Timeline is final, so ShockwaveTimeline does not extend it, rather store it internally.
+        // Timeline is final, so WaveTimeline does not extend it, rather store it internally.
         // So to play it, first use a getter to retrieve the timeline, and then play it normally.
         shockwave.getTimeline().play();
 
@@ -218,10 +216,15 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
                 isUncovered.setValue(true);
 
-                // A mine exploding has its own sound, so exclude it from the click sound
+                // Mine has its own sound when uncovered, so dont play the click sound if it is one.
                 if (!isMine) {Audio.clickSound.play();}
 
+                // TODO: Find a way to remove the click sound for when the last tile get cleared [a.k.a when the board gets cleared]
+                // AFAIK, the only way to do that is to rewrite THE ENTIRE UNCOVERING SYSTEM due to the janky, procedural way ive designed it
+                // If anything, this class is due for a rewrite anyway, its awful.
+
             } 
+
             else {normalTile.toFront();} // If not, revert to normal tile appearance.
 
         }
@@ -230,25 +233,25 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     // Variable manipulation functions
     // A bunch of getters and setters used by MinePane to get information w/o making the actual variables public.
-    public boolean isInConstraints(int[] constraintsX, int[] constraintsY) {
+    public Boolean isInConstraints(int[] constraintsX, int[] constraintsY) {
         // Constraints are usually given as simple coordinates, so tile uses their simple coordinates as well
-        boolean inXConstraint = constraintsX[0] < simpleX && simpleX < constraintsX[1];
-        boolean inYConstraint = constraintsY[0] < simpleY && simpleY < constraintsY[1];
+        Boolean inXConstraint = constraintsX[0] < simpleX && simpleX < constraintsX[1];
+        Boolean inYConstraint = constraintsY[0] < simpleY && simpleY < constraintsY[1];
 
-        // Both booleans are added togrether as the overal constraints are meant to be a 3x3 square.
+        // Both booleans are added together as the overal constraints are meant to be a 3x3 square.
         return inXConstraint && inYConstraint;
     }
 
-    public void setUncovered(boolean value) {
+    public void setUncovered(Boolean value) {
         // Flagged tiles should not be removed recursively, by nature.
         if (!isFlagged) {isUncovered.setValue(value);}
-    }
+    } 
 
     public EventBoolean getUncovered() {
         return isUncovered;
     }
 
-    public boolean getMined() {
+    public Boolean getMined() {
         return isMine;
     }
 
