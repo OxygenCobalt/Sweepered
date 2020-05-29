@@ -29,7 +29,7 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
     private final int mineCount;
 
-    private boolean gameStarted;
+    private String gameState; // TODO: Make this an enum?
 
     private Tile[][] tiles;
 
@@ -45,7 +45,7 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
         this.mineCount = mineCount;
 
-        gameStarted = false;
+        gameState = "Unstarted";
 
         tiles = new Tile[this.mineWidth][this.mineHeight];
 
@@ -112,12 +112,13 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
                     // such as if its around the first uncovered tile and if its already a mine
 
                     inSafeZone = tile.isInConstraints(constraintsX, constraintsY);
-                    isMine = tile.getMineStatus();
+                    isMine = tile.getMined();
 
                     if (!inSafeZone && !isMine) {
 
                         if (randGenerator.nextInt(100) < ratio) {
                             tile.becomeMine();
+                            tile.getExploded().addListener(this); // Add listener to be used if the tile explodes
 
                             // GeneratedMines breaks the loop as soon as it reaches the mineCount,
                             // ending the entire generation loop
@@ -152,7 +153,7 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
         switch (observable.getType()) {
             case "isUncovered": onUncover(observable); break;
-            case "hasExploded": onExplode(); break;
+            case "hasExploded": onExplode(observable); break;
 
             default: throw new UnsupportedOperationException("Invalid EventBoolean type");
         }
@@ -160,40 +161,70 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
     private void onUncover(EventBoolean observable) {
         // Find the stored x/y values from whatever tile was activated
+
+        switch (gameState) {
+            case "Started": clearTile(observable); break;
+            case "Unstarted": startGame(observable); break;
+
+            default: throw new UnsupportedOperationException("Invalid GameState"); // TODO: Again, I need to use enums.
+        }
+    }
+
+    private void onExplode(EventBoolean observable) {
         int obsX = observable.getX();
         int obsY = observable.getY();
 
-        ArrayList<Tile> recursiveList = new ArrayList<Tile>();
+        for (Tile[] tileColumn : tiles) {
 
-        if (gameStarted) {
+            for (Tile tile : tileColumn) {
+                // Let tiles know of the exploded tile, in order to create a shockwave from the tile.
+                tile.notifyOfExplosion(obsX, obsY);
+            }
+
+        }
+
+        endGame();
+    }
+
+    private void clearTile(EventBoolean observable) {
+        int obsX = observable.getX();
+        int obsY = observable.getY();
+
+        Tile uncoveredTile = tiles[obsX][obsY];
+
+        if (!uncoveredTile.getMined()) { // If the tile is a mine, dont run this function as the surrounding mines will never be shown.
             int mineCount = 0;
 
-            Tile tile;
+            // Create array of stored tiles to be cleared if uncovered tile is blank
+            ArrayList<Tile> recursiveList = new ArrayList<Tile>();
+
+            // Tile reference/Tile-Specific requirements
+            Tile nearTile;
             boolean isMine;
             boolean isNotCenter;
             boolean isNotOutOfBounds;
 
-            recursiveList.clear();
+            recursiveList.clear(); // Clear list to prevent old tiles from being cleared again.
 
             for (int uX = (obsX - 1); uX < (obsX + 2); uX++) {
 
                 for (int uY = (obsY - 1); uY < (obsY + 2); uY++) {
 
+                    // Check if surrounding tile is not outside the bounds of the board
+                    // before running any functions on it
                     isNotOutOfBounds = (uX != mineWidth && uX >= 0) && (uY != mineHeight && uY >= 0);
 
+                    // Also blacklist center tile, as it has already been cleared
+                    isNotCenter = !(uX == obsX && uY == obsY);
+
                     if (isNotOutOfBounds) {
-                        tile = tiles[uX][uY];
 
-                        isMine = tile.getMineStatus();
-                        isNotCenter = !(uX == obsX && uY == obsY);
+                        nearTile = tiles[uX][uY];
+                        isMine = nearTile.getMined();
 
-                        if (isMine && isNotCenter) {
+                        if (isMine) {mineCount++;} // Add to surrounding mines if tile does contain a mine
 
-                            isMine = tile.getMineStatus();
-                            if (isMine) {mineCount++;}
-                        }
-
-                        recursiveList.add(tile);
+                        recursiveList.add(nearTile);
 
                     }
 
@@ -201,28 +232,51 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
             }
 
+            // Run uncover on the tile w/the number of surrounding mines,
+            // which is used to find the correct uncovered image from TextureAtlas.
             tiles[obsX][obsY].uncover(mineCount);
 
+            // Uncover the other tiles added earlier if there are no surrounding mines
             if (mineCount == 0) {
                 recursiveList.forEach((t) -> t.setUncovered(true));
             }
 
-        } else { // Start the game otherwise
-            gameStarted = true;
-
-            // Constraints are calculated by creating a 3x3 "Rectangle" around the
-            // tile that was uncovered, but in the from of their maximum and minimum values.
-            int[] constraintsX = new int[]{obsX - 2, obsX + 2};
-            int[] constraintsY = new int[]{obsY - 2, obsY + 2};
-
-            // Generate mines and then run the function again to activate
-            // the recursive looping for the first tile.
-            generateMines(constraintsX, constraintsY);
-            onUncover(observable);
+        } else { // If the tile is a mine, simply explode it.
+            uncoveredTile.explode();
         }
+
     }
 
-    private void onExplode() {}
+    private void startGame(EventBoolean observable) {
+        gameState = "Started";
+
+        int obsX = observable.getX();
+        int obsY = observable.getY();
+
+        // Constraints are calculated by creating a 3x3 "Rectangle" around the
+        // tile that was uncovered, but in the from of their maximum and minimum values.
+        int[] constraintsX = new int[]{obsX - 2, obsX + 2};
+        int[] constraintsY = new int[]{obsY - 2, obsY + 2};
+
+        // Generate mines and then run the function again to activate
+        // the recursive looping for the first tile.
+        generateMines(constraintsX, constraintsY);
+        onUncover(observable);        
+    }
+
+    private void endGame() {
+        gameState = "Ended";
+
+        // Disable every tile, as game should end now.
+        for (Tile[] tileColumn : tiles) {
+
+            for (Tile tile : tileColumn) {
+                tile.setUnclickable(true);
+            }
+
+        }   
+
+    }
 }
 
 // OxygenCobalt

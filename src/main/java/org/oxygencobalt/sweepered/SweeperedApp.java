@@ -20,7 +20,7 @@ public class SweeperedApp extends Application {
         window.setTitle("Sweepered");
 
         // Arguments are passed to GameScene as followed:
-        // group - for the super() contructor to function
+        // group - for the super() constructor to function
         // width, height - specified board size [in tiles, not pixels]
         // mine count - number of mines on the board
         // offset - the spacing between each pane in GameScene
