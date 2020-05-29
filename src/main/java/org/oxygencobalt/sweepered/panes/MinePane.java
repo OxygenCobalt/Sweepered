@@ -64,18 +64,20 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
         generateTiles();
         generateCorners();
     }
+    
+    // TODO: For the love of god, decouple board generation and tile generation. Its awful.
 
     // Node Generation
     private void generateTiles() {
         // Simply iterate through all the X and Y coordinates on the board, 
         // and generate a tile for them all
-        for (int tX = 0; tX < mineWidth; tX++) {
+        for (int tileX = 0; tileX < mineWidth; tileX++) {
 
-            for (int tY = 0; tY < mineHeight; tY++) {
-                tiles[tX][tY] = new Tile(
-                        // Pass mine positions
-                        tX, 
-                        tY,
+            for (int tileY = 0; tileY < mineHeight; tileY++) {
+                tiles[tileX][tileY] = new Tile(
+                        // Pass tile positions
+                        tileX, 
+                        tileY,
                         // Pass pane positions for MouseRect creation
                         x,
                         y
@@ -136,14 +138,16 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
     }
 
     private void generateCorners() {
-        // Like generateTiles, iterate through every corner of the pane
+        // Iterate through every corner of the pane
         // and generate a corner for them all
-        for (int cX = 0; cX < 2; cX++) {
+        for (int cornerX = 0; cornerX < 2; cornerX++) {
 
-            for (int cY = 0; cY < 2; cY++) {
-                getChildren().add(new Corner(cX, cY, width, height));
+            for (int cornerY = 0; cornerY < 2; cornerY++) {
+                getChildren().add(new Corner(cornerX, cornerY, width, height));
             }
+
         }
+
     }
 
     // Event handling
@@ -171,26 +175,28 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
     }
 
     private void onExplode(EventBoolean observable) {
-        int obsX = observable.getX();
-        int obsY = observable.getY();
+        int originX = observable.getX();
+        int originY = observable.getY();
 
         for (Tile[] tileColumn : tiles) {
 
             for (Tile tile : tileColumn) {
-                // Let tiles know of the exploded tile, in order to create a shockwave from the tile.
-                tile.notifyOfExplosion(obsX, obsY);
+
+                // Let the tiles know about the tiles explosion, w/its location
+                tile.notifyOfGameEnd("Explosion", originX, originY);
+
             }
 
         }
 
-        endGame();
+        gameState = "Ended";
     }
 
     private void clearTile(EventBoolean observable) {
-        int obsX = observable.getX();
-        int obsY = observable.getY();
+        int originX = observable.getX();
+        int originY = observable.getY();
 
-        Tile uncoveredTile = tiles[obsX][obsY];
+        Tile uncoveredTile = tiles[originX][originY];
 
         if (!uncoveredTile.getMined()) { // If the tile is a mine, dont run this function as the surrounding mines will never be shown.
             int mineCount = 0;
@@ -206,20 +212,20 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
             recursiveList.clear(); // Clear list to prevent old tiles from being cleared again.
 
-            for (int uX = (obsX - 1); uX < (obsX + 2); uX++) {
+            for (int nearX = (originX - 1); nearX <  (originX + 2); nearX++) {
 
-                for (int uY = (obsY - 1); uY < (obsY + 2); uY++) {
+                for (int nearY = (originY - 1); nearY < (originY + 2); nearY++) {
 
                     // Check if surrounding tile is not outside the bounds of the board
                     // before running any functions on it
-                    isNotOutOfBounds = (uX != mineWidth && uX >= 0) && (uY != mineHeight && uY >= 0);
+                    isNotOutOfBounds = (nearX != mineWidth && nearX >= 0) && (nearY != mineHeight && nearY >= 0);
 
                     // Also blacklist center tile, as it has already been cleared
-                    isNotCenter = !(uX == obsX && uY == obsY);
+                    isNotCenter = !(nearX == originX && nearY == originY);
 
                     if (isNotOutOfBounds) {
 
-                        nearTile = tiles[uX][uY];
+                        nearTile = tiles[nearX][nearY];
                         isMine = nearTile.getMined();
 
                         if (isMine) {mineCount++;} // Add to surrounding mines if tile does contain a mine
@@ -234,7 +240,7 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
             // Run uncover on the tile w/the number of surrounding mines,
             // which is used to find the correct uncovered image from TextureAtlas.
-            tiles[obsX][obsY].uncover(mineCount);
+            tiles[originX][originY].uncover(mineCount);
 
             // Uncover the other tiles added earlier if there are no surrounding mines
             if (mineCount == 0) {
@@ -250,32 +256,18 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
     private void startGame(EventBoolean observable) {
         gameState = "Started";
 
-        int obsX = observable.getX();
-        int obsY = observable.getY();
+        int originX = observable.getX();
+        int originY = observable.getY();
 
         // Constraints are calculated by creating a 3x3 "Rectangle" around the
         // tile that was uncovered, but in the from of their maximum and minimum values.
-        int[] constraintsX = new int[]{obsX - 2, obsX + 2};
-        int[] constraintsY = new int[]{obsY - 2, obsY + 2};
+        int[] constraintsX = new int[]{originX - 2, originX + 2};
+        int[] constraintsY = new int[]{originY - 2, originY + 2};
 
         // Generate mines and then run the function again to activate
         // the recursive looping for the first tile.
         generateMines(constraintsX, constraintsY);
         onUncover(observable);        
-    }
-
-    private void endGame() {
-        gameState = "Ended";
-
-        // Disable every tile, as game should end now.
-        for (Tile[] tileColumn : tiles) {
-
-            for (Tile tile : tileColumn) {
-                tile.setUnclickable(true);
-            }
-
-        }   
-
     }
 }
 

@@ -35,10 +35,10 @@ public class StatPane extends Pane {
     private void generateCorners() {
         // Iterate through every corner of the pane
         // and generate a corner for them all
-        for (int cX = 0; cX < 2; cX++) {
+        for (int cornerX = 0; cornerX < 2; cornerX++) {
 
-            for (int cY = 0; cY < 2; cY++) {
-                getChildren().add(new Corner(cX, cY, width, height));
+            for (int cornerY = 0; cornerY < 2; cornerY++) {
+                getChildren().add(new Corner(cornerX, cornerY, width, height));
             }
 
         }

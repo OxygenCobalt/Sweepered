@@ -37,7 +37,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     private boolean isMine;
     private boolean isFlagged;
-    private boolean isUnclickable;
+    private boolean isDisabled;
 
     private EventBoolean isUncovered;
     private EventBoolean hasExploded;
@@ -47,7 +47,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     private ImageView normalTile;
     private ImageView flaggedTile;
     private ImageView pressedTile;
-    private ImageView shockwaveTile;
+    private ImageView waveTile;
     private ImageView minedTile;
     private ImageView explodedTile;
     private ImageView nearTile;
@@ -69,7 +69,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         isMine = false;
         isFlagged = false;
-        isUnclickable = false;
+        isDisabled = false;
 
         isUncovered = new EventBoolean(false, "isUncovered", simpleX, simpleY);
 
@@ -88,11 +88,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         flaggedTile = TextureAtlas.get(TextureAtlas.tileFlagged);
         pressedTile = TextureAtlas.get(TextureAtlas.tilePressed);
 
-        // shockwaveTile gets its opacity set to 0 for the shockwave transition that may happen later.
-        shockwaveTile = TextureAtlas.get(TextureAtlas.tileShockwave);
-        shockwaveTile.setOpacity(0);
-
-        getChildren().addAll(pressedTile, flaggedTile, normalTile, shockwaveTile);
+        getChildren().addAll(pressedTile, flaggedTile, normalTile);
     }
 
     // State functions
@@ -158,21 +154,36 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         Audio.explodeSound.play();        
     }
 
-    public void notifyOfExplosion(int explodeX, int explodeY) {
+    public void notifyOfGameEnd(String type, int explodeX, int explodeY) {
+        // Use type to find the correct wave tile to use, use the invalid wave [Yellow] if the type is invalid.
+        switch(type) {
+            case "Cleared": waveTile = TextureAtlas.get(TextureAtlas.tileClearWave); break;
+            case "Explosion": waveTile = TextureAtlas.get(TextureAtlas.tileExplodeWave); break;
+
+            default: waveTile = TextureAtlas.get(TextureAtlas.tileInvalidWave);
+        }
+
+        getChildren().add(waveTile);
+
         shockwave = new ShockwaveTimeline(
-            shockwaveTile,
+            waveTile,
             minedTile,
+            isFlagged,
             new Point2D(simpleX, simpleY),
             new Point2D(explodeX, explodeY)
         );
 
+        // Timeline is final, so ShockwaveTimeline does not extend it, rather store it internally.
+        // So to play it, first use a getter to retrieve the timeline, and then play it normally.
         shockwave.getTimeline().play();
+
+        isDisabled = true; // Prevent tile from being clicked again, as the game has ended.
     }
 
     // Mouse detection functions
     @Override
     public void handle(MouseEvent event) {
-        if (!isUnclickable) { // Only take mouse events if the game is still active/unstarted
+        if (!isDisabled) { // Only take mouse events if the game is still active/unstarted
             String type = String.valueOf(event.getEventType());
 
             if (!isUncovered.getValue()) {
@@ -231,10 +242,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     public void setUncovered(boolean value) {
         // Flagged tiles should not be removed recursively, by nature.
         if (!isFlagged) {isUncovered.setValue(value);}
-    }
-
-    public void setUnclickable(boolean value) { // Would be setDisabled if that wasnt already a method of node.
-        isUnclickable = value;
     }
 
     public EventBoolean getUncovered() {

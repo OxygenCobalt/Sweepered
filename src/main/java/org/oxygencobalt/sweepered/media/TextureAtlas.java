@@ -25,7 +25,10 @@ public class TextureAtlas {
 	public static final Sprite tileNormal = new Sprite(tileAtlas, 0, 0); // Last two arguments represent the sprites simplified x/y values in the atlas
 	public static final Sprite tileFlagged = new Sprite(tileAtlas, 1, 0); // They are multiplied by 32 to get the actual coordinates of the sprite
 	public static final Sprite tilePressed = new Sprite(tileAtlas, 2, 0);
-	public static final Sprite tileShockwave = new Sprite(tileAtlas, 3, 0);
+
+	public static final Sprite tileClearWave = new Sprite(tileAtlas, 0, 1);
+	public static final Sprite tileInvalidWave = new Sprite(tileAtlas, 1, 1);
+	public static final Sprite tileExplodeWave = new Sprite(tileAtlas, 2, 1);
 
 	// Uncovered Tiles
 	private static final Image uncoveredAtlas = new Image(resPath + "uncoveredAtlas.png");
