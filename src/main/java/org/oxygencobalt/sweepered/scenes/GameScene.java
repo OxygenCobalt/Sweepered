@@ -9,14 +9,17 @@ import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-import panes.MinePane;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+
+import panes.TilePane;
 import panes.StatPane;
 
-public class GameScene extends Scene {
+public class GameScene extends Scene implements PropertyChangeListener {
     private Group root;
 
-    private StatPane bar;
-    private MinePane board;
+    private StatPane stats;
+    private TilePane board;
 
     private final int offset;
     private final int mineCount;
@@ -30,11 +33,17 @@ public class GameScene extends Scene {
         this.mineCount = mineCount;
 
         // Load the main panes
-        bar = new StatPane(40, (mineWidth * 32), this.offset, 0);
-        board = new MinePane(mineWidth, mineHeight, this.mineCount, this.offset);
+        stats = new StatPane(40, (mineWidth * 32), this.offset, 0);
+        board = new TilePane(mineWidth, mineHeight, this.mineCount, this.offset);
+
+        board.getGameState().addListener(this);
 
         root = group;
-        root.getChildren().addAll(bar, board);
+        root.getChildren().addAll(stats, board);
+    }
+
+    public void propertyChange(PropertyChangeEvent event) {
+        // TODO: Add GameState communication from MinePane/StatPane
     }
 }
 

@@ -1,6 +1,7 @@
 // MinePane
 // Pane where Tiles and mines are generated,
 
+/*
 package panes;
 
 import javafx.scene.layout.Pane;
@@ -14,12 +15,14 @@ import java.util.ArrayList;
 
 import events.EventBoolean;
 
+import generation.Board;
+
 import media.Audio;
 
 import nodes.Tile;
 import nodes.Corner;
 
-public class MinePane extends Pane implements ChangeListener<Boolean> {
+public class OldTilePane extends Pane implements ChangeListener<Boolean> {
     private final int width;
     private final int height;
 
@@ -36,7 +39,7 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
 
     private Tile[][] tiles;
 
-    public MinePane(int tileWidth, int tileHeight, int mineCount, int offset) { // Width/Height is given as the amount of tiles, not pixels
+    public OldTilePane(int tileWidth, int tileHeight, int mineCount, int offset) { // Width/Height is given as the amount of tiles, not pixels
         x = offset;
         y = (offset * 2) + 44; // The added 44 is to account for the width of stackpane and the border of minepane.
 
@@ -290,5 +293,7 @@ public class MinePane extends Pane implements ChangeListener<Boolean> {
         }
     }
 }
+
+*/
 
 // OxygenCobalt

@@ -12,13 +12,13 @@ import scenes.GameScene;
 public class SweeperedApp extends Application {
     private Stage window;
 
-    @Override
+    @Override 
     public void start(Stage primaryStage) {
         window = primaryStage;
 
         window.setResizable(false);
         window.setTitle("Sweepered");
-
+        
         // Arguments are passed to GameScene as followed:
         // group - for the super() constructor to function
         // width, height - specified board size [in tiles, not pixels]

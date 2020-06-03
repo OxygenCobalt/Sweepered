@@ -12,7 +12,7 @@ public class Audio {
    	public static final AudioClip flagSound = new AudioClip(resPath + "flag.wav");
 
     public static final AudioClip explodeSound = new AudioClip(resPath + "explode.wav");
-    public static final AudioClip clearSound = new AudioClip(resPath + "cleared.wav");
+    public static final AudioClip clearSound = new AudioClip(resPath + "cleared.wav"); // TODO: Maybe change this sound.
 }
 
 // OxygenCobalt
