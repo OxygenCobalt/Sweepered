@@ -7,20 +7,17 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Arrays;
 
+import states.TileState;
+
 public class Board {
-    private TileState[][] board;
+    private TileState.State[][] board;
 
     private final int width;
     private final int height;
     private final int mineCount;
 
-    // Since I cant directly pass arguments to call(), any arguments are instead stored as variables
-    private String currentTask;
-    private int originX;
-    private int originY;
-
     public Board(int width, int height, int mineCount) {
-        board = new TileState[width][height];
+        board = new TileState.State[width][height];
 
         this.width = width;
         this.height = height;
@@ -29,8 +26,8 @@ public class Board {
         // Set every tile in the board to uncovered
         // Since this array is 2-dimensional, I have to iterate
         // through each array and then run Arrays.fill on each one.
-        for (TileState[] column : board) {
-            Arrays.fill(column, TileState.COVERED);
+        for (TileState.State[] column : board) {
+            Arrays.fill(column, TileState.State.COVERED);
         }
 
     }
@@ -48,7 +45,7 @@ public class Board {
 
         Random rand = new Random();
 
-        ArrayList<String> mineLocations = new ArrayList<String>();
+        ArrayList<int[]> mineLocations = new ArrayList<int[]>();
 
         // Fill in a list of valid mine locations
         for (int x = 0; x < width; x++) {
@@ -58,9 +55,8 @@ public class Board {
                 // Blacklist values within a 1-tile radius of the origin
                 if (Math.abs(x - originX) > 1 || Math.abs(y - originY) > 1) {
 
-                    // Create a string with the X and Y coordinate of the tile, and add it to the list
-                    // This will be split back up into the X and Y coords of the mine placed if chosen
-                    String location = String.valueOf(x) + String.valueOf(y);
+                    // Create an array with the X and Y coordinate of the tile, and add it to the list
+                    int[] location = new int[]{x, y};
                     mineLocations.add(location);
 
                 }
@@ -77,18 +73,18 @@ public class Board {
             index = rand.nextInt(locationWidth);
 
             // Get value from list, and split it up into its X/Y values
-            String coords = mineLocations.get(index);
-            int coordX = Character.getNumericValue(coords.charAt(0));
-            int coordY = Character.getNumericValue(coords.charAt(1));
+            int[] coords = mineLocations.get(index);
+            int coordX = coords[0];
+            int coordY = coords[1];
 
             // Update tile state on the board to MINED
-            board[coordX][coordY] = TileState.MINED;
+            board[coordX][coordY] = TileState.State.MINED;
 
             // Also add it to changedTiles in order for board to change the actual tile node.
             changedTiles.add(new ChangePacket(
                 coordX,
                 coordY,
-                TileState.MINED
+                TileState.State.MINED
             ));
 
             // Remove the value from the list, to prevent it from becoming a mine again.
@@ -111,7 +107,7 @@ public class Board {
 
         int foundMines = 0;
 
-        TileState tile;
+        TileState.State tile;
 
         boolean isNotCenter;
         boolean isNotOutOfBounds;
@@ -129,12 +125,14 @@ public class Board {
                     tile = board[nearX][nearY];
 
                     // Add to mineCount if tile does contain a mine
-                    if (tile == TileState.MINED) {
+                    if (tile == TileState.State.MINED) {
                         foundMines++;
                     }
 
-                    // Blacklist already uncovered tiles from recursiveList, to prevent an infinite loop
-                    if (!String.valueOf(tile).contains("UNCOVERED")) {
+                    // Blacklist any tile that is not covered from the recursivelist,
+                    // to prevent flags from being destroyed and an infinite loop
+                    // w/uncovered tiles
+                    if (tile == TileState.State.COVERED) {
                         recursiveList.add(new int[]{nearX, nearY});
                     }
                 }
@@ -144,7 +142,7 @@ public class Board {
         }
 
         // Change tile state to uncovered, with the amount of nearby tiles
-        TileState state = TileState.valueOf("UNCOVERED_" + String.valueOf(foundMines));
+        TileState.State state = TileState.State.valueOf("UNCOVERED_" + String.valueOf(foundMines));
 
         board[originX][originY] = state;
 
@@ -167,6 +165,36 @@ public class Board {
         }
 
         return changedTiles;
+    }
+
+    public ArrayList<ChangePacket> flagTile(int originX, int originY) {
+
+        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+
+        // Get reference to tile
+        TileState.State tile = board[originX][originY];
+
+        // If tile is not already flagged, set it to flag and create a ChangePacket for that.
+        // Otherwise, set it to Covered instead
+        if (tile != TileState.State.FLAGGED) {
+            tile = TileState.State.FLAGGED;
+        }
+
+        else {
+            tile = TileState.State.COVERED;
+        }
+
+        // Update tile on board and create corresponding ChangePacket
+        board[originX][originY] = tile;
+
+        changedTiles.add(new ChangePacket(
+            originX,
+            originY,
+            tile
+        ));
+
+        return changedTiles;
+
     }
 
 }

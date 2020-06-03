@@ -11,8 +11,8 @@ import java.beans.PropertyChangeEvent;
 
 import java.util.ArrayList;
 
-import events.observable.EventBoolean;
-import events.observable.GameState;
+import states.GameState;
+import states.TileState;
 
 import generation.Board;
 import generation.ChangePacket;
@@ -87,7 +87,7 @@ public class TilePane extends Pane implements PropertyChangeListener {
                         y
                 );
 
-                tile.getUncovered().addListener(this);
+                tile.getState().addListener(this);
 
                 tiles[tileX][tileY] = tile;
 
@@ -115,28 +115,53 @@ public class TilePane extends Pane implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent event) {
         // TODO: Should probably fragment this into multiple functions, I dont know
 
-        // Case the object where the event took place to access its X/Y values
-        EventBoolean observable = (EventBoolean) event.getSource();
+        // Cast the TileState corresponding to where the event took place to access its X/Y values
+        TileState observable = (TileState) event.getSource();
+
+        String message = observable.getMessage();
 
         int originX = observable.getX();
         int originY = observable.getY();
+
+        ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
+
+        switch (message) {
+            case "Uncover": toChange = startUncover(originX, originY); break;
+            case "Flag": toChange = startFlag(originX, originY); break;
+        }
+
+        updateTiles(toChange);
+    }
+
+    private ArrayList<ChangePacket> startUncover(int originX, int originY) {
 
         // Get results of both generateMines() and uncoverTile(), and record them appropriately
         ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
 
         if (state.getValue() == GameState.State.UNSTARTED) {
+
             toChange.addAll(board.generateMines(originX, originY));
 
             state.setValue(GameState.State.STARTED);
+
         }
 
-        toChange.addAll(board.uncoverTile(originX, originY));
+        toChange.addAll(board.uncoverTile(originX, originY)); 
 
-        updateTiles(toChange);
+        return toChange;
+
+    }
+
+    private ArrayList<ChangePacket> startFlag(int originX, int originY) {
+
+        return board.flagTile(originX, originY);
+
     }
 
     private void updateTiles(ArrayList<ChangePacket> toChange) {
         Tile tile;
+
+        // Iterate through every ChangePacket, extract the referenced tile, and pass the new state to it.
 
         for (ChangePacket change : toChange) {
 

@@ -1,7 +1,9 @@
 // GameState
-// An ObservableValue for the game state [With an internal enum]
+// An Observable enum for the game state
 
-package events.observable;
+package states;
+
+import events.Observable;
 
 public class GameState extends Observable {
 

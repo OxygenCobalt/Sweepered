@@ -3,12 +3,14 @@
 
 package generation;
 
+import states.TileState;
+
 public class ChangePacket {
 	private final int x;
 	private final int y;
-	private final TileState newState;
+	private final TileState.State newState;
 
-	public ChangePacket(int x, int y, TileState newState) {
+	public ChangePacket(int x, int y, TileState.State newState) {
 		this.x = x;
 		this.y = y;
 
@@ -23,7 +25,7 @@ public class ChangePacket {
 		return y;
 	}
 
-	public TileState getNewState() {
+	public TileState.State getNewState() {
 		return newState;
 	}
 }

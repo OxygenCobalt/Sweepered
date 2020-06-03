@@ -14,12 +14,10 @@ import javafx.geometry.Rectangle2D;
 
 import java.util.HashMap;
 
-import events.observable.EventBoolean;
-
-import generation.TileState;
-
 import media.TextureAtlas;
 import media.Sprite;
+
+import states.TileState;
 
 public class Tile extends Pane implements EventHandler<MouseEvent> {
     private final int width;
@@ -31,8 +29,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     private final int simpleX;
     private final int simpleY;
 
-    private EventBoolean isUncovered;
-    private EventBoolean hasExploded;
+    private TileState state;
 
     private Rectangle2D mouseRect;
 
@@ -53,7 +50,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         this.simpleX = simpleX;
         this.simpleY = simpleY;
 
-        isUncovered = new EventBoolean(false, "isUncovered", simpleX, simpleY);
+        state = new TileState(TileState.State.COVERED, simpleX, simpleY);
 
         // mouseRect is used to detect when the mouse has been released *outside* of the tile
         // The panes location is used to create a location relative to the scene, as I cant do that w/MouseEvent
@@ -70,62 +67,133 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     // Mouse Input functions
     public void handle(MouseEvent event) {
 
+        // TODO: Maybe you should use the JavaFX mouse enums.
         String type = String.valueOf(event.getEventType());
+        String button = String.valueOf(event.getButton());
 
-        // JavaFX polls the last pressed button, making switch statements impossible.
-        if (type.equals("MOUSE_PRESSED")) {onPress(event);}
-        if (type.equals("MOUSE_RELEASED")) {onRelease(event);}
+        // Prevent tile from being clicked on if its in any state other than COVERED
+        if (state.getState() != TileState.State.DISABLED) {
+
+            switch (button) {
+
+                case "PRIMARY": {
+
+                    if (type.equals("MOUSE_PRESSED")) {onPress(event);}
+                    if (type.equals("MOUSE_RELEASED")) {onRelease(event);}
+
+                    break;   
+
+                }
+
+                case "SECONDARY": {
+
+                    // Also check if the mouse is pressing or releasing, to prevent
+                    // a flag from being placed and then immediately removed
+                    if (type.equals("MOUSE_PRESSED")) {
+
+                        // Switch between two near-identical enums in order to notify the listeners repeatedly
+                        // FIXME: Find a better way to pulse flag queries
+                        state.pulse(
+                            TileState.State.FLAG_QUERY,
+                            TileState.State.FLAG_QUERY_,
+                            "Flag"
+                        );
+
+                        break;
+
+                    }
+
+                }
+
+            }
+
+        }
 
     }
 
     private void onPress(MouseEvent event) {
 
-        loadTexture("Pressed", TextureAtlas.tilePressed);
+        String button = String.valueOf(event.getButton());
+        TileState.State rawState = state.getState();
+        
+        if (rawState != TileState.State.FLAGGED) {
+
+            loadTexture("Pressed", TextureAtlas.tilePressed);
+
+        }
 
     }
 
     private void onRelease(MouseEvent event) {
         // Find if the mouse pointer is still within the Rect2D
         Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
+        Boolean isNotFlagged = state.getState() != TileState.State.FLAGGED;
 
-        if (isInBox) {
+        if (isInBox && isNotFlagged) {
 
-            isUncovered.setValue(true);
+            state.setState(TileState.State.UNCOVERED, "Uncover");
 
         }
 
     }
 
     // State management
-    public void updateState(TileState state) {
-        switch (state) {
-            case MINED: becomeMine(); break;
+    public void updateState(TileState.State newState) {
+
+        switch (newState) {
+
+            case MINED: becomeMine(newState); break;
+
+            // The board function can return two types of ChangePackets, so have cases for each of them
+            case COVERED: invertFlagged(newState); break;
+            case FLAGGED: invertFlagged(newState); break;
 
             // Due to UNCOVERED having multiple constants in TileState,
             // It is used as the default case.
-            default: uncover(state);
+            default: uncover(newState);
+
         }
+
     }
 
-    private void uncover(TileState state) {
+    private void uncover(TileState.State newState) {
+
         // TODO: Add grid + sounds
 
         // Get the amount of mines near the tile by parsing the
         // UNCOVERED constant for the last character
         int nearMines = Character.getNumericValue(
-                String.valueOf(state).charAt(10)
+                String.valueOf(newState).charAt(10)
         );
 
         loadTexture("Uncovered", TextureAtlas.uncoveredNear[nearMines]);
 
-        // Set isUncovered to true silently for any tiles that were uncovered recursively
-        if (!isUncovered.getValue()) {
-            isUncovered.setValueSilent(true);
-        }
+        // Disable tile once everything is shown [As dealing with the many iterations of UNCOVERED would be frustrating]
+        state.setStateSilent(TileState.State.DISABLED);
+
     }
 
-    private void becomeMine() {
+    private void becomeMine(TileState.State newState) {
+
         loadTexture("Mined", TextureAtlas.uncoveredMined);
+
+    }
+
+    private void invertFlagged(TileState.State newState) {
+
+        // Set tiles new state [Just in case]
+        state.setStateSilent(newState);
+
+        if (state.getState() == TileState.State.FLAGGED) { // If the tile is flagged, load its texture
+            loadTexture("Flagged", TextureAtlas.tileFlagged);
+        } 
+
+        else { // Otherwise revert to a normal tile
+
+            loadTexture("Normal", TextureAtlas.tileNormal);
+
+        }
+
     }
 
     // Image loading
@@ -151,8 +219,8 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     }
 
     // Getters
-    public EventBoolean getUncovered() {
-        return isUncovered;
+    public TileState getState() {
+        return state;
     }
 }
 

@@ -1,7 +1,7 @@
 // ObservableBase
 // Base class for all observable values.
 
-package events.observable;
+package events;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
