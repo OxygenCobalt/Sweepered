@@ -3,7 +3,6 @@
 
 package generation;
 
-// TODO: Maybe ditch ArrayList
 import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
@@ -32,6 +31,26 @@ public class Board {
 
         this.remainingTiles = (width * height) - mineCount;
 
+        // Having a size that exceeds (width * height) - 9 is impossible, as the program will enter an infinite loop trying to fill in a tile that doesnt exist.
+        // There also cannot be a size lower than 9x9, as that will break StatBar [May be subject to change.]
+
+        if (remainingTiles < 9 || (width < 9 || height < 9)) {
+
+            // FIXME: Very unfriendly, may just add a restriction to the custom game option.
+
+            throw new IllegalArgumentException(
+
+                "Size W" + 
+                String.valueOf(width) + 
+                " H" + 
+                String.valueOf(height) + 
+                " with MineCount of " +
+                String.valueOf(mineCount) + 
+                " is not valid."
+
+            );
+
+        }
         minedTiles = Arrays.asList(
             TileState.State.MINED,
             TileState.State.FLAGGED_MINED,
@@ -102,10 +121,15 @@ public class Board {
 
             // Also add it to changedTiles in order for board to change the actual tile node.
             changedTiles.add(new ChangePacket(
-                coordX,
-                coordY,
+
+                "Mined",
+                originX,
+                originY,
+
                 TileState.State.MINED,
-                null
+                coordX,
+                coordY
+
             ));
 
             // Remove the value from the list, to prevent it from becoming a mine again.
@@ -206,10 +230,15 @@ public class Board {
         changedTiles.add(
 
             new ChangePacket(
+
+                "Uncover",
                 originX,
                 originY,
+
                 originTile,
-                null
+                originX,
+                originY
+
             )
 
         );
@@ -226,7 +255,7 @@ public class Board {
         TileState.State tile = board[originX][originY];
 
         String stringTile = String.valueOf(tile);
-
+        String type;
 
         // Check if the tile is not already flagged
         // If so, change the flagged status to the corresponding flag status for the tiles mined state
@@ -244,6 +273,8 @@ public class Board {
                 tile = TileState.State.FLAGGED; // Otherwise, change it to the plain flagged value
 
             }
+
+            type = "Flagged";
 
         }
 
@@ -263,16 +294,23 @@ public class Board {
 
             }
 
+            type = "Unflagged";
+
         }
 
         // Update tile on board and create corresponding ChangePacket
         board[originX][originY] = tile;
 
         changedTiles.add(new ChangePacket(
+
+            type,
             originX,
             originY,
+
             tile,
-            null
+            originX,
+            originY
+
         ));
 
         return changedTiles;
@@ -306,12 +344,15 @@ public class Board {
                 board[x][y] = tile;
 
                 changedTiles.add(new ChangePacket(
-                    x,
-                    y,
-                    tile,
+
                     type,
                     originX,
-                    originY
+                    originY,
+
+                    tile,
+                    x,
+                    y
+
                 ));
 
             }
@@ -349,10 +390,13 @@ public class Board {
 
             changedTiles.add(new ChangePacket(
 
+                "Cleared",
                 originX,
                 originY,
+
                 TileState.State.UNCOVERED_CLEARED,
-                null
+                originX,
+                originY
 
             ));
 

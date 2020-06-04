@@ -200,7 +200,7 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
         for (ChangePacket change : toChange) {
 
-            tile = tiles[change.getX()][change.getY()];
+            tile = tiles[change.getTargetX()][change.getTargetY()];
 
             tile.updateState(change);
 

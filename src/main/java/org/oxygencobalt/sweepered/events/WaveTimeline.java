@@ -10,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.geometry.Point2D;
 
 import javafx.util.Duration;
-import java.util.ArrayList;
 
 import media.TextureAtlas;
 import media.Sprite;

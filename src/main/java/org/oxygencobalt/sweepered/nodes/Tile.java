@@ -122,6 +122,11 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
                     // a flag from being placed and then immediately removed
                     if (type.equals("MOUSE_PRESSED")) {
 
+                        // Playing the flag sound is seperate from any function due to
+                        // how the invertFlagged() function does not always run
+
+                        Audio.flagSound.play();
+
                         // Switch between two near-identical enums in order to notify the listeners repeatedly
                         state.pulse(
                             TileState.State.FLAG_QUERY,
@@ -131,8 +136,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
                         // Due to the nature of how flagging/unflagging works,
                         // Just play the sound outside of any functions.
-
-                        Audio.flagSound.play();
 
                         break;
 
@@ -157,25 +160,28 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     private void onRelease(MouseEvent event) {
 
-        // First, play the click sound itself [Unless the tile is a mine, as exploding a tile has its own sound]
-
-        if (state.getState() != TileState.State.MINED) {
-
-            Audio.clickSound.play();
-
-        }
-
         // Find if the mouse pointer is still within the Rect2D
         Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
 
         if (isInBox) {
 
+            // Play the click sound, but only if the state isnt MINED,
+            // as exploding a tile has its own sound.
+
+            if (state.getState() != TileState.State.MINED) {
+
+                Audio.clickSound.play();
+
+            }
+
             state.setState(TileState.State.UNCOVERED, "Uncover");
 
         } else { // Otherwise, revert to the normal covered tile appearence
 
-            loadTexture("Normal", TextureAtlas.tileNormal);
+            // Since being able to unpress a tile is universal, no need to check if its mined
+            Audio.clickSound.play();
 
+            loadTexture("Normal", TextureAtlas.tileNormal);
         }
 
     }
@@ -183,18 +189,19 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     // State management
     public void updateState(ChangePacket packet) {
 
+        // NewState is declared just in case uncovered overwrites it.
         TileState.State newState = packet.getNewState();
 
         switch (newState) {
 
             // No function needs to be ran when turning a tile into a mine
-            case MINED: becomeMine(newState); break;
-            case EXPLODED: explodeMine(newState); break;
+            case MINED: becomeMine(packet); break;
+            case EXPLODED: explodeMine(packet); break;
 
             // The board function can return two types of ChangePackets, so have cases for each of them
-            case COVERED: invertFlagged(newState); break;
-            case FLAGGED: invertFlagged(newState); break;
-            case FLAGGED_MINED: invertFlagged(newState); break;
+            case COVERED: invertFlagged(packet); break;
+            case FLAGGED: invertFlagged(packet); break;
+            case FLAGGED_MINED: invertFlagged(packet); break;
 
             // This DISABLED case is different from the uncover() disable case.
             // It is not changed silently, meaning that *something* has happened
@@ -205,12 +212,12 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             case DISABLED: disableTile(packet); break;
             case DISABLED_MINED: disableTile(packet); break;
 
-            case UNCOVERED_CLEARED: clearTile(newState); break;
+            case UNCOVERED_CLEARED: clearTile(packet); break;
 
             // Due to UNCOVERED having multiple constants in TileState,
             // It is used as the default case.
             // newState is also updated due to tiles not storing the specific UNCOVERED_X enum
-            default: newState = uncover(newState);
+            default: newState = uncover(packet);
 
         }
 
@@ -218,7 +225,9 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private TileState.State uncover(TileState.State newState) {
+    private TileState.State uncover(ChangePacket packet) {
+
+        TileState.State newState = packet.getNewState();
 
         // Get the amount of mines near the tile by parsing the
         // UNCOVERED constant for the last character
@@ -242,7 +251,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void becomeMine(TileState.State newState) {
+    private void becomeMine(ChangePacket packet) {
 
         // Simply make sure that the normal, covered tile is shown
         // In case that the tile is becoming a mine after being unflagged.
@@ -250,7 +259,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void explodeMine(TileState.State newState) {
+    private void explodeMine(ChangePacket packet) {
 
         // Simply loaded the exploded texture, and then play the corresponding sound
 
@@ -260,9 +269,9 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void invertFlagged(TileState.State newState) {
+    private void invertFlagged(ChangePacket packet) {
 
-        String stringState = String.valueOf(newState);
+        String stringState = String.valueOf(packet.getNewState());
 
         if (stringState.contains("FLAGGED")) { // If the tile should now be flagged, load its texture
 
@@ -283,7 +292,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         int originX = packet.getOriginX();
         int originY = packet.getOriginY();
 
-        String type = packet.getOriginType();
+        String type = packet.getType();
 
         WaveTimeline timeline = new WaveTimeline(
             this,
@@ -298,7 +307,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void clearTile(TileState.State newState) {
+    private void clearTile(ChangePacket packet) {
 
         // UNCOVERED_CLEARED is no different from UNCOVERED, so no code needs to be ran
         // Just play the clear sound instead.

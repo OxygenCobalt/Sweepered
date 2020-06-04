@@ -6,56 +6,53 @@ package generation;
 import states.TileState;
 
 public class ChangePacket {
-	private final int x;
-	private final int y;
+	private final String type;
 
-	private int originX;
-	private int originY;
+	private final int originX;
+	private final int originY;
 
-	private String originType;
+	private final int targetX;
+	private final int targetY;
 
 	private final TileState.State newState;
 
-	public ChangePacket(int x, int y, TileState.State newState, String optionalType, int... optionalOrigin) {
+	public ChangePacket(String type, int originX, int originY, TileState.State newState, int targetX, int targetY) {
 
-		this.x = x;
-		this.y = y;
+		this.type = type;
+
+		this.originX = originX;
+		this.originY = originY;
+
+		this.targetX = targetX;
+		this.targetY = targetY;
 
 		this.newState = newState;
 
-		if (optionalOrigin.length == 2) {
-
-			originX = optionalOrigin[0];
-			originY = optionalOrigin[1];
-
-			originType = optionalType;
-
-		}
-
 	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
+	public String getType() {
+		return type;
 	}
 
 	public int getOriginX() {
 		return originX;
 	}
 
-	public int getOriginY() {
-		return originY;
-	}
-
-	public String getOriginType() {
-		return originType;
-	}
-
 	public TileState.State getNewState() {
 		return newState;
 	}
 
+	public int getOriginY() {
+		return originY;
+	}
+
+	public int getTargetX() {
+		return targetX;
+	}
+
+	public int getTargetY() {
+		return targetY;
+	}
+
 }
+
+// OxygenCobalt
