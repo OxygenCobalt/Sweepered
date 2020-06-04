@@ -19,7 +19,7 @@ public class TileState extends Observable {
 
 	    MINED, EXPLODED,
 
-	   	UNCOVERED, // General Uncovered [Used in tiles]
+	   	UNCOVERED, UNCOVERED_CLEARED, // General Uncovered [Used in tiles]
 
 	   	// Uncovered + NearMines [Primarily used in Board]
 	    UNCOVERED_0, UNCOVERED_1, UNCOVERED_2, 

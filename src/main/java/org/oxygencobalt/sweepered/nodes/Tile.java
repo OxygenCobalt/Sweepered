@@ -14,13 +14,18 @@ import javafx.scene.image.ImageView;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
 
+import java.util.List;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
 
 import events.WaveTimeline;
 
+import generation.ChangePacket;
+
 import media.TextureAtlas;
 import media.Sprite;
+import media.Audio;
 
 import states.TileState;
 
@@ -41,7 +46,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     private HashMap<String, ImageView> images;
 
-    private final ArrayList<TileState.State> disabledStates;
+    private final List<TileState.State> disabledStates;
 
     public Tile(int simpleX, int simpleY, int paneX, int paneY) {
 
@@ -66,12 +71,12 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         // Create/Add the disabled states to their respective list
         // FIXME: Shorten this please
-        disabledStates = new ArrayList<TileState.State>();
-
-        disabledStates.add(TileState.State.DISABLED);
-        disabledStates.add(TileState.State.EXPLODED);
-        disabledStates.add(TileState.State.UNCOVERED);
-        disabledStates.add(TileState.State.DISABLED_MINED);
+        disabledStates = Arrays.asList(
+            TileState.State.DISABLED,
+            TileState.State.EXPLODED,
+            TileState.State.UNCOVERED,
+            TileState.State.DISABLED_MINED
+        );
 
         // Create image map and load the main tile texture
         images = new HashMap<String, ImageView>();
@@ -118,12 +123,16 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
                     if (type.equals("MOUSE_PRESSED")) {
 
                         // Switch between two near-identical enums in order to notify the listeners repeatedly
-                        // FIXME: Find a better way to pulse flag queries
                         state.pulse(
                             TileState.State.FLAG_QUERY,
                             TileState.State.FLAG_QUERY_,
                             "Flag"
                         );
+
+                        // Due to the nature of how flagging/unflagging works,
+                        // Just play the sound outside of any functions.
+
+                        Audio.flagSound.play();
 
                         break;
 
@@ -148,6 +157,14 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     private void onRelease(MouseEvent event) {
 
+        // First, play the click sound itself [Unless the tile is a mine, as exploding a tile has its own sound]
+
+        if (state.getState() != TileState.State.MINED) {
+
+            Audio.clickSound.play();
+
+        }
+
         // Find if the mouse pointer is still within the Rect2D
         Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
 
@@ -164,10 +181,9 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     }
 
     // State management
-    public void updateState(TileState.State newState, int originX, int originY) {
+    public void updateState(ChangePacket packet) {
 
-        // Note: Origin X/Y is solely used to locate the point to pass to WaveTimeline
-        // FIXME: Possibly find a way to remove these extraneous args
+        TileState.State newState = packet.getNewState();
 
         switch (newState) {
 
@@ -181,10 +197,15 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             case FLAGGED_MINED: invertFlagged(newState); break;
 
             // This DISABLED case is different from the uncover() disable case.
-            // It is not changed silently, meaning that a mine has exploded and 
-            // marked all other tiles as disabled.
-            case DISABLED: disableTile(newState, originX, originY); break;
-            case DISABLED_MINED: disableTile(newState, originX, originY); break;
+            // It is not changed silently, meaning that *something* has happened
+            // and all tiles must be disabled
+
+            // disableTile also takes the entire changepacket instead of
+            // the new state, as it needs the origin and the type for WaveTimeline
+            case DISABLED: disableTile(packet); break;
+            case DISABLED_MINED: disableTile(packet); break;
+
+            case UNCOVERED_CLEARED: clearTile(newState); break;
 
             // Due to UNCOVERED having multiple constants in TileState,
             // It is used as the default case.
@@ -198,8 +219,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     }
 
     private TileState.State uncover(TileState.State newState) {
-
-        // TODO: Add grid + sounds
 
         // Get the amount of mines near the tile by parsing the
         // UNCOVERED constant for the last character
@@ -233,9 +252,11 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     private void explodeMine(TileState.State newState) {
 
-        // Simply loaded the exploded texture [For now]
+        // Simply loaded the exploded texture, and then play the corresponding sound
 
         loadTexture("Exploded", TextureAtlas.uncoveredExploded);
+
+        Audio.explodeSound.play();
 
     }
 
@@ -257,7 +278,12 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void disableTile(TileState.State newState, int originX, int originY) {
+    private void disableTile(ChangePacket packet) {
+
+        int originX = packet.getOriginX();
+        int originY = packet.getOriginY();
+
+        String type = packet.getOriginType();
 
         WaveTimeline timeline = new WaveTimeline(
             this,
@@ -265,10 +291,19 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             new Point2D(simpleX, simpleY),
             new Point2D(originX, originY),
 
-            "Explosion"
+            type
         );
 
         timeline.getTimeline().play();
+
+    }
+
+    private void clearTile(TileState.State newState) {
+
+        // UNCOVERED_CLEARED is no different from UNCOVERED, so no code needs to be ran
+        // Just play the clear sound instead.
+
+        Audio.clearSound.play();
 
     }
 

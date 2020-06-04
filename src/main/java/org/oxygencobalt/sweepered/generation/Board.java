@@ -3,9 +3,11 @@
 
 package generation;
 
-import java.util.ArrayList;
+// TODO: Maybe ditch ArrayList
+import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 import states.TileState;
 
@@ -15,7 +17,11 @@ public class Board {
     private final int width;
     private final int height;
     private final int mineCount;
-    private final int remainingTiles;
+
+    private int remainingTiles;
+
+    private final List<TileState.State> minedTiles;
+    private final List<TileState.State> coveredTiles;
 
     public Board(int width, int height, int mineCount) {
         board = new TileState.State[width][height];
@@ -25,6 +31,17 @@ public class Board {
         this.mineCount = mineCount;
 
         this.remainingTiles = (width * height) - mineCount;
+
+        minedTiles = Arrays.asList(
+            TileState.State.MINED,
+            TileState.State.FLAGGED_MINED,
+            TileState.State.DISABLED_MINED
+        );
+
+        coveredTiles = Arrays.asList(
+            TileState.State.FLAGGED,
+            TileState.State.COVERED
+        );
 
         // Set every tile in the board to uncovered
         // Since this array is 2-dimensional, I have to iterate
@@ -87,7 +104,8 @@ public class Board {
             changedTiles.add(new ChangePacket(
                 coordX,
                 coordY,
-                TileState.State.MINED
+                TileState.State.MINED,
+                null
             ));
 
             // Remove the value from the list, to prevent it from becoming a mine again.
@@ -106,131 +124,95 @@ public class Board {
 
     public ArrayList<ChangePacket> uncoverTile(int originX, int originY) {
 
-        // First, check if the tile about to be uncovered is a mine
-        if (board[originX][originY] == TileState.State.MINED) {
-
-            return explodeTile(originX, originY); // If so, return whatever explodeTile() returns.
-
-        }
-
-        // If not, continue.
+        // Declare the variables used.
         
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
         ArrayList<int[]> recursiveList = new ArrayList<int[]>();
 
-        TileState.State tile;
+        TileState.State nearTile;
+        TileState.State originTile;
 
         int foundMines = 0;
 
-        boolean isNotCenter;
-        boolean isNotOutOfBounds;
+        Boolean isNotOutOfBounds;
 
-        for (int nearX = (originX - 1); nearX <  (originX + 2); nearX++) {
+        originTile = board[originX][originY];
 
-            for (int nearY = (originY - 1); nearY < (originY + 2); nearY++) {
+        // First, check if the tile is mined
+        if (originTile == TileState.State.MINED) {
 
-                // Also check if surrounding tile is not outside the bounds of the board
-                // before running any functions on it
-                // TODO: THERE HAS TO BE A BETTER WAY TO WRITE THIS
-                isNotOutOfBounds = (nearX != width && nearX >= 0) && (nearY != height && nearY >= 0);
+            // If thats the case, set the origin tile to EXPLODED and drop the other instructions
+            originTile = TileState.State.EXPLODED;
 
-                if (isNotOutOfBounds) {
-                    tile = board[nearX][nearY];
-
-                    // Add to mineCount if tile does contain a mine
-                    if (tile == TileState.State.MINED) {
-                        foundMines++;
-                    }
-
-                    // Blacklist any tile that is not covered from the recursivelist,
-                    // to prevent flags from being destroyed and an infinite loop
-                    // w/uncovered tiles
-                    if (tile == TileState.State.COVERED) {
-                        recursiveList.add(new int[]{nearX, nearY});
-                    }
-                }
-
-            }
+            board[originX][originY] = originTile;
 
         }
 
-        // Change tile state to uncovered, with the amount of nearby tiles
-        TileState.State state = TileState.State.valueOf("UNCOVERED_" + String.valueOf(foundMines));
+        else { // Otherwise, continue.
 
-        board[originX][originY] = state;
+            for (int nearX = (originX - 1); nearX <  (originX + 2); nearX++) {
 
-        // Also add the changed tile to the list
-        changedTiles.add(new ChangePacket(
-            originX,
-            originY,
-            state
-        ));
+                for (int nearY = (originY - 1); nearY < (originY + 2); nearY++) {
 
-        // If there are no nearby mines, iterate recursively and add the list of changed tiles
-        if (foundMines == 0) {
+                    // Also check if surrounding tile is not outside the bounds of the board
+                    // before running any functions on it
+                    // TODO: THERE HAS TO BE A BETTER WAY TO WRITE THIS
+                    isNotOutOfBounds = (nearX != width && nearX >= 0) && (nearY != height && nearY >= 0);
 
-            for (int[] coords : recursiveList) {
+                    if (isNotOutOfBounds) {
+                        nearTile = board[nearX][nearY];
 
-                changedTiles.addAll(uncoverTile(coords[0], coords[1]));
+                        // Add to mineCount if tile does contain a mine [Or its flagged or disabled equivelents]
+                        if (minedTiles.contains(nearTile)) {
+                            foundMines++;
+                        }
 
-            }
+                        // Blacklist any tile that is not covered from the recursivelist,
+                        // to prevent flags from being destroyed and an infinite loop
+                        // w/uncovered tiles
 
-        }
+                        // FIXME: The mines are being removed recursively multiple times, but im not sure if thats possible to be fixed.
 
-        return changedTiles;
-    }
-
-    public ArrayList<ChangePacket> explodeTile(int originX, int originY) {
-
-        // If called, ignore the uncover process and return a changelist that will disable all tiles/explode the uncovered tile
-        // Also mark the mined tile as exploded
-
-        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
-
-        TileState.State tile;
-
-        board[originX][originY] = TileState.State.EXPLODED;
-
-        changedTiles.add(new ChangePacket(
-            originX,
-            originY,
-            TileState.State.EXPLODED
-        ));
-
-        for (int x = 0; x < width; x++) {
-
-            for (int y = 0; y < height; y++) {
-
-                tile = board[x][y];
-
-                if (tile != TileState.State.EXPLODED) { // Blacklist origin tile, as it has been marked exploded
-
-                    // Mined tiles have their own disabled case, to store information for WaveTimeline
-                    if (tile == TileState.State.MINED) {
-
-                        tile = TileState.State.DISABLED_MINED;
+                        if (nearTile == TileState.State.COVERED) {
+                            recursiveList.add(new int[]{nearX, nearY});
+                        }
 
                     }
-
-                    else {
-
-                        tile = TileState.State.DISABLED;
-
-                    }
-
-                    board[x][y] = tile;
-
-                    changedTiles.add(new ChangePacket(
-                        x,
-                        y,
-                        board[x][y]
-                    ));
 
                 }
 
             }
 
+            // Change the origin tile to uncovered, with the amount of nearby tiles
+            originTile = TileState.State.valueOf("UNCOVERED_" + String.valueOf(foundMines));
+
+            // To prevent a StackOverflowError, the board tile has to be updated seperately in both cases.
+            board[originX][originY] = originTile;
+
+            // If there are no nearby mines, iterate recursively and add the list of changed tiles
+            if (foundMines == 0) {
+
+                for (int[] coords : recursiveList) {
+
+                    changedTiles.addAll(uncoverTile(coords[0], coords[1]));
+
+                }
+
+            }
         }
+
+        // Finally, create a ChangePacket for the original updated tile.
+
+        changedTiles.add(
+
+            new ChangePacket(
+                originX,
+                originY,
+                originTile,
+                null
+            )
+
+        );
 
         return changedTiles;
 
@@ -289,8 +271,92 @@ public class Board {
         changedTiles.add(new ChangePacket(
             originX,
             originY,
-            tile
+            tile,
+            null
         ));
+
+        return changedTiles;
+
+    }
+
+    public ArrayList<ChangePacket> notifyAllTiles(String type, int originX, int originY) {
+
+        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+
+        TileState.State tile;
+
+        for (int x = 0; x < width; x++) {
+
+            for (int y = 0; y < height; y++) {
+
+                tile = board[x][y];
+
+                if (tile == TileState.State.MINED) {
+
+                    tile = TileState.State.DISABLED_MINED;
+
+                }
+
+                else {
+
+                    tile = TileState.State.DISABLED;
+
+                }
+
+                board[x][y] = tile;
+
+                changedTiles.add(new ChangePacket(
+                    x,
+                    y,
+                    tile,
+                    type,
+                    originX,
+                    originY
+                ));
+
+            }
+
+        }
+
+        return changedTiles;
+
+    }
+
+    public ArrayList<ChangePacket> updateRemainingTiles(int originX, int originY) {
+
+        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+
+        remainingTiles = 0; // Reset remainingTiles, for the new count.
+
+        // Iterate through all tiles in board, and increment remainingTiles for every one still covered
+        for (int x = 0; x < width; x++) {
+
+            for (int y = 0; y < height; y++) {
+
+                if (coveredTiles.contains(board[x][y])) {
+
+                    remainingTiles++;
+
+                }
+
+            }
+
+        }
+
+        // If every tile is uncovered [or some other state, such as MINED]
+        // Create a changePacket for the originally pressed tile that has the special state of UNCOVERED_CLEARED.
+        if (remainingTiles == 0) {
+
+            changedTiles.add(new ChangePacket(
+
+                originX,
+                originY,
+                TileState.State.UNCOVERED_CLEARED,
+                null
+
+            ));
+
+        } 
 
         return changedTiles;
 

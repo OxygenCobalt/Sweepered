@@ -133,13 +133,28 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
         }
 
-        updateTiles(toChange, originX, originY);
+        // Get the last [The index where an exploded or cleared tile would be added to] and check if
+        // its one of the special cases [EXPLODED or UNCOVERED_CLEARED.
+        TileState.State originTile = toChange.get(toChange.size() - 1).getNewState();
+
+        // If so, run its respective function.
+        switch (originTile) {
+
+            case EXPLODED: toChange.addAll(startExplode(originX, originY)); break;
+
+            case UNCOVERED_CLEARED: toChange.addAll(startClear(originX, originY)); break;
+
+        }
+
+        updateTiles(toChange);
     }
 
     private ArrayList<ChangePacket> startUncover(int originX, int originY) {
 
         // Get results of both generateMines() and uncoverTile(), and record them appropriately
         ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
+
+        TileState.State originTile;
 
         if (state.getState() == GameState.State.UNSTARTED) {
 
@@ -150,6 +165,7 @@ public class TilePane extends Pane implements PropertyChangeListener {
         }
 
         toChange.addAll(board.uncoverTile(originX, originY)); 
+        toChange.addAll(board.updateRemainingTiles(originX, originY));
 
         return toChange;
 
@@ -161,7 +177,22 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
     }
 
-    private void updateTiles(ArrayList<ChangePacket> toChange, int originX, int originY) {
+    private ArrayList<ChangePacket> startExplode(int originX, int originY) {
+
+        state.setState(GameState.State.EXPLOSION);
+
+        return board.notifyAllTiles("Explosion", originX, originY);
+
+
+    }
+
+    private ArrayList<ChangePacket> startClear(int originX, int originY) {
+
+        return board.notifyAllTiles("Cleared", originX, originY);
+
+    }
+
+    private void updateTiles(ArrayList<ChangePacket> toChange) {
         Tile tile;
         TileState.State newState;
 
@@ -171,15 +202,7 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
             tile = tiles[change.getX()][change.getY()];
 
-            tile.updateState(change.getNewState(), originX, originY);
-        
-            // Detect if one of the changed tiles was an exploded one
-            if (change.getNewState() == TileState.State.EXPLODED) {
-
-                // If so, change gameState to the lose condition [EXPLOSION]
-                state.setState(GameState.State.EXPLOSION);
-
-            }
+            tile.updateState(change);
 
         }
 
