@@ -10,9 +10,14 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.image.ImageView;
+
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.Point2D;
 
 import java.util.HashMap;
+import java.util.ArrayList;
+
+import events.WaveTimeline;
 
 import media.TextureAtlas;
 import media.Sprite;
@@ -20,6 +25,7 @@ import media.Sprite;
 import states.TileState;
 
 public class Tile extends Pane implements EventHandler<MouseEvent> {
+
     private final int width;
     private final int height;
 
@@ -34,6 +40,8 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     private Rectangle2D mouseRect;
 
     private HashMap<String, ImageView> images;
+
+    private final ArrayList<TileState.State> disabledStates;
 
     public Tile(int simpleX, int simpleY, int paneX, int paneY) {
 
@@ -56,6 +64,15 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         // The panes location is used to create a location relative to the scene, as I cant do that w/MouseEvent
         mouseRect = new Rectangle2D(x + paneX, y + paneY, 32, 32);
 
+        // Create/Add the disabled states to their respective list
+        // FIXME: Shorten this please
+        disabledStates = new ArrayList<TileState.State>();
+
+        disabledStates.add(TileState.State.DISABLED);
+        disabledStates.add(TileState.State.EXPLODED);
+        disabledStates.add(TileState.State.UNCOVERED);
+        disabledStates.add(TileState.State.DISABLED_MINED);
+
         // Create image map and load the main tile texture
         images = new HashMap<String, ImageView>();
         loadTexture("Normal", TextureAtlas.tileNormal);
@@ -72,14 +89,23 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         String button = String.valueOf(event.getButton());
 
         // Prevent tile from being clicked on if its in any state other than COVERED
-        if (state.getState() != TileState.State.DISABLED) {
+        if (!disabledStates.contains(state.getState())) {
 
             switch (button) {
 
                 case "PRIMARY": {
 
-                    if (type.equals("MOUSE_PRESSED")) {onPress(event);}
-                    if (type.equals("MOUSE_RELEASED")) {onRelease(event);}
+                    // Make sure that the tile is not flagged in any way before proceeding
+                    Boolean isNotFlagged = !String.valueOf(state.getState()).contains("FLAGGED");
+
+                    if (isNotFlagged) {
+
+                        // JavaFX polls the last pressed button, making switch statements impossible.
+
+                        if (type.equals("MOUSE_PRESSED")) {onPress(event);}
+                        if (type.equals("MOUSE_RELEASED")) {onRelease(event);}
+
+                    }
 
                     break;   
 
@@ -114,49 +140,64 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     private void onPress(MouseEvent event) {
 
         String button = String.valueOf(event.getButton());
-        TileState.State rawState = state.getState();
-        
-        if (rawState != TileState.State.FLAGGED) {
+        Boolean isNotFlagged = state.getState() != TileState.State.FLAGGED;
 
-            loadTexture("Pressed", TextureAtlas.tilePressed);
-
-        }
+        loadTexture("Pressed", TextureAtlas.tilePressed);
 
     }
 
     private void onRelease(MouseEvent event) {
+
         // Find if the mouse pointer is still within the Rect2D
         Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
-        Boolean isNotFlagged = state.getState() != TileState.State.FLAGGED;
 
-        if (isInBox && isNotFlagged) {
+        if (isInBox) {
 
             state.setState(TileState.State.UNCOVERED, "Uncover");
+
+        } else { // Otherwise, revert to the normal covered tile appearence
+
+            loadTexture("Normal", TextureAtlas.tileNormal);
 
         }
 
     }
 
     // State management
-    public void updateState(TileState.State newState) {
+    public void updateState(TileState.State newState, int originX, int originY) {
+
+        // Note: Origin X/Y is solely used to locate the point to pass to WaveTimeline
+        // FIXME: Possibly find a way to remove these extraneous args
 
         switch (newState) {
 
+            // No function needs to be ran when turning a tile into a mine
             case MINED: becomeMine(newState); break;
+            case EXPLODED: explodeMine(newState); break;
 
             // The board function can return two types of ChangePackets, so have cases for each of them
             case COVERED: invertFlagged(newState); break;
             case FLAGGED: invertFlagged(newState); break;
+            case FLAGGED_MINED: invertFlagged(newState); break;
+
+            // This DISABLED case is different from the uncover() disable case.
+            // It is not changed silently, meaning that a mine has exploded and 
+            // marked all other tiles as disabled.
+            case DISABLED: disableTile(newState, originX, originY); break;
+            case DISABLED_MINED: disableTile(newState, originX, originY); break;
 
             // Due to UNCOVERED having multiple constants in TileState,
             // It is used as the default case.
-            default: uncover(newState);
+            // newState is also updated due to tiles not storing the specific UNCOVERED_X enum
+            default: newState = uncover(newState);
 
         }
 
+        state.setStateSilent(newState);
+
     }
 
-    private void uncover(TileState.State newState) {
+    private TileState.State uncover(TileState.State newState) {
 
         // TODO: Add grid + sounds
 
@@ -166,26 +207,46 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
                 String.valueOf(newState).charAt(10)
         );
 
-        loadTexture("Uncovered", TextureAtlas.uncoveredNear[nearMines]);
+        // Determine which grid state to use depending on the Y coordinates,
+        // to prevent odd grid borders at the top left tiles.
+        Sprite gridSprite = new Sprite(TextureAtlas.gridAtlas, 1, 1);
 
-        // Disable tile once everything is shown [As dealing with the many iterations of UNCOVERED would be frustrating]
-        state.setStateSilent(TileState.State.DISABLED);
+        if (x == 0) {gridSprite.setX(0);}
+        if (y == 0) {gridSprite.setY(0);}
+
+        // Load both grid and uncovered textures.
+        loadTexture("Uncovered", TextureAtlas.uncoveredNear[nearMines]);
+        loadTexture("Grid", gridSprite);
+
+        // Return UNCOVERED to update newState now that everything has been deduced
+        return TileState.State.UNCOVERED;
 
     }
 
     private void becomeMine(TileState.State newState) {
 
-        loadTexture("Mined", TextureAtlas.uncoveredMined);
+        // Simply make sure that the normal, covered tile is shown
+        // In case that the tile is becoming a mine after being unflagged.
+        loadTexture("Normal", TextureAtlas.tileNormal);
+
+    }
+
+    private void explodeMine(TileState.State newState) {
+
+        // Simply loaded the exploded texture [For now]
+
+        loadTexture("Exploded", TextureAtlas.uncoveredExploded);
 
     }
 
     private void invertFlagged(TileState.State newState) {
 
-        // Set tiles new state [Just in case]
-        state.setStateSilent(newState);
+        String stringState = String.valueOf(newState);
 
-        if (state.getState() == TileState.State.FLAGGED) { // If the tile is flagged, load its texture
+        if (stringState.contains("FLAGGED")) { // If the tile should now be flagged, load its texture
+
             loadTexture("Flagged", TextureAtlas.tileFlagged);
+
         } 
 
         else { // Otherwise revert to a normal tile
@@ -196,8 +257,23 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
+    private void disableTile(TileState.State newState, int originX, int originY) {
+
+        WaveTimeline timeline = new WaveTimeline(
+            this,
+
+            new Point2D(simpleX, simpleY),
+            new Point2D(originX, originY),
+
+            "Explosion"
+        );
+
+        timeline.getTimeline().play();
+
+    }
+
     // Image loading
-    private void loadTexture(String name, Sprite fallback) {
+    public void loadTexture(String name, Sprite fallback) {
 
         // Check if the image already exists in the map
         if (images.containsKey(name)) {
@@ -219,9 +295,9 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     }
 
     // Getters
-    public TileState getState() {
-        return state;
-    }
+    public HashMap<String, ImageView> getImages() {return images;}
+    public TileState getTileState() {return state;}
+
 }
 
 // OxygenCobalt

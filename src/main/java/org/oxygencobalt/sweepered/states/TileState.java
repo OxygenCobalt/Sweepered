@@ -11,20 +11,22 @@ public class TileState extends Observable {
 
 	    COVERED, 
 
-	    FLAGGED, 
+	    FLAGGED,
 
-	    FLAG_QUERY, FLAG_QUERY_,
+	    FLAGGED_MINED,
+
+	    FLAG_QUERY, FLAG_QUERY_, // Flag values used to pulse listeners
 
 	    MINED, EXPLODED,
 
-	   	UNCOVERED, // Undefined uncovered [Should not be used for long]
+	   	UNCOVERED, // General Uncovered [Used in tiles]
 
-	   	// Uncovered + NearMines
+	   	// Uncovered + NearMines [Primarily used in Board]
 	    UNCOVERED_0, UNCOVERED_1, UNCOVERED_2, 
 	    UNCOVERED_3, UNCOVERED_4, UNCOVERED_5,
 	    UNCOVERED_6, UNCOVERED_7, UNCOVERED_8,
 
-	    DISABLED
+	    DISABLED, DISABLED_MINED
 
 	}
 
@@ -59,7 +61,8 @@ public class TileState extends Observable {
 
 	}
 
-	public final void pulse (State state, State altState, String message) {
+	// Pulse is used to notify listeners w/o changing the value itself.
+	public final void pulse(State state, State altState, String message) {
 
 		if (this.state != state) {
 

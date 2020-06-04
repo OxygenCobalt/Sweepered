@@ -27,13 +27,13 @@ public class GameState extends Observable {
 
     }
 
-    public State getValue() {
+    public State getState() {
 
         return state;
 
     }
 
-    public void setValue(State value) {
+    public void setState(State value) {
 
         State oldState = state;
         this.state = value;

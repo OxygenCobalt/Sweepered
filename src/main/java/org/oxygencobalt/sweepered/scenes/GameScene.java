@@ -44,6 +44,8 @@ public class GameScene extends Scene implements PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent event) {
         // TODO: Add GameState communication from MinePane/StatPane
+
+        System.out.println("Detected game state change");
     }
 }
 

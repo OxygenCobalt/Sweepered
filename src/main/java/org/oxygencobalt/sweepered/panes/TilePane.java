@@ -87,7 +87,7 @@ public class TilePane extends Pane implements PropertyChangeListener {
                         y
                 );
 
-                tile.getState().addListener(this);
+                tile.getTileState().addListener(this);
 
                 tiles[tileX][tileY] = tile;
 
@@ -126,11 +126,14 @@ public class TilePane extends Pane implements PropertyChangeListener {
         ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
 
         switch (message) {
+
             case "Uncover": toChange = startUncover(originX, originY); break;
+
             case "Flag": toChange = startFlag(originX, originY); break;
+
         }
 
-        updateTiles(toChange);
+        updateTiles(toChange, originX, originY);
     }
 
     private ArrayList<ChangePacket> startUncover(int originX, int originY) {
@@ -138,11 +141,11 @@ public class TilePane extends Pane implements PropertyChangeListener {
         // Get results of both generateMines() and uncoverTile(), and record them appropriately
         ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
 
-        if (state.getValue() == GameState.State.UNSTARTED) {
+        if (state.getState() == GameState.State.UNSTARTED) {
 
             toChange.addAll(board.generateMines(originX, originY));
 
-            state.setValue(GameState.State.STARTED);
+            state.setState(GameState.State.STARTED);
 
         }
 
@@ -158,8 +161,9 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
     }
 
-    private void updateTiles(ArrayList<ChangePacket> toChange) {
+    private void updateTiles(ArrayList<ChangePacket> toChange, int originX, int originY) {
         Tile tile;
+        TileState.State newState;
 
         // Iterate through every ChangePacket, extract the referenced tile, and pass the new state to it.
 
@@ -167,7 +171,15 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
             tile = tiles[change.getX()][change.getY()];
 
-            tile.updateState(change.getNewState());
+            tile.updateState(change.getNewState(), originX, originY);
+        
+            // Detect if one of the changed tiles was an exploded one
+            if (change.getNewState() == TileState.State.EXPLODED) {
+
+                // If so, change gameState to the lose condition [EXPLOSION]
+                state.setState(GameState.State.EXPLOSION);
+
+            }
 
         }
 

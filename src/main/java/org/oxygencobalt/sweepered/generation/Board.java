@@ -15,6 +15,7 @@ public class Board {
     private final int width;
     private final int height;
     private final int mineCount;
+    private final int remainingTiles;
 
     public Board(int width, int height, int mineCount) {
         board = new TileState.State[width][height];
@@ -22,6 +23,8 @@ public class Board {
         this.width = width;
         this.height = height;
         this.mineCount = mineCount;
+
+        this.remainingTiles = (width * height) - mineCount;
 
         // Set every tile in the board to uncovered
         // Since this array is 2-dimensional, I have to iterate
@@ -102,12 +105,22 @@ public class Board {
     }
 
     public ArrayList<ChangePacket> uncoverTile(int originX, int originY) {
+
+        // First, check if the tile about to be uncovered is a mine
+        if (board[originX][originY] == TileState.State.MINED) {
+
+            return explodeTile(originX, originY); // If so, return whatever explodeTile() returns.
+
+        }
+
+        // If not, continue.
+        
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
         ArrayList<int[]> recursiveList = new ArrayList<int[]>();
 
-        int foundMines = 0;
-
         TileState.State tile;
+
+        int foundMines = 0;
 
         boolean isNotCenter;
         boolean isNotOutOfBounds;
@@ -167,6 +180,62 @@ public class Board {
         return changedTiles;
     }
 
+    public ArrayList<ChangePacket> explodeTile(int originX, int originY) {
+
+        // If called, ignore the uncover process and return a changelist that will disable all tiles/explode the uncovered tile
+        // Also mark the mined tile as exploded
+
+        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+
+        TileState.State tile;
+
+        board[originX][originY] = TileState.State.EXPLODED;
+
+        changedTiles.add(new ChangePacket(
+            originX,
+            originY,
+            TileState.State.EXPLODED
+        ));
+
+        for (int x = 0; x < width; x++) {
+
+            for (int y = 0; y < height; y++) {
+
+                tile = board[x][y];
+
+                if (tile != TileState.State.EXPLODED) { // Blacklist origin tile, as it has been marked exploded
+
+                    // Mined tiles have their own disabled case, to store information for WaveTimeline
+                    if (tile == TileState.State.MINED) {
+
+                        tile = TileState.State.DISABLED_MINED;
+
+                    }
+
+                    else {
+
+                        tile = TileState.State.DISABLED;
+
+                    }
+
+                    board[x][y] = tile;
+
+                    changedTiles.add(new ChangePacket(
+                        x,
+                        y,
+                        board[x][y]
+                    ));
+
+                }
+
+            }
+
+        }
+
+        return changedTiles;
+
+    }
+
     public ArrayList<ChangePacket> flagTile(int originX, int originY) {
 
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
@@ -174,14 +243,44 @@ public class Board {
         // Get reference to tile
         TileState.State tile = board[originX][originY];
 
-        // If tile is not already flagged, set it to flag and create a ChangePacket for that.
-        // Otherwise, set it to Covered instead
-        if (tile != TileState.State.FLAGGED) {
-            tile = TileState.State.FLAGGED;
+        String stringTile = String.valueOf(tile);
+
+
+        // Check if the tile is not already flagged
+        // If so, change the flagged status to the corresponding flag status for the tiles mined state
+        // If not, convert the flagged status back into the mined state
+        if (!stringTile.contains("FLAGGED")) {
+
+            if (tile == TileState.State.MINED) { // Check if theres an underlying mine before changing the state
+
+                tile = TileState.State.FLAGGED_MINED; // If so, change the tile to its corresponding value
+
+            }
+
+            else {
+
+                tile = TileState.State.FLAGGED; // Otherwise, change it to the plain flagged value
+
+            }
+
         }
 
         else {
-            tile = TileState.State.COVERED;
+
+            // Perform a similar operation as above, but in reverse.
+            if (tile == TileState.State.FLAGGED_MINED) {
+
+                tile = TileState.State.MINED;
+
+
+            } 
+
+            else {
+
+                tile = TileState.State.COVERED;
+
+            }
+
         }
 
         // Update tile on board and create corresponding ChangePacket
