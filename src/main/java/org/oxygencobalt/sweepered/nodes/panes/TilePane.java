@@ -21,193 +21,219 @@ import nodes.entities.Tile;
 import nodes.entities.Corner;
 
 public class TilePane extends Pane implements PropertyChangeListener {
-    private final int width;
-    private final int height;
 
-    private final int x;
-    private final int y;
+	private final int width;
+	private final int height;
 
-    private final int tileWidth;
-    private final int tileHeight;
+	private final int x;
+	private final int y;
 
-    private final int mineCount;
+	private final int tileWidth;
+	private final int tileHeight;
 
-    private final GameState state;
+	private final int mineCount;
 
-    private Board board;
-    private Tile[][] tiles;
+	private final GameState state;
 
-    public TilePane(int tileWidth, int tileHeight, int mineCount, int offset) { // Width/Height is given as the amount of tiles, not pixels
-        x = offset;
-        y = (offset * 2) + 44; // The added 44 is to account for the width of stackpane and the border of minepane.
+	private Board board;
+	private Tile[][] tiles;
 
-        width = tileWidth * 32; // Since w/h is based on mine count, its multiplied by the dimensions of the tiles to get the size in pixels
-        height = tileHeight * 32;
+	public TilePane(int tileWidth, int tileHeight, int mineCount, int offset) { // Width/Height is given as the amount of tiles, not pixels
 
-        relocate(x, y);
-        setPrefSize(width, height);
-        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing
+		x = offset;
+		y = (offset * 2) + 44; // The added 44 is to account for the width of stackpane and the border of the top of this pane.
 
-        // Set Style for the background and the borders
-        setStyle(
-            "-fx-background-color: #3d3d3d;" +
-            "-fx-border-width: 4px;" +
-            "-fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;" +
-            "-fx-border-style: solid outside;"
-        );
+		width = tileWidth * 32; // Since w/h is based on mine count, its multiplied by the dimensions of the tiles to get the size in pixels
+		height = tileHeight * 32;
 
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+		relocate(x, y);
+		setPrefSize(width, height);
+		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing
 
-        this.mineCount = mineCount;
+		// Set Style for the background and the borders
+		setStyle(
 
-        state = new GameState(GameState.State.UNSTARTED);
+			"-fx-background-color: #3d3d3d;" +
+			"-fx-border-width: 4px;" +
+			"-fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;" +
+			"-fx-border-style: solid outside;"
 
-        board = new Board(tileWidth, tileHeight, mineCount);
-        tiles = new Tile[tileWidth][tileHeight];
+		);
 
-        generateTiles();
-        generateCorners();
-    }
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
 
-    private void generateTiles() {
-        Tile tile;
+		this.mineCount = mineCount;
 
-        // Simply iterate through all the X and Y coordinates on the board, 
-        // and generate a tile for them all
-        for (int tileX = 0; tileX < tileWidth; tileX++) {
+		state = new GameState(GameState.State.UNSTARTED);
 
-            for (int tileY = 0; tileY < tileHeight; tileY++) {
-                tile = new Tile(
-                        // Pass tile positions
-                        tileX, 
-                        tileY,
-                        // Pass pane positions for MouseRect creation
-                        x,
-                        y
-                );
+		board = new Board(tileWidth, tileHeight, mineCount);
+		tiles = new Tile[tileWidth][tileHeight];
 
-                tile.getTileState().addListener(this);
+		generateTiles();
+		generateCorners();
 
-                tiles[tileX][tileY] = tile;
+	}
 
-                getChildren().add(tiles[tileX][tileY]);
-            }
+	private void generateTiles() {
+		Tile tile;
 
-        }
+		// Simply iterate through all the X and Y coordinates on the board, 
+		// and generate a tile for them all
+		for (int tileX = 0; tileX < tileWidth; tileX++) {
 
-    }
+			for (int tileY = 0; tileY < tileHeight; tileY++) {
 
-    private void generateCorners() {
+				tile = new Tile(
 
-        // Iterate through every corner of the pane
-        // and generate a corner for them all
-        for (int cornerX = 0; cornerX < 2; cornerX++) {
+						// Pass tile positions
+						tileX, 
+						tileY,
+						// Pass pane positions for MouseRect creation
+						x,
+						y
 
-            for (int cornerY = 0; cornerY < 2; cornerY++) {
-                getChildren().add(new Corner(cornerX, cornerY, width, height));
-            }
+				);
 
-        }
+				tile.getTileState().addListener(this);
 
-    }
+				tiles[tileX][tileY] = tile;
 
-    public void propertyChange(PropertyChangeEvent event) {
+				getChildren().add(tiles[tileX][tileY]);
 
-        // Cast the TileState corresponding to where the event took place to access its X/Y values
-        TileState observable = (TileState) event.getSource();
+			}
 
-        String message = observable.getMessage();
+		}
 
-        int originX = observable.getX();
-        int originY = observable.getY();
+	}
 
-        ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
+	private void generateCorners() {
 
-        switch (message) {
+		// Iterate through every corner of the pane
+		// and generate a corner for them all
+		for (int cornerX = 0; cornerX < 2; cornerX++) {
 
-            case "Uncover": toChange = startUncover(originX, originY); break;
+			for (int cornerY = 0; cornerY < 2; cornerY++) {
 
-            case "Flag": toChange = startFlag(originX, originY); break;
+				getChildren().add(new Corner(cornerX, cornerY, width, height));
 
-        }
+			}
 
-        // Get the last [The index where an exploded or cleared tile would be added to] and check if
-        // its one of the special changes [EXPLODE or CLEAR]
-        ChangePacket.Change originTile = toChange.get(toChange.size() - 1).getChange();
+		}
 
-        // If so, run its respective function.
-        switch (originTile) {
+	}
 
-            case EXPLODE: toChange.addAll(startExplode(originX, originY)); break;
+	public void propertyChange(PropertyChangeEvent event) {
 
-            case CLEAR: toChange.addAll(startClear(originX, originY)); break;
+		// Cast the TileState corresponding to where the event took place to access its X/Y values
+		TileState observable = (TileState) event.getSource();
 
-        }
+		String message = observable.getMessage();
 
-        updateTiles(toChange);
-    }
+		int originX = observable.getX();
+		int originY = observable.getY();
 
-    private ArrayList<ChangePacket> startUncover(int originX, int originY) {
+		ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
 
-        // Get results of both generateMines() and uncoverTile(), and record them appropriately
-        ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
+		switch (message) {
 
-        if (state.getState() == GameState.State.UNSTARTED) {
+			case "Uncover": toChange = startUncover(originX, originY); break;
 
-            toChange.addAll(board.generateMines(originX, originY));
+			case "Flag": toChange = startFlag(originX, originY); break;
 
-            state.setState(GameState.State.STARTED);
+		}
 
-        }
+		// Get the last [The index where an exploded or cleared tile would be added to] and check if
+		// its one of the special changes [EXPLODE or CLEAR]
+		ChangePacket.Change originTile = toChange.get(toChange.size() - 1).getChange();
 
-        toChange.addAll(board.uncoverTile(originX, originY)); 
-        toChange.addAll(board.updateRemainingTiles(originX, originY));
+		// If so, run its respective function.
+		switch (originTile) {
 
-        return toChange;
+			case EXPLODE: toChange.addAll(startExplode(originX, originY)); break;
 
-    }
+			case CLEAR: toChange.addAll(startClear(originX, originY)); break;
 
-    private ArrayList<ChangePacket> startFlag(int originX, int originY) {
+		}
 
-        return board.flagTile(originX, originY);
+		updateTiles(toChange);
+	}
 
-    }
+	private ArrayList<ChangePacket> startUncover(int originX, int originY) {
 
-    private ArrayList<ChangePacket> startExplode(int originX, int originY) {
+		ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
 
-        state.setState(GameState.State.EXPLOSION);
+		if (state.getState() == GameState.State.UNSTARTED) {
 
-        return board.notifyAllTiles("EXPLOSION", originX, originY);
+			// If the game is unstarted, generate the mines before
+			// uncovering the tile, while also starting the game.
 
+			toChange.addAll(board.generateMines(originX, originY));
 
-    }
+			state.setState(GameState.State.STARTED);
 
-    private ArrayList<ChangePacket> startClear(int originX, int originY) {
+		}
 
-        return board.notifyAllTiles("CLEARED", originX, originY);
+		// In all cases, run uncoverTile on the given updated tile,
+		// and uncover the remaining tile count [As uncoverTile cant do that itself.]
 
-    }
+		toChange.addAll(board.uncoverTile(originX, originY)); 
+		toChange.addAll(board.updateRemainingTiles(originX, originY));
 
-    private void updateTiles(ArrayList<ChangePacket> toChange) {
-        Tile tile;
-        TileState.State newState;
+		return toChange;
 
-        // Iterate through every ChangePacket, extract the referenced tile, and pass the new state to it.
+	}
 
-        for (ChangePacket change : toChange) {
+	private ArrayList<ChangePacket> startFlag(int originX, int originY) {
 
-            tile = tiles[change.getTargetX()][change.getTargetY()];
+		return board.flagTile(originX, originY);
 
-            tile.updateState(change);
+	}
 
-        }
+	private ArrayList<ChangePacket> startExplode(int originX, int originY) {
 
-    }
+		// Since this is a game end scenario, change
+		// the game state to EXPLOSION, which is the
+		// loss condition.
 
-    public GameState getGameState() {
-        return state;
-    }
+		state.setState(GameState.State.EXPLOSION);
+
+		return board.disableAllTiles("EXPLOSION", originX, originY);
+
+
+	}
+
+	private ArrayList<ChangePacket> startClear(int originX, int originY) {
+
+		// Since this is a game end scenario, change
+		// the game state to EXPLOSION, which is the
+		// win condition.
+
+		state.setState(GameState.State.CLEARED);
+
+		return board.disableAllTiles("CLEARED", originX, originY);
+
+	}
+
+	private void updateTiles(ArrayList<ChangePacket> toChange) {
+
+		Tile tile;
+		TileState.State newState;
+
+		// Iterate through every ChangePacket, extract the referenced tile,
+		// and pass the new state to its updateState function.
+
+		for (ChangePacket change : toChange) {
+
+			tile = tiles[change.getTargetX()][change.getTargetY()];
+
+			tile.updateState(change);
+
+		}
+
+	}
+
+	public GameState getGameState() {return state;}
 
 }
 

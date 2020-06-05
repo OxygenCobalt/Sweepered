@@ -20,6 +20,7 @@ import nodes.panes.TilePane;
 import nodes.panes.StatPane;
 
 public class GameScene extends Scene implements PropertyChangeListener {
+
     private Group root;
 
     private StatPane stats;
@@ -31,19 +32,17 @@ public class GameScene extends Scene implements PropertyChangeListener {
     private final int mineCount;
 
     public GameScene(Group group, int mineWidth, int mineHeight, int mineCount, int offset) {
+
         // Call super to construct Scene(), and then add passed group to class.
         super(group, (mineWidth * 32) + (18 + offset), (mineHeight * 32) + (76 + offset));
+
         setFill(Color.web("3d3d3d")); // Background color matches w/the tile color, mostly
 
-        this.offset = offset + 4; // 4 is added to make up for borders
+        this.offset = offset + 4; // 4 is added to make up for some of the borders
         this.mineCount = mineCount;
 
-        // Run stop on every sound in order to cache them in memory, making everything else run faster
-        // [Yeah, I dont know why either]
-        Audio.clickSound.stop();
-        Audio.flagSound.stop();
-        Audio.explodeSound.stop();
-        Audio.clearSound.stop();
+        // Load the sounds in from Audio
+        Audio.loadSounds();
 
         // Load the main panes
         stats = new StatPane(40, (mineWidth * 32), this.offset, 0);
@@ -55,9 +54,11 @@ public class GameScene extends Scene implements PropertyChangeListener {
         root.getChildren().addAll(stats, board);
 
         masterState = new GameState(GameState.State.UNSTARTED);
+
     }
 
     public void propertyChange(PropertyChangeEvent event) {
+
         // Cast the changed state back to GameState, in order to be used
         GameState observable = (GameState) event.getSource();
 

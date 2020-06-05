@@ -19,7 +19,7 @@ public class TileState extends Observable {
 
         UNCOVERED,
 
-        DISABLED, DISABLED_MINED
+        DISABLED, DISABLED_MINED, DISABLED_FLAGGED
 
     }
 
@@ -31,6 +31,7 @@ public class TileState extends Observable {
     private final int y;
 
     public TileState(State state, int x, int y) {
+
         this.state = state;
 
         // Store auxillary information
@@ -40,6 +41,7 @@ public class TileState extends Observable {
 
         // Initialize propertyChangeSupport before allowing a listener to be added
         setObservableObject(this);
+
     }
 
     public final void setState(State state, String message) {

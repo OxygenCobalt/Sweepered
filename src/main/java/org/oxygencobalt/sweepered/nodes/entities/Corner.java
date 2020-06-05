@@ -12,6 +12,7 @@ import media.TextureAtlas;
 import media.Sprite;
 
 public class Corner extends Pane {
+
     private final int x;
     private final int y;
 
@@ -22,8 +23,9 @@ public class Corner extends Pane {
     private ImageView cornerImage;
 
     public Corner(int simpleX, int simpleY, int paneWidth, int paneHeight) {
-        // The paneWidth is multiplied by a simple coordinate [which is 0 or 1]
-        // To find a real coordiante, whether -4 [Left] or the width of the pane [Right]
+
+        // The paneWidth is multiplied by a simple coordinate [which is 0 or 1] to
+        // find a real coordinate, whether -4 [Left] or the width of the pane [Right]
         x = -4 + (simpleX * (paneWidth + 4));
         y = -4 + (simpleY * (paneHeight + 4));
 
@@ -37,16 +39,21 @@ public class Corner extends Pane {
         // Instead of creating sprites in TextureAtlas for corners,
         // Corner generates its own instead.
         cornerSprite = new Sprite(
+
             TextureAtlas.cornerAtlas,
             simpleX,
             simpleY,
             width,
             height
+
         );
 
         cornerImage = TextureAtlas.get(cornerSprite);
+
         getChildren().add(cornerImage);
+
     }
+
 }
 
 // OxygenCobalt

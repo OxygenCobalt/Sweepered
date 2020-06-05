@@ -26,7 +26,7 @@ public class SweeperedApp extends Application {
         // offset - the spacing between each pane in GameScene
         GameScene mainScene = new GameScene(new Group(), 9, 9, 35, 10);
 
-        window.setScene(mainScene); // Currently the main scene loaded is just GameScene
+        window.setScene(mainScene);
         window.show();
     }
 

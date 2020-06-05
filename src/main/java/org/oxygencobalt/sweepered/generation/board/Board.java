@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import generation.states.TileState;
 
 public class Board {
+
     private TileState.State[][] board;
 
     private final int width;
@@ -23,6 +24,7 @@ public class Board {
     private final List<TileState.State> coveredTiles;
 
     public Board(int width, int height, int mineCount) {
+
         board = new TileState.State[width][height];
 
         this.width = width;
@@ -51,6 +53,10 @@ public class Board {
             );
 
         }
+
+        // Create and fill the lists of tiles
+        // used in some if functions to shorten them,
+        // so x != y & x != y would just become !a.contains(x)
         minedTiles = Arrays.asList(
             TileState.State.MINED,
             TileState.State.FLAGGED_MINED,
@@ -66,7 +72,9 @@ public class Board {
         // Since this array is 2-dimensional, I have to iterate
         // through each array and then run Arrays.fill on each one.
         for (TileState.State[] column : board) {
+
             Arrays.fill(column, TileState.State.COVERED);
+
         }
 
     }
@@ -76,6 +84,7 @@ public class Board {
     // Mine generation is HEAVILY INSPIRED by the way Simon Tartham wrote it in mines.c
     // Check out his puzzle collection here: https://www.chiark.greenend.org.uk/~sgtatham/puzzles/
     public ArrayList<ChangePacket> generateMines(int originX, int originY) {
+
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
 
         int generatedMines = 0;
@@ -147,8 +156,6 @@ public class Board {
     }
 
     public ArrayList<ChangePacket> uncoverTile(int originX, int originY) {
-
-        // Declare the variables used.
         
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
         ArrayList<int[]> recursiveList = new ArrayList<int[]>();
@@ -212,10 +219,7 @@ public class Board {
 
             }
 
-            // First, set the changepackets intended change to be created to the amount of nearby mines.
             originChange = ChangePacket.Change.UNCOVER;
-
-            // Change the origin tile to uncovered
             originTile = TileState.State.UNCOVERED;
 
             // To prevent a StackOverflowError, the board tile has to be updated seperately in both cases.
@@ -267,20 +271,19 @@ public class Board {
 
         String stringTile = String.valueOf(tile);
 
-        // Check if the tile is not already flagged
-        // If so, change the flagged status to the corresponding flag status for the tiles mined state
-        // If not, convert the flagged status back into the mined state
+        // If the tile is not flagged, change its state to the corresponding FLAGGED state depending on its MINED status
+        // If not, change the tiles state in reverse, converting its FLAGGED status to its corresponding MINED status
         if (!stringTile.contains("FLAGGED")) {
 
-            if (tile == TileState.State.MINED) { // Check if theres an underlying mine before changing the state
+            if (tile == TileState.State.MINED) {
 
-                tile = TileState.State.FLAGGED_MINED; // If so, change the tile to its corresponding value
+                tile = TileState.State.FLAGGED_MINED;
 
             }
 
             else {
 
-                tile = TileState.State.FLAGGED; // Otherwise, change it to the plain flagged value
+                tile = TileState.State.FLAGGED;
 
             }
 
@@ -288,7 +291,6 @@ public class Board {
 
         else {
 
-            // Perform a similar operation as above, but in reverse.
             if (tile == TileState.State.FLAGGED_MINED) {
 
                 tile = TileState.State.MINED;
@@ -323,11 +325,14 @@ public class Board {
 
     }
 
-    public ArrayList<ChangePacket> notifyAllTiles(String type, int originX, int originY) {
+    public ArrayList<ChangePacket> disableAllTiles(String reason, int originX, int originY) {
 
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
 
         TileState.State tile;
+
+        // Iterate through every tile, and set it to DISABLED,
+        // as notifyAllTiles is only activated at a Game End scenario.
 
         for (int x = 0; x < width; x++) {
 
@@ -335,20 +340,21 @@ public class Board {
 
                 tile = board[x][y];
 
-                if (tile == TileState.State.MINED) {
+                switch (tile) {
 
-                    tile = TileState.State.DISABLED_MINED;
+                    case MINED: tile = TileState.State.DISABLED_MINED; break;
 
-                }
+                    // This flagged state only allows WaveTimeline to differentiate from
+                    // tiles that were flagged correctly and ones that werent.
+                    case FLAGGED: tile = TileState.State.DISABLED_FLAGGED; break;
 
-                else {
-
-                    tile = TileState.State.DISABLED;
-
+                    default: tile = TileState.State.DISABLED;
                 }
 
                 board[x][y] = tile;
 
+                // Create a changepacket w/the reason for the disabling as
+                // an auxillary value.
                 changedTiles.add(new ChangePacket(
 
                     ChangePacket.Change.DISABLE,
@@ -359,7 +365,7 @@ public class Board {
                     x,
                     y,
 
-                    type
+                    reason
 
                 ));
 
@@ -395,6 +401,8 @@ public class Board {
         // If every tile is uncovered [or some other state, such as MINED]
         // Create a changePacket for the originally pressed tile that has the special state of UNCOVERED_CLEARED.
         if (remainingTiles == 0) {
+
+            board[originX][originY] = TileState.State.UNCOVERED;
 
             changedTiles.add(new ChangePacket(
 

@@ -16,6 +16,8 @@ public abstract class Observable {
 
     public void setObservableObject(Observable observable) {
 
+        // Load the observable object [Whatever inherits it]
+        // into the support that will actually notify the listeners
         propertyChangeSupport = new PropertyChangeSupport(observable);
 
     }
