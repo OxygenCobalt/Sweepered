@@ -1,7 +1,7 @@
 // MinePane
 // Pane where Tiles and mines are generated,
 
-package panes;
+package nodes.panes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -11,14 +11,14 @@ import java.beans.PropertyChangeEvent;
 
 import java.util.ArrayList;
 
-import states.GameState;
-import states.TileState;
+import generation.board.Board;
+import generation.board.ChangePacket;
 
-import generation.Board;
-import generation.ChangePacket;
+import generation.states.GameState;
+import generation.states.TileState;
 
-import nodes.Tile;
-import nodes.Corner;
+import nodes.entities.Tile;
+import nodes.entities.Corner;
 
 public class TilePane extends Pane implements PropertyChangeListener {
     private final int width;
@@ -113,7 +113,6 @@ public class TilePane extends Pane implements PropertyChangeListener {
     }
 
     public void propertyChange(PropertyChangeEvent event) {
-        // TODO: Should probably fragment this into multiple functions, I dont know
 
         // Cast the TileState corresponding to where the event took place to access its X/Y values
         TileState observable = (TileState) event.getSource();
@@ -134,15 +133,15 @@ public class TilePane extends Pane implements PropertyChangeListener {
         }
 
         // Get the last [The index where an exploded or cleared tile would be added to] and check if
-        // its one of the special cases [EXPLODED or UNCOVERED_CLEARED.
-        TileState.State originTile = toChange.get(toChange.size() - 1).getNewState();
+        // its one of the special changes [EXPLODE or CLEAR]
+        ChangePacket.Change originTile = toChange.get(toChange.size() - 1).getChange();
 
         // If so, run its respective function.
         switch (originTile) {
 
-            case EXPLODED: toChange.addAll(startExplode(originX, originY)); break;
+            case EXPLODE: toChange.addAll(startExplode(originX, originY)); break;
 
-            case UNCOVERED_CLEARED: toChange.addAll(startClear(originX, originY)); break;
+            case CLEAR: toChange.addAll(startClear(originX, originY)); break;
 
         }
 
@@ -153,8 +152,6 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
         // Get results of both generateMines() and uncoverTile(), and record them appropriately
         ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
-
-        TileState.State originTile;
 
         if (state.getState() == GameState.State.UNSTARTED) {
 
@@ -181,14 +178,14 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
         state.setState(GameState.State.EXPLOSION);
 
-        return board.notifyAllTiles("Explosion", originX, originY);
+        return board.notifyAllTiles("EXPLOSION", originX, originY);
 
 
     }
 
     private ArrayList<ChangePacket> startClear(int originX, int originY) {
 
-        return board.notifyAllTiles("Cleared", originX, originY);
+        return board.notifyAllTiles("CLEARED", originX, originY);
 
     }
 

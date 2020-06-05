@@ -1,12 +1,12 @@
 // StatPane
 // Pane where items such as the timer, number of mines remaining, and reset button are
 
-package panes;
+package nodes.panes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-import nodes.Corner;
+import nodes.entities.Corner;
 
 public class StatPane extends Pane {
     public final int height;

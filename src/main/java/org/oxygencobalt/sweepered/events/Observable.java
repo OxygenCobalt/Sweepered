@@ -6,6 +6,8 @@ package events;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+// FIXME: This class is from stackoverflow, just write your own observable at this point lmao
+
 public abstract class Observable {
 
     protected PropertyChangeSupport propertyChangeSupport = null;

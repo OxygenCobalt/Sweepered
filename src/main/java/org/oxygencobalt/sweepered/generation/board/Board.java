@@ -1,14 +1,14 @@
 // Board
 // Multithreaded class that handles interactions between tiles
 
-package generation;
+package generation.board;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-import states.TileState;
+import generation.states.TileState;
 
 public class Board {
     private TileState.State[][] board;
@@ -122,7 +122,7 @@ public class Board {
             // Also add it to changedTiles in order for board to change the actual tile node.
             changedTiles.add(new ChangePacket(
 
-                "Mined",
+                ChangePacket.Change.MINE,
                 originX,
                 originY,
 
@@ -154,7 +154,9 @@ public class Board {
         ArrayList<int[]> recursiveList = new ArrayList<int[]>();
 
         TileState.State nearTile;
+
         TileState.State originTile;
+        ChangePacket.Change originChange;
 
         int foundMines = 0;
 
@@ -165,7 +167,10 @@ public class Board {
         // First, check if the tile is mined
         if (originTile == TileState.State.MINED) {
 
-            // If thats the case, set the origin tile to EXPLODED and drop the other instructions
+            // If thats the case, set the origin tile/type to EXPLODED and drop the other instructions
+
+            originChange = ChangePacket.Change.EXPLODE;
+
             originTile = TileState.State.EXPLODED;
 
             board[originX][originY] = originTile;
@@ -207,8 +212,11 @@ public class Board {
 
             }
 
-            // Change the origin tile to uncovered, with the amount of nearby tiles
-            originTile = TileState.State.valueOf("UNCOVERED_" + String.valueOf(foundMines));
+            // First, set the changepackets intended change to be created to the amount of nearby mines.
+            originChange = ChangePacket.Change.UNCOVER;
+
+            // Change the origin tile to uncovered
+            originTile = TileState.State.UNCOVERED;
 
             // To prevent a StackOverflowError, the board tile has to be updated seperately in both cases.
             board[originX][originY] = originTile;
@@ -231,13 +239,16 @@ public class Board {
 
             new ChangePacket(
 
-                "Uncover",
+                originChange,
                 originX,
                 originY,
 
                 originTile,
                 originX,
-                originY
+                originY,
+
+                // foundMines is passed as an auxillary argument, even if it wont be used if a tile explodes.
+                foundMines
 
             )
 
@@ -255,7 +266,6 @@ public class Board {
         TileState.State tile = board[originX][originY];
 
         String stringTile = String.valueOf(tile);
-        String type;
 
         // Check if the tile is not already flagged
         // If so, change the flagged status to the corresponding flag status for the tiles mined state
@@ -273,8 +283,6 @@ public class Board {
                 tile = TileState.State.FLAGGED; // Otherwise, change it to the plain flagged value
 
             }
-
-            type = "Flagged";
 
         }
 
@@ -294,8 +302,6 @@ public class Board {
 
             }
 
-            type = "Unflagged";
-
         }
 
         // Update tile on board and create corresponding ChangePacket
@@ -303,7 +309,7 @@ public class Board {
 
         changedTiles.add(new ChangePacket(
 
-            type,
+            ChangePacket.Change.FLAG,
             originX,
             originY,
 
@@ -345,13 +351,15 @@ public class Board {
 
                 changedTiles.add(new ChangePacket(
 
-                    type,
+                    ChangePacket.Change.DISABLE,
                     originX,
                     originY,
 
                     tile,
                     x,
-                    y
+                    y,
+
+                    type
 
                 ));
 
@@ -390,11 +398,11 @@ public class Board {
 
             changedTiles.add(new ChangePacket(
 
-                "Cleared",
+                ChangePacket.Change.CLEAR,
                 originX,
                 originY,
 
-                TileState.State.UNCOVERED_CLEARED,
+                TileState.State.UNCOVERED,
                 originX,
                 originY
 

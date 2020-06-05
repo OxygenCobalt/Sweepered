@@ -1,7 +1,7 @@
 // Corner
 // Largely decorative object
 
-package nodes;
+package nodes.entities;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;

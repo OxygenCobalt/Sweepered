@@ -14,9 +14,9 @@ import javafx.util.Duration;
 import media.TextureAtlas;
 import media.Sprite;
 
-import states.TileState;
+import generation.states.TileState;
 
-import nodes.Tile;
+import nodes.entities.Tile;
 
 public class WaveTimeline {
 
@@ -37,14 +37,15 @@ public class WaveTimeline {
 		this.tile = tile;
 		this.type = type;
 
-		// Determine wave type based on given type.
+		// Determine wave tile based on given type.
+
 		switch (type) {
 
-			case "Explosion": waveSprite = TextureAtlas.tileExplodeWave; break;
+			case "EXPLOSION": waveSprite = TextureAtlas.tileExplodeWave; break;
 
-			case "Cleared": waveSprite = TextureAtlas.tileClearWave; break;
+			case "CLEARED": waveSprite = TextureAtlas.tileClearWave; break;
 
-			case "Invalid": waveSprite = TextureAtlas.tileInvalidWave; break;
+			case "INVALID": waveSprite = TextureAtlas.tileInvalidWave; break;
 
 		}
 
@@ -69,11 +70,11 @@ public class WaveTimeline {
 			switch (type) {
 
 				// Any mined tile should have their mine shown if a mine explodes
-				case "Explosion": tile.loadTexture("Mined", TextureAtlas.uncoveredMined);
+				case "EXPLOSION": tile.loadTexture("Mined", TextureAtlas.uncoveredMined);
 								  break;
 
 				// Any remaining mines should be flagged if the board is cleared
-				case "Cleared":   tile.loadTexture("Flagged", TextureAtlas.tileFlagged);
+				case "CLEARED":   tile.loadTexture("Flagged", TextureAtlas.tileFlagged);
 								  break;
 
 				default: System.out.println("This shouldnt happen."); // > mfw this does happen

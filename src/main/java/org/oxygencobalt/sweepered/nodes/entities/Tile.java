@@ -1,7 +1,7 @@
 // Tile
 // Main button-like object, may or may not contain a mine
 
-package nodes;
+package nodes.entities;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -21,13 +21,12 @@ import java.util.ArrayList;
 
 import events.WaveTimeline;
 
-import generation.ChangePacket;
+import generation.board.ChangePacket;
+import generation.states.TileState;
 
 import media.TextureAtlas;
 import media.Sprite;
 import media.Audio;
-
-import states.TileState;
 
 public class Tile extends Pane implements EventHandler<MouseEvent> {
 
@@ -90,7 +89,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     public void handle(MouseEvent event) {
 
         // TODO: Maybe you should use the JavaFX mouse enums.
-        String type = String.valueOf(event.getEventType());
         String button = String.valueOf(event.getButton());
 
         // Prevent tile from being clicked on if its in any state other than COVERED
@@ -98,54 +96,56 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
             switch (button) {
 
-                case "PRIMARY": {
+                case "PRIMARY": onPrimary(event); break;
 
-                    // Make sure that the tile is not flagged in any way before proceeding
-                    Boolean isNotFlagged = !String.valueOf(state.getState()).contains("FLAGGED");
-
-                    if (isNotFlagged) {
-
-                        // JavaFX polls the last pressed button, making switch statements impossible.
-
-                        if (type.equals("MOUSE_PRESSED")) {onPress(event);}
-                        if (type.equals("MOUSE_RELEASED")) {onRelease(event);}
-
-                    }
-
-                    break;   
-
-                }
-
-                case "SECONDARY": {
-
-                    // Also check if the mouse is pressing or releasing, to prevent
-                    // a flag from being placed and then immediately removed
-                    if (type.equals("MOUSE_PRESSED")) {
-
-                        // Playing the flag sound is seperate from any function due to
-                        // how the invertFlagged() function does not always run
-
-                        Audio.flagSound.play();
-
-                        // Switch between two near-identical enums in order to notify the listeners repeatedly
-                        state.pulse(
-                            TileState.State.FLAG_QUERY,
-                            TileState.State.FLAG_QUERY_,
-                            "Flag"
-                        );
-
-                        // Due to the nature of how flagging/unflagging works,
-                        // Just play the sound outside of any functions.
-
-                        break;
-
-                    }
-
-                }
+                case "SECONDARY": onSecondary(event); break;
 
             }
 
         }
+
+    }
+
+    private void onPrimary(MouseEvent event) {
+
+        Boolean isNotFlagged = !String.valueOf(state.getState()).contains("FLAGGED");
+        String type = String.valueOf(event.getEventType());
+
+        // Make sure that the tile is not flagged in any way before proceeding
+
+        if (isNotFlagged) {
+
+            // JavaFX polls the last pressed button, making switch statements impossible.
+
+            if (type.equals("MOUSE_PRESSED")) {onPress(event);}
+            if (type.equals("MOUSE_RELEASED")) {onRelease(event);}
+
+        }
+
+    }
+
+    private void onSecondary(MouseEvent event) {
+
+        String type = String.valueOf(event.getEventType());
+
+        // Also check if the mouse is pressing or releasing, to prevent
+        // a flag from being placed and then immediately removed
+        if (type.equals("MOUSE_PRESSED")) {
+
+            // Playing the flag sound is seperate from any function due to
+            // how the invertFlagged() function does not always run
+
+            Audio.flagSound.play();
+
+            // Switch between two near-identical enums in order to notify the listeners repeatedly
+            // FIXME: Once you write your own observer class, just change pulse() to fire an observer change.
+            state.pulse(
+                TileState.State.FLAG_QUERY,
+                TileState.State.FLAG_QUERY_,
+                "Flag"
+            );
+
+        }        
 
     }
 
@@ -191,33 +191,24 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         // NewState is declared just in case uncovered overwrites it.
         TileState.State newState = packet.getNewState();
+        ChangePacket.Change change = packet.getChange();
 
-        switch (newState) {
+        switch (change) {
 
             // No function needs to be ran when turning a tile into a mine
-            case MINED: becomeMine(packet); break;
-            case EXPLODED: explodeMine(packet); break;
+            case MINE: becomeMine(packet); break;
 
             // The board function can return two types of ChangePackets, so have cases for each of them
-            case COVERED: invertFlagged(packet); break;
-            case FLAGGED: invertFlagged(packet); break;
-            case FLAGGED_MINED: invertFlagged(packet); break;
+            case FLAG: invertFlagged(packet); break;
 
-            // This DISABLED case is different from the uncover() disable case.
-            // It is not changed silently, meaning that *something* has happened
-            // and all tiles must be disabled
+            // Game end cases
+            case DISABLE: disableTile(packet); break;
 
-            // disableTile also takes the entire changepacket instead of
-            // the new state, as it needs the origin and the type for WaveTimeline
-            case DISABLED: disableTile(packet); break;
-            case DISABLED_MINED: disableTile(packet); break;
+            // These cases are for the tile itself, while the above cases are for the entire board.
+            case EXPLODE: explodeMine(packet); break;
+            case CLEAR: clearTile(packet); break;
 
-            case UNCOVERED_CLEARED: clearTile(packet); break;
-
-            // Due to UNCOVERED having multiple constants in TileState,
-            // It is used as the default case.
-            // newState is also updated due to tiles not storing the specific UNCOVERED_X enum
-            default: newState = uncover(packet);
+            case UNCOVER: uncover(packet); break;
 
         }
 
@@ -225,15 +216,28 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private TileState.State uncover(ChangePacket packet) {
+    private void uncover(ChangePacket packet) {
 
         TileState.State newState = packet.getNewState();
 
-        // Get the amount of mines near the tile by parsing the
-        // UNCOVERED constant for the last character
-        int nearMines = Character.getNumericValue(
-                String.valueOf(newState).charAt(10)
-        );
+        int nearMines;
+
+        // Get the auxillary element from nearMines and first check if its an actual instance of Integer
+
+        // FIXME?: Im really not sure if this is a good way to write this.
+
+        if (packet.getAuxillary() instanceof Integer) {
+
+            // If so, cast it to integer as its safe to do so.
+            nearMines = (int) packet.getAuxillary();
+
+        }
+
+        else {
+
+            throw new IllegalArgumentException("Given nearMines is not an integer.");
+
+        }
 
         // Determine which grid state to use depending on the Y coordinates,
         // to prevent odd grid borders at the top left tiles.
@@ -245,9 +249,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         // Load both grid and uncovered textures.
         loadTexture("Uncovered", TextureAtlas.uncoveredNear[nearMines]);
         loadTexture("Grid", gridSprite);
-
-        // Return UNCOVERED to update newState now that everything has been deduced
-        return TileState.State.UNCOVERED;
 
     }
 
@@ -292,7 +293,22 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         int originX = packet.getOriginX();
         int originY = packet.getOriginY();
 
-        String type = packet.getType();
+        String type;
+
+        // Like uncover, check if this auxillary value is an instance of String.
+        if (packet.getAuxillary() instanceof String) {
+
+            // If so, cast it to String as its safe to do so.
+            type = (String) packet.getAuxillary();
+
+        }
+
+        else {
+
+            throw new IllegalArgumentException("Given type is not a String.");
+
+        }
+
 
         WaveTimeline timeline = new WaveTimeline(
             this,

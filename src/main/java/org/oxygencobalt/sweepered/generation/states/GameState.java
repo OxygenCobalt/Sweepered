@@ -1,7 +1,7 @@
 // GameState
 // An Observable enum for the game state
 
-package states;
+package generation.states;
 
 import events.Observable;
 
@@ -18,28 +18,34 @@ public class GameState extends Observable {
 
     private State state;
 
-    public GameState(State value) {
+    public GameState(State state) {
 
-        state = value;
+        this.state = state;
 
         // Initialize propertyChangeSupport before allowing a listener to be added
         setObservableObject(this);
 
     }
 
-    public State getState() {
+    public void setState(State state) {
 
-        return state;
-
-    }
-
-    public void setState(State value) {
-
-        State oldState = state;
-        this.state = value;
+        State oldState = this.state;
+        this.state = state;
 
         // Notify listeners of value change
         propertyChangeSupport.firePropertyChange("State", oldState, state);
+
+    }
+
+    public void setStateSilent(State state) {
+
+        this.state = state;
+
+    }
+
+    public State getState() {
+
+        return state;
 
     }
 

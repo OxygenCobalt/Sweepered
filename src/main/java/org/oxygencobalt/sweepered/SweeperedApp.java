@@ -7,7 +7,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 
-import scenes.GameScene;
+import nodes.scenes.GameScene;
 
 public class SweeperedApp extends Application {
     private Stage window;
