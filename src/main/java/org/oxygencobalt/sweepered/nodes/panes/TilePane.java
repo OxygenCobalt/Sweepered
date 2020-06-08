@@ -6,10 +6,9 @@ package nodes.panes;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-
 import java.util.ArrayList;
+
+import events.observable.Listener;
 
 import generation.board.Board;
 import generation.board.ChangePacket;
@@ -20,7 +19,7 @@ import generation.states.TileState;
 import nodes.entities.Tile;
 import nodes.entities.Corner;
 
-public class TilePane extends Pane implements PropertyChangeListener {
+public class TilePane extends Pane implements Listener {
 
     private final int width;
     private final int height;
@@ -81,7 +80,7 @@ public class TilePane extends Pane implements PropertyChangeListener {
         tiles = new Tile[tileWidth][tileHeight];
 
         generateTiles();
-        generateCorners();
+        Corner.generateCorners(this);
 
     }
 
@@ -133,10 +132,10 @@ public class TilePane extends Pane implements PropertyChangeListener {
 
     }
 
-    public void propertyChange(final PropertyChangeEvent event) {
+    public void propertyChanged(final Object source) {
 
         // Cast the TileState corresponding to where the event took place to access its X/Y values
-        TileState observable = (TileState) event.getSource();
+        TileState observable = (TileState) source;
 
         String message = observable.getMessage();
 

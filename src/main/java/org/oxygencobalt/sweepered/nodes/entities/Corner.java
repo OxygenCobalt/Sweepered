@@ -57,6 +57,33 @@ public class Corner extends Pane {
 
     }
 
+    // This function allows a pane to generate their own corners
+    // Without a function of their own.
+
+    public static void generateCorners(final Pane pane) {
+
+        // Get the preferred with of the panes
+        int paneWidth = (int) pane.getPrefWidth();
+        int paneHeight = (int) pane.getPrefHeight();
+
+        // Then, iterate through every corner of the pane
+        // and generate a corner for them all
+        for (int cornerX = 0; cornerX < 2; cornerX++) {
+
+            for (int cornerY = 0; cornerY < 2; cornerY++) {
+
+                pane.getChildren().add(
+
+                    new Corner(cornerX, cornerY, paneWidth, paneHeight)
+
+                );
+
+            }
+
+        }
+
+    }
+
 }
 
 // OxygenCobalt

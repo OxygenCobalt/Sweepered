@@ -8,8 +8,7 @@ import javafx.scene.Group;
 
 import javafx.scene.paint.Color;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import events.observable.Listener;
 
 import generation.states.GameState;
 
@@ -18,7 +17,7 @@ import media.Audio;
 import nodes.panes.TilePane;
 import nodes.panes.StatPane;
 
-public class GameScene extends Scene implements PropertyChangeListener {
+public class GameScene extends Scene implements Listener {
 
     private Group root;
 
@@ -60,10 +59,10 @@ public class GameScene extends Scene implements PropertyChangeListener {
 
     }
 
-    public void propertyChange(final PropertyChangeEvent event) {
+    public void propertyChanged(final Object source) {
 
         // Cast the changed state back to GameState, in order to be used
-        GameState observable = (GameState) event.getSource();
+        GameState observable = (GameState) source;
 
         // TODO: Add GameState communication from MinePane/StatPane
 

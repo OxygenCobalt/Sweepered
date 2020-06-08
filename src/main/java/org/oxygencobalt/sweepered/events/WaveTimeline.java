@@ -104,6 +104,8 @@ public class WaveTimeline {
 
         tile.loadTexture("Incorrect", TextureAtlas.STATE_BAD_FLAG);
 
+        System.out.println("hi");
+
     }
 
     private void fade() {

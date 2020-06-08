@@ -154,16 +154,9 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
             Audio.FLAG_SOUND.play();
 
-            // Switch between two near-identical enums in order to notify the listeners repeatedly
-            // FIXME: Once you write your own observer class, just change pulse()
-            // to fire an observer change.
-            state.pulse(
-
-                TileState.State.FLAG_QUERY,
-                TileState.State.FLAG_QUERY_,
-                "Flag"
-
-            );
+            // Run the pulse function in order to notify the listeners
+            // that the tile needs to be flagged, without changing the value.
+            state.pulse("Flag");
 
         }
 

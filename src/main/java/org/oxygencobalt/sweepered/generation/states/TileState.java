@@ -3,7 +3,7 @@
 
 package generation.states;
 
-import events.Observable;
+import events.observable.Observable;
 
 public class TileState extends Observable {
 
@@ -39,9 +39,6 @@ public class TileState extends Observable {
         this.x = x;
         this.y = y;
 
-        // Initialize propertyChangeSupport before allowing a listener to be added
-        setObservableObject(this);
-
     }
 
     public final void setState(final State newState, final String newMessage) {
@@ -52,22 +49,16 @@ public class TileState extends Observable {
         message = newMessage;
 
         // Notify listeners of value change
-        propertyChangeSupport.firePropertyChange("TileState", oldState, state);
+        fireChange(this);
 
     }
 
     // Pulse is used to notify listeners w/o changing the value itself.
-    public final void pulse(final State newState, final State altState, final String newMessage) {
+    public final void pulse(final String newMessage) {
 
-        if (this.state != newState) {
+        message = newMessage;
 
-            setState(newState, newMessage);
-
-        } else {
-
-            setState(altState, newMessage);
-
-        }
+        fireChange(this);
 
     }
 

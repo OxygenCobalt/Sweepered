@@ -48,18 +48,18 @@ public final class TextureAtlas {
     // Tile States
     private static final Image STATE_ATLAS = new Image(RES_PATH + "stateAtlas.png");
     public static final Sprite STATE_FLAGGED = new Sprite(STATE_ATLAS, 0, 0);
-    public static final Sprite STATE_BAD_FLAG = new Sprite(STATE_ATLAS, 0, 0);
+    public static final Sprite STATE_BAD_FLAG = new Sprite(STATE_ATLAS, 1, 0);
     public static final Sprite STATE_MINED = new Sprite(STATE_ATLAS, 0, 1);
     public static final Sprite STATE_EXPLODED = new Sprite(STATE_ATLAS, 0, 2);
 
     // Uncovered Number-Tiles
-    // These are indexed by mineCount [See: MinePanes onUncover()], so its an array.
+    // These are indexed by mineCount [See: Tile's uncover()], so its an array.
     public static final Sprite[] STATE_UNCOVERED = new Sprite[]{
 
         // TODO: If you add anims, please point
         // this sprite to another blank tile.
 
-        new Sprite(STATE_ATLAS, 0, 3),
+        new Sprite(STATE_ATLAS, 1, 2), // FIXME: Move this when you add anims
         new Sprite(STATE_ATLAS, 0, 3),
         new Sprite(STATE_ATLAS, 1, 3),
         new Sprite(STATE_ATLAS, 2, 3),

@@ -3,7 +3,7 @@
 
 package generation.states;
 
-import events.Observable;
+import events.observable.Observable;
 
 public class GameState extends Observable {
 
@@ -22,9 +22,6 @@ public class GameState extends Observable {
 
         this.state = state;
 
-        // Initialize propertyChangeSupport before allowing a listener to be added
-        setObservableObject(this);
-
     }
 
     public void setState(final State newState) {
@@ -33,7 +30,7 @@ public class GameState extends Observable {
         state = newState;
 
         // Notify listeners of value change
-        propertyChangeSupport.firePropertyChange("State", oldState, state);
+        fireChange(this);
 
     }
 
