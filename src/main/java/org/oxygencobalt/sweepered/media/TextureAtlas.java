@@ -36,36 +36,38 @@ public final class TextureAtlas {
     private static final String RES_PATH = "file:src/main/resources/textures/";
 
     // Basic Tiles
-    private static final Image TILE_ATLAS = new Image(RES_PATH + "tileAtlas.png");
-    public static final Sprite TILE_NORMAL = new Sprite(TILE_ATLAS, 0, 0);
-    public static final Sprite TILE_FLAGGED = new Sprite(TILE_ATLAS, 1, 0);
-    public static final Sprite TILE_PRESSED = new Sprite(TILE_ATLAS, 2, 0);
+    private static final Image UI_ATLAS = new Image(RES_PATH + "uiAtlas.png");
+    public static final Sprite TILE_NORMAL = new Sprite(UI_ATLAS, 0, 0);
+    public static final Sprite TILE_PRESSED = new Sprite(UI_ATLAS, 1, 0);
 
-    public static final Sprite CLEAR_WAVE = new Sprite(TILE_ATLAS, 0, 1);
-    public static final Sprite INVALID_WAVE = new Sprite(TILE_ATLAS, 1, 1);
-    public static final Sprite EXPLODE_WAVE = new Sprite(TILE_ATLAS, 2, 1);
+    private static final Image WAVE_ATLAS = new Image(RES_PATH + "waveAtlas.png");
+    public static final Sprite CLEAR_WAVE = new Sprite(WAVE_ATLAS, 0, 0);
+    public static final Sprite INVALID_WAVE = new Sprite(WAVE_ATLAS, 1, 0);
+    public static final Sprite EXPLODE_WAVE = new Sprite(WAVE_ATLAS, 2, 0);
 
-    // Uncovered Tiles
-    private static final Image UNCOVERED_ATLAS = new Image(RES_PATH + "uncoveredAtlas.png");
-    public static final Sprite UNCOVERED_MINED = new Sprite(UNCOVERED_ATLAS, 0, 0);
-    public static final Sprite UNCOVERED_EXPLODED = new Sprite(UNCOVERED_ATLAS, 0, 1);
+    // Tile States
+    private static final Image STATE_ATLAS = new Image(RES_PATH + "stateAtlas.png");
+    public static final Sprite STATE_FLAGGED = new Sprite(STATE_ATLAS, 0, 0);
+    public static final Sprite STATE_BAD_FLAG = new Sprite(STATE_ATLAS, 0, 0);
+    public static final Sprite STATE_MINED = new Sprite(STATE_ATLAS, 0, 1);
+    public static final Sprite STATE_EXPLODED = new Sprite(STATE_ATLAS, 0, 2);
 
     // Uncovered Number-Tiles
     // These are indexed by mineCount [See: MinePanes onUncover()], so its an array.
-    public static final Sprite[] UNCOVERED_NEAR = new Sprite[]{
+    public static final Sprite[] STATE_UNCOVERED = new Sprite[]{
 
         // TODO: If you add anims, please point
         // this sprite to another blank tile.
 
-        new Sprite(UNCOVERED_ATLAS, 3, 1),
-        new Sprite(UNCOVERED_ATLAS, 0, 2),
-        new Sprite(UNCOVERED_ATLAS, 1, 2),
-        new Sprite(UNCOVERED_ATLAS, 2, 2),
-        new Sprite(UNCOVERED_ATLAS, 3, 2),
-        new Sprite(UNCOVERED_ATLAS, 0, 3),
-        new Sprite(UNCOVERED_ATLAS, 1, 3),
-        new Sprite(UNCOVERED_ATLAS, 2, 3),
-        new Sprite(UNCOVERED_ATLAS, 3, 3)
+        new Sprite(STATE_ATLAS, 0, 3),
+        new Sprite(STATE_ATLAS, 0, 3),
+        new Sprite(STATE_ATLAS, 1, 3),
+        new Sprite(STATE_ATLAS, 2, 3),
+        new Sprite(STATE_ATLAS, 3, 3),
+        new Sprite(STATE_ATLAS, 0, 4),
+        new Sprite(STATE_ATLAS, 1, 4),
+        new Sprite(STATE_ATLAS, 2, 4),
+        new Sprite(STATE_ATLAS, 3, 4)
 
     };
 

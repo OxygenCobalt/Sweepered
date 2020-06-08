@@ -267,8 +267,13 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         }
 
+        // First, remove the Pressed/Covered textures, to make way
+        // for the number of nearby mines/the grid tiles.
+        removeTexture("Normal");
+        removeTexture("Pressed");
+
         // Load both grid and uncovered textures.
-        loadTexture("Uncovered", TextureAtlas.UNCOVERED_NEAR[nearMines]);
+        loadTexture("Uncovered", TextureAtlas.STATE_UNCOVERED[nearMines]);
         loadTexture("Grid", gridSprite);
 
     }
@@ -283,7 +288,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         // Simply load the exploded texture, and then play the corresponding sound
 
-        loadTexture("Exploded", TextureAtlas.UNCOVERED_EXPLODED);
+        loadTexture("Exploded", TextureAtlas.STATE_EXPLODED);
 
         Audio.EXPLODE_SOUND.play();
 
@@ -296,7 +301,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         // If the tile should now be flagged, load its texture
         if (stringState.contains("FLAGGED")) {
 
-            loadTexture("Flagged", TextureAtlas.TILE_FLAGGED);
+            loadTexture("Flagged", TextureAtlas.STATE_FLAGGED);
 
         } else { // Otherwise revert to a normal tile
 
@@ -373,6 +378,16 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             getChildren().add(images.get(name)); // Add it to the pane
 
         }
+
+    }
+
+    public void removeTexture(final String name) {
+
+        // Both remove the texture from the pane, and the map of images
+
+        getChildren().remove(images.get(name));
+
+        images.remove(name);
 
     }
 

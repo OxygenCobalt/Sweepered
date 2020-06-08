@@ -84,11 +84,11 @@ public class WaveTimeline {
         switch (type) {
 
             // Any mined tile should have their mine shown if a mine explodes
-            case "EXPLOSION": tile.loadTexture("Mined", TextureAtlas.UNCOVERED_MINED);
+            case "EXPLOSION": tile.loadTexture("Mined", TextureAtlas.STATE_MINED);
                               break;
 
             // Any remaining mines should be flagged if the board is cleared
-            case "CLEARED":   tile.loadTexture("Flagged", TextureAtlas.TILE_FLAGGED);
+            case "CLEARED":   tile.loadTexture("Flagged", TextureAtlas.STATE_FLAGGED);
                               break;
 
             default: System.out.println("This shouldnt happen."); // > mfw this does happen
@@ -99,10 +99,10 @@ public class WaveTimeline {
 
     private void showBadFlag() {
 
-        // If the tile is flagged incorrectly [Not under a mine], then recover it to show the error.
-        // TODO: May change the texture to a flag w/an X mark over it.
+        // If the tile is flagged incorrectly [Not under a mine],
+        // then show an X on the tile to correct it.
 
-        tile.loadTexture("Normal", TextureAtlas.TILE_NORMAL);
+        tile.loadTexture("Incorrect", TextureAtlas.STATE_BAD_FLAG);
 
     }
 
