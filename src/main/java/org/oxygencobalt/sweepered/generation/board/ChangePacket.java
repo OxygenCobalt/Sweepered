@@ -29,15 +29,15 @@ public class ChangePacket {
 
     private final Object auxillary;
 
-    public ChangePacket(Change change, 
-                        int originX, 
-                        int originY, 
+    public ChangePacket(final Change change,
+                        final int originX,
+                        final int originY,
 
-                        TileState.State newState, 
-                        int targetX, 
-                        int targetY,
+                        final TileState.State newState,
+                        final int targetX,
+                        final int targetY,
 
-                        Object... auxillary) {
+                        final Object... auxillary) {
 
         this.change = change;
 
@@ -54,7 +54,7 @@ public class ChangePacket {
 
         // Run a switch statement w/the length of auxillary.
         // If the length is 0, then the argument was not passed, and auxillary should just be null.
-        // If the length is 1, then an auxillary argument was passed, and therefore auxillary should be set to that.
+        // If the length is 1, then an auxillary arg was passed, so set the value to that
         // Otherwise, there are too many auxillary arguments, and an exception must be thrown.
 
         switch (auxillary.length) {
@@ -71,19 +71,47 @@ public class ChangePacket {
 
     // Getters
 
-    public Change getChange() {return change;}
+    public final Change getChange() {
 
-    public int getOriginX() {return originX;}
+        return change;
 
-    public int getOriginY() {return originY;}
+    }
 
-    public TileState.State getNewState() {return newState;}
+    public final int getOriginX() {
 
-    public int getTargetX() {return targetX;}
+        return originX;
 
-    public int getTargetY() {return targetY;}
+    }
 
-    public Object getAuxillary() {return auxillary;}
+    public final int getOriginY() {
+
+        return originY;
+
+    }
+
+    public final TileState.State getNewState() {
+
+        return newState;
+
+    }
+
+    public final int getTargetX() {
+
+        return targetX;
+
+    }
+
+    public final int getTargetY() {
+
+        return targetY;
+
+    }
+
+    public final Object getAuxillary() {
+
+        return auxillary;
+
+    }
 
 }
 

@@ -1,5 +1,5 @@
 // GameState
-// An Observable enum for the game state
+// An Observable enum for the Game State
 
 package generation.states;
 
@@ -18,7 +18,7 @@ public class GameState extends Observable {
 
     private State state;
 
-    public GameState(State state) {
+    public GameState(final State state) {
 
         this.state = state;
 
@@ -27,10 +27,10 @@ public class GameState extends Observable {
 
     }
 
-    public void setState(State state) {
+    public void setState(final State newState) {
 
-        State oldState = this.state;
-        this.state = state;
+        State oldState = state;
+        state = newState;
 
         // Notify listeners of value change
         propertyChangeSupport.firePropertyChange("State", oldState, state);
@@ -38,9 +38,17 @@ public class GameState extends Observable {
     }
 
     // Used to set the value of this boolean w/o notifying the listeners
-    public void setStateSilent(State state) {this.state = state;}
+    public void setStateSilent(final State newState) {
 
-    public State getState() {return state;}
+        this.state = newState;
+
+    }
+
+    public State getState() {
+
+        return state;
+
+    }
 
 }
 

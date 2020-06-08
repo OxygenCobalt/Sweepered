@@ -1,5 +1,5 @@
 // TileState
-// Observable enum used for managing the state of tiles
+// Observable enum for the Tile State
 
 package generation.states;
 
@@ -9,7 +9,7 @@ public class TileState extends Observable {
 
     public enum State {
 
-        COVERED, MINED, 
+        COVERED, MINED,
 
         FLAGGED, FLAGGED_MINED,
 
@@ -30,7 +30,7 @@ public class TileState extends Observable {
     private final int x;
     private final int y;
 
-    public TileState(State state, int x, int y) {
+    public TileState(final State state, final int x, final int y) {
 
         this.state = state;
 
@@ -44,44 +44,64 @@ public class TileState extends Observable {
 
     }
 
-    public final void setState(State state, String message) {
+    public final void setState(final State newState, final String newMessage) {
 
-        State oldState = this.state;
-        this.state = state;
+        State oldState = state;
+        state = newState;
 
-        this.message = message;
+        message = newMessage;
 
         // Notify listeners of value change
-        propertyChangeSupport.firePropertyChange("TileState", oldState, this.state);
+        propertyChangeSupport.firePropertyChange("TileState", oldState, state);
 
     }
 
     // Pulse is used to notify listeners w/o changing the value itself.
-    public final void pulse(State state, State altState, String message) {
+    public final void pulse(final State newState, final State altState, final String newMessage) {
 
-        if (this.state != state) {
+        if (this.state != newState) {
 
-            setState(state, message);
+            setState(newState, newMessage);
 
         } else {
 
-            setState(altState, message);
-            
+            setState(altState, newMessage);
+
         }
 
     }
 
     // Used to set the value of this boolean w/o notifying the listeners
-    public final void setStateSilent(State state) {this.state = state;}
+    public final void setStateSilent(final State newState) {
+
+        this.state = newState;
+
+    }
 
     // Getters
-    public final State getState() {return state;}
+    public final State getState() {
 
-    public final String getMessage() {return message;}
+        return state;
 
-    public final int getX() {return x;}
+    }
 
-    public final int getY() {return y;}
+    public final String getMessage() {
+
+        return message;
+
+    }
+
+    public final int getX() {
+
+        return x;
+
+    }
+
+    public final int getY() {
+
+        return y;
+
+    }
 
 }
 

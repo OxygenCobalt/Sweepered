@@ -12,17 +12,21 @@ public abstract class Observable {
 
     protected PropertyChangeSupport propertyChangeSupport = null;
 
-    public Observable() {}
+    public Observable() {
 
-    public void setObservableObject(Observable observable) {
+        // Not called.
 
-        // Load the observable object [Whatever inherits it]
+    }
+
+    public final void setObservableObject(final Observable observable) {
+
+        // Load the observable object [Whatever inherits this]
         // into the support that will actually notify the listeners
         propertyChangeSupport = new PropertyChangeSupport(observable);
 
     }
 
-    public void addListener(PropertyChangeListener listener){
+    public final void addListener(final PropertyChangeListener listener) {
 
         propertyChangeSupport.addPropertyChangeListener(listener);
 

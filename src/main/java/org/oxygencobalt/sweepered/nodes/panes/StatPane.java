@@ -13,21 +13,30 @@ public class StatPane extends Pane {
     public final int height;
     public final int width;
 
-    public StatPane(int height, int width, int offset, int mineCount) { // MineCount is given by MinePane.mines [To be added]
+    public StatPane(final int height,
+                    final int width,
+                    final int offset,
+                    final int mineCount) {
 
         this.height = height;
         this.width = width;
 
-        setPrefSize(width, height);
-        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Lock Size to prevent unintential resizing
         relocate(offset, offset);
+
+        setPrefSize(width, height);
+
+        // Lock Size to prevent unintential resizing
+        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Set Style for the background and the borders
         setStyle(
 
-            "-fx-background-color: #3d3d3d;" +
-            "-fx-border-width: 4px;" +
-            "-fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;" +
+            "-fx-background-color: #3d3d3d;"
+            +
+            "-fx-border-width: 4px;"
+            +
+            "-fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;"
+            +
             "-fx-border-style: solid outside;"
 
         );

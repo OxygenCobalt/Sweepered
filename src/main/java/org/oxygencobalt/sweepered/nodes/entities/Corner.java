@@ -22,7 +22,10 @@ public class Corner extends Pane {
     private Sprite cornerSprite;
     private ImageView cornerImage;
 
-    public Corner(int simpleX, int simpleY, int paneWidth, int paneHeight) {
+    public Corner(final int simpleX,
+                  final int simpleY,
+                  final int paneWidth,
+                  final int paneHeight) {
 
         // The paneWidth is multiplied by a simple coordinate [which is 0 or 1] to
         // find a real coordinate, whether -4 [Left] or the width of the pane [Right]
@@ -40,7 +43,7 @@ public class Corner extends Pane {
         // Corner generates its own instead.
         cornerSprite = new Sprite(
 
-            TextureAtlas.cornerAtlas,
+            TextureAtlas.CORNER_ATLAS,
             simpleX,
             simpleY,
             width,

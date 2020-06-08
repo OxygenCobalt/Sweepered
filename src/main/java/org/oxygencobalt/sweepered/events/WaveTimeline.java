@@ -6,7 +6,6 @@ package events;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 
-import javafx.scene.image.ImageView;
 import javafx.geometry.Point2D;
 
 import javafx.util.Duration;
@@ -27,7 +26,10 @@ public class WaveTimeline {
 
     private Sprite waveSprite;
 
-    public WaveTimeline(Tile tile, Point2D location, Point2D origin, String type) {
+    public WaveTimeline(final Tile tile,
+                        final Point2D location,
+                        final Point2D origin,
+                        final String type) {
 
         // Distance is measured in the time it will take for the shockwave to reach the tile itself.
         double distanceTime = location.distance(origin) * 0.1;
@@ -40,11 +42,11 @@ public class WaveTimeline {
 
         switch (type) {
 
-            case "EXPLOSION": waveSprite = TextureAtlas.tileExplodeWave; break;
+            case "EXPLOSION": waveSprite = TextureAtlas.EXPLODE_WAVE; break;
 
-            case "CLEARED": waveSprite = TextureAtlas.tileClearWave; break;
+            case "CLEARED": waveSprite = TextureAtlas.CLEAR_WAVE; break;
 
-            case "INVALID": waveSprite = TextureAtlas.tileInvalidWave; break;
+            case "INVALID": waveSprite = TextureAtlas.INVALID_WAVE; break;
 
         }
 
@@ -53,54 +55,54 @@ public class WaveTimeline {
         timeline = new Timeline(
             new KeyFrame(Duration.ZERO,                        event -> inactive()),
             new KeyFrame(Duration.seconds(distanceTime),       event -> active()),
-            new KeyFrame(Duration.seconds(distanceTime + 0.1), event -> fade()),            
+            new KeyFrame(Duration.seconds(distanceTime + 0.1), event -> fade()),
             new KeyFrame(Duration.seconds(distanceTime + 0.2), event -> inactive())
         );
 
     }
-    
+
     private void active() {
 
         TileState state = tile.getTileState();
 
         switch (state.getState()) {
 
-            case DISABLED_MINED: {
+            case DISABLED_MINED: showTileState(); break;
 
-                switch (type) {
-
-                    // Any mined tile should have their mine shown if a mine explodes
-                    case "EXPLOSION": tile.loadTexture("Mined", TextureAtlas.uncoveredMined);
-                                      break;
-
-                    // Any remaining mines should be flagged if the board is cleared
-                    case "CLEARED":   tile.loadTexture("Flagged", TextureAtlas.tileFlagged);
-                                      break;
-
-                    default: System.out.println("This shouldnt happen."); // > mfw this does happen
-
-                }
-
-                break;
-
-            }
-
-            case DISABLED_FLAGGED: {
-
-                // If the tile is flagged incorrectly [Not under a mine], then recover it to show the error.
-                // TODO: May change the texture to a flag w/an X mark over it.
-                tile.loadTexture("Normal", TextureAtlas.tileNormal);
-
-                break;
-
-            }
-
+            case DISABLED_FLAGGED: showBadFlag(); break;
         }
 
         // Bring waveTile back to front if another tile is loaded from above
         tile.loadTexture("Wave", waveSprite);
 
         tile.getImages().get("Wave").setOpacity(1);
+
+    }
+
+    private void showTileState() {
+
+        switch (type) {
+
+            // Any mined tile should have their mine shown if a mine explodes
+            case "EXPLOSION": tile.loadTexture("Mined", TextureAtlas.UNCOVERED_MINED);
+                              break;
+
+            // Any remaining mines should be flagged if the board is cleared
+            case "CLEARED":   tile.loadTexture("Flagged", TextureAtlas.TILE_FLAGGED);
+                              break;
+
+            default: System.out.println("This shouldnt happen."); // > mfw this does happen
+
+        }
+
+    }
+
+    private void showBadFlag() {
+
+        // If the tile is flagged incorrectly [Not under a mine], then recover it to show the error.
+        // TODO: May change the texture to a flag w/an X mark over it.
+
+        tile.loadTexture("Normal", TextureAtlas.TILE_NORMAL);
 
     }
 
@@ -117,7 +119,11 @@ public class WaveTimeline {
 
     }
 
-    public Timeline getTimeline() {return timeline;}
+    public Timeline getTimeline() {
+
+        return timeline;
+
+    }
 
 }
 

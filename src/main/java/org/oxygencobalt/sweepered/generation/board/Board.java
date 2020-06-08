@@ -1,5 +1,5 @@
 // Board
-// Multithreaded class that handles interactions between tiles
+// Object that handles interactions between tiles
 
 package generation.board;
 
@@ -23,7 +23,7 @@ public class Board {
     private final List<TileState.State> minedTiles;
     private final List<TileState.State> coveredTiles;
 
-    public Board(int width, int height, int mineCount) {
+    public Board(final int width, final int height, final int mineCount) {
 
         board = new TileState.State[width][height];
 
@@ -33,8 +33,11 @@ public class Board {
 
         this.remainingTiles = (width * height) - mineCount;
 
-        // Having a size that exceeds (width * height) - 9 is impossible, as the program will enter an infinite loop trying to fill in a tile that doesnt exist.
-        // There also cannot be a size lower than 9x9, as that will break StatBar [May be subject to change.]
+        // Having a size that exceeds (width * height) - 9 is
+        // impossible, as the program will enter an infinite loop
+        // trying to fill in a tile that doesnt exist. There also
+        // cannot be a size lower than 9x9, as that will break
+        // StatBar [May be subject to change.]
 
         if (remainingTiles < 9 || (width < 9 || height < 9)) {
 
@@ -42,12 +45,18 @@ public class Board {
 
             throw new IllegalArgumentException(
 
-                "Size W" + 
-                String.valueOf(width) + 
-                " H" + 
-                String.valueOf(height) + 
-                " with MineCount of " +
-                String.valueOf(mineCount) + 
+                "Size W"
+                +
+                String.valueOf(width)
+                +
+                " H"
+                +
+                String.valueOf(height)
+                +
+                " with MineCount of "
+                +
+                String.valueOf(mineCount)
+                +
                 " is not valid."
 
             );
@@ -83,7 +92,7 @@ public class Board {
 
     // Mine generation is HEAVILY INSPIRED by the way Simon Tartham wrote it in mines.c
     // Check out his puzzle collection here: https://www.chiark.greenend.org.uk/~sgtatham/puzzles/
-    public ArrayList<ChangePacket> generateMines(int originX, int originY) {
+    public final ArrayList<ChangePacket> generateMines(final int originX, final int originY) {
 
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
 
@@ -103,7 +112,8 @@ public class Board {
                 // Blacklist values within a 1-tile radius of the origin
                 if (Math.abs(x - originX) > 1 || Math.abs(y - originY) > 1) {
 
-                    // Create an array with the X and Y coordinate of the tile, and add it to the list
+                    // Create an array with the X and Y coordinate of
+                    // the tile, and add it to the list
                     int[] location = new int[]{x, y};
                     mineLocations.add(location);
 
@@ -155,8 +165,8 @@ public class Board {
 
     }
 
-    public ArrayList<ChangePacket> uncoverTile(int originX, int originY) {
-        
+    public final ArrayList<ChangePacket> uncoverTile(final int originX, final int originY) {
+
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
         ArrayList<int[]> recursiveList = new ArrayList<int[]>();
 
@@ -174,7 +184,8 @@ public class Board {
         // First, check if the tile is mined
         if (originTile == TileState.State.MINED) {
 
-            // If thats the case, set the origin tile/type to EXPLODED and drop the other instructions
+            // If thats the case, set the origin tile/type to
+            // EXPLODED and drop the other instructions
 
             originChange = ChangePacket.Change.EXPLODE;
 
@@ -182,9 +193,7 @@ public class Board {
 
             board[originX][originY] = originTile;
 
-        }
-
-        else { // Otherwise, continue.
+        } else { // Otherwise, continue.
 
             for (int nearX = (originX - 1); nearX <  (originX + 2); nearX++) {
 
@@ -193,12 +202,15 @@ public class Board {
                     // Also check if surrounding tile is not outside the bounds of the board
                     // before running any functions on it
                     // TODO: THERE HAS TO BE A BETTER WAY TO WRITE THIS
-                    isNotOutOfBounds = (nearX != width && nearX >= 0) && (nearY != height && nearY >= 0);
+                    isNotOutOfBounds = (
+                        (nearX != width && nearX >= 0) && (nearY != height && nearY >= 0)
+                    );
 
                     if (isNotOutOfBounds) {
                         nearTile = board[nearX][nearY];
 
-                        // Add to mineCount if tile does contain a mine [Or its flagged or disabled equivelents]
+                        // Add to mineCount if tile does contain a mine
+                        // [Or its flagged or disabled equivelents]
                         if (minedTiles.contains(nearTile)) {
                             foundMines++;
                         }
@@ -207,7 +219,8 @@ public class Board {
                         // to prevent flags from being destroyed and an infinite loop
                         // w/uncovered tiles
 
-                        // FIXME: The mines are being removed recursively multiple times, but im not sure if thats possible to be fixed.
+                        // FIXME: The mines are being removed recursively
+                        // multiple times, but im not sure if thats possible to be fixed.
 
                         if (nearTile == TileState.State.COVERED) {
                             recursiveList.add(new int[]{nearX, nearY});
@@ -222,10 +235,12 @@ public class Board {
             originChange = ChangePacket.Change.UNCOVER;
             originTile = TileState.State.UNCOVERED;
 
-            // To prevent a StackOverflowError, the board tile has to be updated seperately in both cases.
+            // To prevent a StackOverflowError, the board tile
+            // has to be updated seperately in both cases.
             board[originX][originY] = originTile;
 
-            // If there are no nearby mines, iterate recursively and add the list of changed tiles
+            // If there are no nearby mines, iterate
+            // recursively and add the list of changed tiles
             if (foundMines == 0) {
 
                 for (int[] coords : recursiveList) {
@@ -251,7 +266,8 @@ public class Board {
                 originX,
                 originY,
 
-                // foundMines is passed as an auxillary argument, even if it wont be used if a tile explodes.
+                // foundMines is passed as an auxillary argument,
+                // even if it wont be used if a tile explodes.
                 foundMines
 
             )
@@ -262,7 +278,7 @@ public class Board {
 
     }
 
-    public ArrayList<ChangePacket> flagTile(int originX, int originY) {
+    public final ArrayList<ChangePacket> flagTile(final int originX, final int originY) {
 
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
 
@@ -271,34 +287,32 @@ public class Board {
 
         String stringTile = String.valueOf(tile);
 
-        // If the tile is not flagged, change its state to the corresponding FLAGGED state depending on its MINED status
-        // If not, change the tiles state in reverse, converting its FLAGGED status to its corresponding MINED status
+        // If the tile is not flagged, change its state to
+        // the corresponding FLAGGED state depending on its MINED status
+
+        // If not, change the tiles state in reverse, converting its
+        // FLAGGED status to its corresponding MINED status
+
         if (!stringTile.contains("FLAGGED")) {
 
             if (tile == TileState.State.MINED) {
 
                 tile = TileState.State.FLAGGED_MINED;
 
-            }
-
-            else {
+            } else {
 
                 tile = TileState.State.FLAGGED;
 
             }
 
-        }
-
-        else {
+        } else {
 
             if (tile == TileState.State.FLAGGED_MINED) {
 
                 tile = TileState.State.MINED;
 
 
-            } 
-
-            else {
+            } else {
 
                 tile = TileState.State.COVERED;
 
@@ -325,7 +339,9 @@ public class Board {
 
     }
 
-    public ArrayList<ChangePacket> disableAllTiles(String reason, int originX, int originY) {
+    public final ArrayList<ChangePacket> disableAllTiles(final String reason,
+                                                         final int originX,
+                                                         final int originY) {
 
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
 
@@ -377,13 +393,15 @@ public class Board {
 
     }
 
-    public ArrayList<ChangePacket> updateRemainingTiles(int originX, int originY) {
+    public final ArrayList<ChangePacket> updateRemainingTiles(final int originX,
+                                                              final int originY) {
 
         ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
 
         remainingTiles = 0; // Reset remainingTiles, for the new count.
 
-        // Iterate through all tiles in board, and increment remainingTiles for every one still covered
+        // Iterate through all tiles in board, and increment
+        // remainingTiles for every one still covered
         for (int x = 0; x < width; x++) {
 
             for (int y = 0; y < height; y++) {
@@ -399,7 +417,8 @@ public class Board {
         }
 
         // If every tile is uncovered [or some other state, such as MINED]
-        // Create a changePacket for the originally pressed tile that has the special state of UNCOVERED_CLEARED.
+        // Create a changePacket for the originally pressed tile that
+        // has the special state of UNCOVERED_CLEARED.
         if (remainingTiles == 0) {
 
             board[originX][originY] = TileState.State.UNCOVERED;
@@ -416,7 +435,7 @@ public class Board {
 
             ));
 
-        } 
+        }
 
         return changedTiles;
 

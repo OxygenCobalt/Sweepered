@@ -1,11 +1,17 @@
 // Audio
-// Very small class holding static Audioclips for now.
+// Very small class holding static Audioclips.
 
 package media;
 
 import javafx.scene.media.AudioClip;
 
-public class Audio {
+public final class Audio {
+
+    private Audio() {
+
+        // Isnt called.
+
+    }
 
     public static void loadSounds() {
 
@@ -14,20 +20,20 @@ public class Audio {
 
         // [Yeah, I dont know why either]
 
-        clickSound.stop();
-        flagSound.stop();
-        explodeSound.stop();
-        clearSound.stop();
+        CLICK_SOUND.stop();
+        FLAG_SOUND.stop();
+        EXPLODE_SOUND.stop();
+        CLEAR_SOUND.stop();
 
     }
 
-    private static final String resPath = "file:src/main/resources/audio/";
+    private static final String RES_PATH = "file:src/main/resources/audio/";
 
-    public static final AudioClip clickSound = new AudioClip(resPath + "click.wav");
-    public static final AudioClip flagSound = new AudioClip(resPath + "flag.wav");
+    public static final AudioClip CLICK_SOUND = new AudioClip(RES_PATH + "click.wav");
+    public static final AudioClip FLAG_SOUND = new AudioClip(RES_PATH + "flag.wav");
 
-    public static final AudioClip explodeSound = new AudioClip(resPath + "explode.wav");
-    public static final AudioClip clearSound = new AudioClip(resPath + "cleared.wav"); // TODO: Maybe change this sound.
+    public static final AudioClip EXPLODE_SOUND = new AudioClip(RES_PATH + "explode.wav");
+    public static final AudioClip CLEAR_SOUND = new AudioClip(RES_PATH + "cleared.wav");
 
 }
 

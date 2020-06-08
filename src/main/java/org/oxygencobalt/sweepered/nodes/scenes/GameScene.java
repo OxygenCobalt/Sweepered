@@ -1,12 +1,11 @@
 // GameScene
-// Main Minesweeper game scene, only mode as of now is 9x9, but more will be added.
+// Main Minesweeper game scene.
 
 package nodes.scenes;
 
 import javafx.scene.Scene;
 import javafx.scene.Group;
 
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 import java.beans.PropertyChangeListener;
@@ -31,7 +30,11 @@ public class GameScene extends Scene implements PropertyChangeListener {
     private final int offset;
     private final int mineCount;
 
-    public GameScene(Group group, int mineWidth, int mineHeight, int mineCount, int offset) {
+    public GameScene(final Group group,
+                     final int mineWidth,
+                     final int mineHeight,
+                     final int mineCount,
+                     final int offset) {
 
         // Call super to construct Scene(), and then add passed group to class.
         super(group, (mineWidth * 32) + (18 + offset), (mineHeight * 32) + (76 + offset));
@@ -57,7 +60,7 @@ public class GameScene extends Scene implements PropertyChangeListener {
 
     }
 
-    public void propertyChange(PropertyChangeEvent event) {
+    public void propertyChange(final PropertyChangeEvent event) {
 
         // Cast the changed state back to GameState, in order to be used
         GameState observable = (GameState) event.getSource();
