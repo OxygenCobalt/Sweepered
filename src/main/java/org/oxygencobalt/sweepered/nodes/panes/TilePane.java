@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import events.observable.Listener;
 
 import generation.board.Board;
-import generation.board.ChangePacket;
+import generation.board.UpdatePacket;
 
 import generation.states.GameState;
 import generation.states.TileState;
@@ -132,17 +132,17 @@ public class TilePane extends Pane implements Listener {
 
     }
 
-    public void propertyChanged(final Object source) {
+    public void propertyChanged(final Object changed) {
 
         // Cast the TileState corresponding to where the event took place to access its X/Y values
-        TileState observable = (TileState) source;
+        TileState observable = (TileState) changed;
 
         String message = observable.getMessage();
 
         final int originX = observable.getX();
         final int originY = observable.getY();
 
-        ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
+        ArrayList<UpdatePacket> toChange = new ArrayList<UpdatePacket>();
 
         switch (message) {
 
@@ -154,7 +154,7 @@ public class TilePane extends Pane implements Listener {
 
         // Get the last [The index where an exploded or cleared tile would be added to] and check if
         // its one of the special changes [EXPLODE or CLEAR]
-        ChangePacket.Change originTile = toChange.get(toChange.size() - 1).getChange();
+        UpdatePacket.Change originTile = toChange.get(toChange.size() - 1).getChange();
 
         // If so, run its respective function.
         switch (originTile) {
@@ -169,9 +169,9 @@ public class TilePane extends Pane implements Listener {
 
     }
 
-    private ArrayList<ChangePacket> startUncover(final int originX, final int originY) {
+    private ArrayList<UpdatePacket> startUncover(final int originX, final int originY) {
 
-        ArrayList<ChangePacket> toChange = new ArrayList<ChangePacket>();
+        ArrayList<UpdatePacket> toChange = new ArrayList<UpdatePacket>();
 
         if (state.getState() == GameState.State.UNSTARTED) {
 
@@ -194,13 +194,13 @@ public class TilePane extends Pane implements Listener {
 
     }
 
-    private ArrayList<ChangePacket> startFlag(final int originX, final int originY) {
+    private ArrayList<UpdatePacket> startFlag(final int originX, final int originY) {
 
         return board.flagTile(originX, originY);
 
     }
 
-    private ArrayList<ChangePacket> startExplode(final int originX, final int originY) {
+    private ArrayList<UpdatePacket> startExplode(final int originX, final int originY) {
 
         // Since this is a game end scenario, change
         // the game state to EXPLOSION, which is the
@@ -213,7 +213,7 @@ public class TilePane extends Pane implements Listener {
 
     }
 
-    private ArrayList<ChangePacket> startClear(final int originX, final int originY) {
+    private ArrayList<UpdatePacket> startClear(final int originX, final int originY) {
 
         // Since this is a game end scenario, change
         // the game state to EXPLOSION, which is the
@@ -225,15 +225,15 @@ public class TilePane extends Pane implements Listener {
 
     }
 
-    private void updateTiles(final ArrayList<ChangePacket> toChange) {
+    private void updateTiles(final ArrayList<UpdatePacket> toChange) {
 
         Tile tile;
         TileState.State newState;
 
-        // Iterate through every ChangePacket, extract the referenced tile,
+        // Iterate through every UpdatePacket, extract the referenced tile,
         // and pass the new state to its updateState function.
 
-        for (ChangePacket change : toChange) {
+        for (UpdatePacket change : toChange) {
 
             tile = tiles[change.getTargetX()][change.getTargetY()];
 

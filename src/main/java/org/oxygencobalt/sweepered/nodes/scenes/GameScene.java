@@ -59,10 +59,10 @@ public class GameScene extends Scene implements Listener {
 
     }
 
-    public void propertyChanged(final Object source) {
+    public void propertyChanged(final Object changed) {
 
         // Cast the changed state back to GameState, in order to be used
-        GameState observable = (GameState) source;
+        GameState observable = (GameState) changed;
 
         // TODO: Add GameState communication from MinePane/StatPane
 

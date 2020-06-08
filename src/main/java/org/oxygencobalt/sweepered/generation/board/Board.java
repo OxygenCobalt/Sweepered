@@ -92,9 +92,9 @@ public class Board {
 
     // Mine generation is HEAVILY INSPIRED by the way Simon Tartham wrote it in mines.c
     // Check out his puzzle collection here: https://www.chiark.greenend.org.uk/~sgtatham/puzzles/
-    public final ArrayList<ChangePacket> generateMines(final int originX, final int originY) {
+    public final ArrayList<UpdatePacket> generateMines(final int originX, final int originY) {
 
-        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+        ArrayList<UpdatePacket> changedTiles = new ArrayList<UpdatePacket>();
 
         int generatedMines = 0;
         int locationWidth;
@@ -139,9 +139,9 @@ public class Board {
             board[coordX][coordY] = TileState.State.MINED;
 
             // Also add it to changedTiles in order for board to change the actual tile node.
-            changedTiles.add(new ChangePacket(
+            changedTiles.add(new UpdatePacket(
 
-                ChangePacket.Change.MINE,
+                UpdatePacket.Change.MINE,
                 originX,
                 originY,
 
@@ -165,15 +165,15 @@ public class Board {
 
     }
 
-    public final ArrayList<ChangePacket> uncoverTile(final int originX, final int originY) {
+    public final ArrayList<UpdatePacket> uncoverTile(final int originX, final int originY) {
 
-        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+        ArrayList<UpdatePacket> changedTiles = new ArrayList<UpdatePacket>();
         ArrayList<int[]> recursiveList = new ArrayList<int[]>();
 
         TileState.State nearTile;
 
         TileState.State originTile;
-        ChangePacket.Change originChange;
+        UpdatePacket.Change originChange;
 
         int foundMines = 0;
 
@@ -187,7 +187,7 @@ public class Board {
             // If thats the case, set the origin tile/type to
             // EXPLODED and drop the other instructions
 
-            originChange = ChangePacket.Change.EXPLODE;
+            originChange = UpdatePacket.Change.EXPLODE;
 
             originTile = TileState.State.EXPLODED;
 
@@ -232,7 +232,7 @@ public class Board {
 
             }
 
-            originChange = ChangePacket.Change.UNCOVER;
+            originChange = UpdatePacket.Change.UNCOVER;
             originTile = TileState.State.UNCOVERED;
 
             // To prevent a StackOverflowError, the board tile
@@ -252,11 +252,11 @@ public class Board {
             }
         }
 
-        // Finally, create a ChangePacket for the original updated tile.
+        // Finally, create a UpdatePacket for the original updated tile.
 
         changedTiles.add(
 
-            new ChangePacket(
+            new UpdatePacket(
 
                 originChange,
                 originX,
@@ -278,9 +278,9 @@ public class Board {
 
     }
 
-    public final ArrayList<ChangePacket> flagTile(final int originX, final int originY) {
+    public final ArrayList<UpdatePacket> flagTile(final int originX, final int originY) {
 
-        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+        ArrayList<UpdatePacket> changedTiles = new ArrayList<UpdatePacket>();
 
         // Get reference to tile
         TileState.State tile = board[originX][originY];
@@ -320,12 +320,12 @@ public class Board {
 
         }
 
-        // Update tile on board and create corresponding ChangePacket
+        // Update tile on board and create corresponding UpdatePacket
         board[originX][originY] = tile;
 
-        changedTiles.add(new ChangePacket(
+        changedTiles.add(new UpdatePacket(
 
-            ChangePacket.Change.FLAG,
+            UpdatePacket.Change.FLAG,
             originX,
             originY,
 
@@ -339,11 +339,11 @@ public class Board {
 
     }
 
-    public final ArrayList<ChangePacket> disableAllTiles(final String reason,
+    public final ArrayList<UpdatePacket> disableAllTiles(final String reason,
                                                          final int originX,
                                                          final int originY) {
 
-        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+        ArrayList<UpdatePacket> changedTiles = new ArrayList<UpdatePacket>();
 
         TileState.State tile;
 
@@ -369,11 +369,11 @@ public class Board {
 
                 board[x][y] = tile;
 
-                // Create a changepacket w/the reason for the disabling as
+                // Create a UpdatePacket w/the reason for the disabling as
                 // an auxillary value.
-                changedTiles.add(new ChangePacket(
+                changedTiles.add(new UpdatePacket(
 
-                    ChangePacket.Change.DISABLE,
+                    UpdatePacket.Change.DISABLE,
                     originX,
                     originY,
 
@@ -393,10 +393,10 @@ public class Board {
 
     }
 
-    public final ArrayList<ChangePacket> updateRemainingTiles(final int originX,
+    public final ArrayList<UpdatePacket> updateRemainingTiles(final int originX,
                                                               final int originY) {
 
-        ArrayList<ChangePacket> changedTiles = new ArrayList<ChangePacket>();
+        ArrayList<UpdatePacket> changedTiles = new ArrayList<UpdatePacket>();
 
         remainingTiles = 0; // Reset remainingTiles, for the new count.
 
@@ -417,15 +417,15 @@ public class Board {
         }
 
         // If every tile is uncovered [or some other state, such as MINED]
-        // Create a changePacket for the originally pressed tile that
+        // Create a UpdatePacket for the originally pressed tile that
         // has the special state of UNCOVERED_CLEARED.
         if (remainingTiles == 0) {
 
             board[originX][originY] = TileState.State.UNCOVERED;
 
-            changedTiles.add(new ChangePacket(
+            changedTiles.add(new UpdatePacket(
 
-                ChangePacket.Change.CLEAR,
+                UpdatePacket.Change.CLEAR,
                 originX,
                 originY,
 

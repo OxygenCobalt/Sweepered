@@ -5,7 +5,7 @@ package generation.board;
 
 import generation.states.TileState;
 
-public class ChangePacket {
+public class UpdatePacket {
 
     public enum Change {
 
@@ -29,7 +29,7 @@ public class ChangePacket {
 
     private final Object auxillary;
 
-    public ChangePacket(final Change change,
+    public UpdatePacket(final Change change,
                         final int originX,
                         final int originY,
 

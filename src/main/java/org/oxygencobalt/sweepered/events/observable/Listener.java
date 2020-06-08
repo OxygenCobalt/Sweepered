@@ -5,7 +5,7 @@ package events.observable;
 
 public interface Listener {
 
-    void propertyChanged(Object source);
+    void propertyChanged(Object changed);
 
 }
 

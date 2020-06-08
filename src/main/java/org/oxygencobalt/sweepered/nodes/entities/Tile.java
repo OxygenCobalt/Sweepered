@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 import events.WaveTimeline;
 
-import generation.board.ChangePacket;
+import generation.board.UpdatePacket;
 import generation.states.TileState;
 
 import media.TextureAtlas;
@@ -199,10 +199,10 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     }
 
     // State management
-    public void updateState(final ChangePacket packet) {
+    public void updateState(final UpdatePacket packet) {
 
-        // Get the change intended by the ChangePacket, and run it through the switch statement.
-        ChangePacket.Change change = packet.getChange();
+        // Get the change intended by the UpdatePacket, and run it through the switch statement.
+        UpdatePacket.Change change = packet.getChange();
 
         switch (change) {
 
@@ -225,7 +225,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void uncover(final ChangePacket packet) {
+    private void uncover(final UpdatePacket packet) {
 
         TileState.State newState = packet.getNewState();
 
@@ -271,13 +271,13 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void becomeMine(final ChangePacket packet) {
+    private void becomeMine(final UpdatePacket packet) {
 
         // Nothing needs to be run when a tile becomes a mine, so this function remains empty.
 
     }
 
-    private void explodeMine(final ChangePacket packet) {
+    private void explodeMine(final UpdatePacket packet) {
 
         // Simply load the exploded texture, and then play the corresponding sound
 
@@ -287,7 +287,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void invertFlagged(final ChangePacket packet) {
+    private void invertFlagged(final UpdatePacket packet) {
 
         String stringState = String.valueOf(packet.getNewState());
 
@@ -304,7 +304,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void disableTile(final ChangePacket packet) {
+    private void disableTile(final UpdatePacket packet) {
 
         int originX = packet.getOriginX();
         int originY = packet.getOriginY();
@@ -341,7 +341,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    private void clearTile(final ChangePacket packet) {
+    private void clearTile(final UpdatePacket packet) {
 
         // UNCOVERED_CLEARED is no different from UNCOVERED, so no code needs to be ran
         // Just play the clear sound instead.
