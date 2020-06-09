@@ -19,6 +19,7 @@ import javafx.geometry.Point2D;
 
 import java.util.List;
 import java.util.Arrays;
+
 import java.util.HashMap;
 
 import events.WaveTimeline;
@@ -260,10 +261,8 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         }
 
-        // First, remove the Pressed/Covered textures, to make way
-        // for the number of nearby mines/the grid tiles.
-        removeTexture("Normal");
-        removeTexture("Pressed");
+        // Wipe every texture, to prevent conflicts when the new textures are loaded.
+        wipeTextures();
 
         // Load both grid and uncovered textures.
         loadTexture("Uncovered", TextureAtlas.STATE_UNCOVERED[nearMines]);
@@ -374,13 +373,18 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
     }
 
-    public void removeTexture(final String name) {
+    public void wipeTextures() {
 
-        // Both remove the texture from the pane, and the map of images
+        // Iterate through the entire images dictionary and remove every entry
+        // This is only used on uncover(), when every texture needs to be removed
 
-        getChildren().remove(images.get(name));
+        for (String key : images.keySet()) {
 
-        images.remove(name);
+            getChildren().remove(images.get(key));
+
+        }
+
+        images.clear();
 
     }
 

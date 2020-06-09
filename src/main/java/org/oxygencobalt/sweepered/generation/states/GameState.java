@@ -5,7 +5,7 @@ package generation.states;
 
 import events.observable.Observable;
 
-public class GameState extends Observable {
+public class GameState extends Observable<GameState> {
 
     // Possible game states
     public enum State {

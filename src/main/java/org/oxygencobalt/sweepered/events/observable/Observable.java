@@ -3,9 +3,9 @@
 
 package events.observable;
 
-public abstract class Observable {
+public abstract class Observable<T> {
 
-    protected Listener listener = null;
+    protected Listener<T> listener = null;
 
     public Observable() {
 
@@ -13,23 +13,19 @@ public abstract class Observable {
 
     }
 
-    public void addListener(final Listener newListener) {
+    public void addListener(final Listener<T> newListener) {
 
         listener = newListener;
 
     }
 
-    public void fireChange(final Object source) {
+    public void fireChange(final T source) {
 
         // Check if a listener has been added
 
         if (listener != null) {
 
             listener.propertyChanged(source);
-
-        } else { // If not, throw an exception.
-
-            throw new RuntimeException("Listener must be added before fireChange can be run.");
 
         }
 

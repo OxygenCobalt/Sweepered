@@ -5,7 +5,7 @@ package generation.states;
 
 import events.observable.Observable;
 
-public class TileState extends Observable {
+public class TileState extends Observable<TileState> {
 
     public enum State {
 

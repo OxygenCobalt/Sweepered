@@ -3,9 +3,9 @@
 
 package events.observable;
 
-public interface Listener {
+public interface Listener<T> {
 
-    void propertyChanged(Object changed);
+    void propertyChanged(T changed);
 
 }
 

@@ -17,7 +17,7 @@ import media.Audio;
 import nodes.panes.TilePane;
 import nodes.panes.StatPane;
 
-public class GameScene extends Scene implements Listener {
+public class GameScene extends Scene implements Listener<GameState> {
 
     private Group root;
 
@@ -59,15 +59,12 @@ public class GameScene extends Scene implements Listener {
 
     }
 
-    public void propertyChanged(final Object changed) {
-
-        // Cast the changed state back to GameState, in order to be used
-        GameState observable = (GameState) changed;
+    public void propertyChanged(final GameState changed) {
 
         // TODO: Add GameState communication from MinePane/StatPane
 
         // Update the master state once everything is done.
-        masterState.setStateSilent(observable.getState());
+        masterState.setStateSilent(changed.getState());
 
     }
 }

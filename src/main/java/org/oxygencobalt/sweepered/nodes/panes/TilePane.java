@@ -19,7 +19,7 @@ import generation.states.TileState;
 import nodes.entities.Tile;
 import nodes.entities.Corner;
 
-public class TilePane extends Pane implements Listener {
+public class TilePane extends Pane implements Listener<TileState> {
 
     private final int width;
     private final int height;
@@ -132,15 +132,12 @@ public class TilePane extends Pane implements Listener {
 
     }
 
-    public void propertyChanged(final Object changed) {
+    public void propertyChanged(final TileState changed) {
 
-        // Cast the TileState corresponding to where the event took place to access its X/Y values
-        TileState observable = (TileState) changed;
+        String message = changed.getMessage();
 
-        String message = observable.getMessage();
-
-        final int originX = observable.getX();
-        final int originY = observable.getY();
+        final int originX = changed.getX();
+        final int originY = changed.getY();
 
         ArrayList<UpdatePacket> toChange = new ArrayList<UpdatePacket>();
 
