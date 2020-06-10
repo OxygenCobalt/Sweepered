@@ -72,10 +72,17 @@ public class WaveTimeline {
             case DISABLED_FLAGGED: showBadFlag(); break;
         }
 
-        // Bring waveTile back to front if another tile is loaded from above
-        tile.loadTexture("Wave", waveSprite);
+        // Bring waveTile back to front if another tile is loaded from above,
+        // but only if the tile is DISABLED in any way to prevent the wave from
+        // persisting past a reset.
 
-        tile.getImages().get("Wave").setOpacity(1);
+        if (String.valueOf(state.getState()).contains("DISABLED")) {
+
+            tile.loadTexture("Wave", waveSprite);
+
+            tile.getImages().get("Wave").setOpacity(1);
+
+        }
 
     }
 
@@ -108,14 +115,26 @@ public class WaveTimeline {
 
     private void fade() {
 
-        tile.getImages().get("Wave").setOpacity(0.5);
+        TileState state = tile.getTileState();
+
+        if (String.valueOf(state.getState()).contains("DISABLED")) {
+
+            tile.getImages().get("Wave").setOpacity(0.5);
+
+        }
 
     }
 
     private void inactive() {
 
-        // Once the mine is shown, theres no need to unshow it, so just hide waveTile's opacity.
-        tile.getImages().get("Wave").setOpacity(0);
+        TileState state = tile.getTileState();
+
+        if (String.valueOf(state.getState()).contains("DISABLED")) {
+
+            // Once the mine is shown, theres no need to unshow it, so just hide waveTile's opacity.
+            tile.getImages().get("Wave").setOpacity(0);
+
+        }
 
     }
 

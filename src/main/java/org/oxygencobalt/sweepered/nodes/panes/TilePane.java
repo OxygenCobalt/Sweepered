@@ -17,8 +17,8 @@ import events.observable.Listener;
 import events.states.GameState;
 import events.states.TileState;
 
-import generation.board.Board;
-import generation.board.UpdatePacket;
+import generation.Board;
+import generation.UpdatePacket;
 
 import nodes.entities.Tile;
 import nodes.entities.Corner;
@@ -299,6 +299,17 @@ public class TilePane extends Pane implements Listener<TileState> {
     }
 
     public void updateGameState(final GameState.State newState) {
+
+        // If the new value is UNSTARTED, then reset the
+        // entire board and pass the updates to the tiles.
+
+        if (newState == GameState.State.UNSTARTED) {
+
+            ArrayList<UpdatePacket> toChange = board.resetBoard();
+
+            updateTiles(toChange);
+
+        }
 
         state.setStateSilent(newState);
 

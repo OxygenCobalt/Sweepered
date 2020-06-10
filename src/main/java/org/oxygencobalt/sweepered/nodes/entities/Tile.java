@@ -22,7 +22,7 @@ import java.util.HashMap;
 import events.WaveTimeline;
 import events.states.TileState;
 
-import generation.board.UpdatePacket;
+import generation.UpdatePacket;
 
 import media.TextureAtlas;
 import media.Sprite;
@@ -221,6 +221,10 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         switch (change) {
 
+            // If COVER is passed, then the board is
+            // being reset and tile must be reset as well.
+            case COVER: resetTile(packet); break;
+
             case MINE: becomeMine(packet); break;
 
             case FLAG: invertFlagged(packet); break;
@@ -237,6 +241,18 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         }
 
         state.setStateSilent(packet.getNewState());
+
+    }
+
+    private void resetTile(final UpdatePacket packet) {
+
+        // Reload the original covered texture,
+        // disregarding the previous state.
+        loadTexture("Normal", TextureAtlas.TILE_NORMAL);
+
+        // Then, stop any sounds playing at the time.
+        Audio.CLEAR_SOUND.stop();
+        Audio.EXPLODE_SOUND.stop();
 
     }
 

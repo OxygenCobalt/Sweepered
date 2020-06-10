@@ -6,6 +6,10 @@ package nodes.entities;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
+import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.scene.input.MouseEvent;
+
 import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
@@ -14,8 +18,9 @@ import events.states.GameState;
 
 import media.TextureAtlas;
 import media.Sprite;
+import media.Audio;
 
-public class ResetButton extends Pane {
+public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private final int x;
     private final int y;
@@ -26,6 +31,7 @@ public class ResetButton extends Pane {
     GameState state;
 
     private String currentFace;
+    private Sprite faceSprite;
 
     private HashMap<String, ImageView> images;
 
@@ -48,38 +54,69 @@ public class ResetButton extends Pane {
 
         images = new HashMap<String, ImageView>();
 
-        loadTexture("resetNormal", TextureAtlas.RESET_NORMAL);
-        loadTexture("faceNormal", TextureAtlas.FACE_NORMAL);
+        // Load basic textures, and set up the face values.
+        currentFace = "faceUNSTARTED";
+        faceSprite = TextureAtlas.FACE_NORMAL;
+
+        loadTexture("Normal", TextureAtlas.RESET_NORMAL);
+        loadTexture(currentFace, faceSprite);
+
+        setOnMousePressed(this);
+        setOnMouseReleased(this);
+
+    }
+
+    public void handle(final MouseEvent event) {
+
+        EventType type = event.getEventType();
+
+        // Disable ResetButton if the game is already unstarted
+
+        if (state.getState() != GameState.State.UNSTARTED) {
+
+            if (type == MouseEvent.MOUSE_PRESSED) {
+
+                onPress(event);
+
+            }
+
+            if (type == MouseEvent.MOUSE_RELEASED) {
+
+                onRelease(event);
+
+            }
+
+        }
+
+    }
+
+    private void onPress(final MouseEvent event) {
+
+        loadTexture("Pressed", TextureAtlas.RESET_PRESSED);
+
+        loadTexture(currentFace, faceSprite);
+
+    }
+
+    private void onRelease(final MouseEvent event) {
+
+        // Update the face to its UNSTARTED variant and
+        // then change the state to UNSTARTED, notifying
+        // the listeners.
+
+        Audio.CLICK_SOUND.play();
+
+        updateFace(GameState.State.UNSTARTED);
+
+        state.setState(GameState.State.UNSTARTED);
 
     }
 
     public void updateGameState(final GameState.State newState) {
 
-        // First reload the normal button texture, in order
-        // to hide the old face.
+        // Update the face and then set the state to the new value given.
 
-        loadTexture("resetNormal", TextureAtlas.RESET_NORMAL);
-
-        // Then, convert the new GameState to a face to load.
-
-        // FIXME: This thing is a result of the janky way you wrote
-        // TextureAtlas, FIX WHEN YOU REWRITE IT
-
-        switch (newState) {
-
-            case UNSTARTED: loadTexture("faceNormal", TextureAtlas.FACE_NORMAL); break;
-
-            case STARTED: loadTexture("faceNormal", TextureAtlas.FACE_NORMAL); break;
-
-            case UNCERTAIN: loadTexture("faceUncertain", TextureAtlas.FACE_UNCERTAIN); break;
-
-            case EXPLOSION: loadTexture("faceExplosion", TextureAtlas.FACE_EXPLOSION); break;
-
-            case CLEARED: loadTexture("faceCleared", TextureAtlas.FACE_CLEARED); break;
-
-        }
-
-        // Finally update the state once everything is done.
+        updateFace(newState);
 
         state.setStateSilent(newState);
 
@@ -88,6 +125,39 @@ public class ResetButton extends Pane {
     public GameState getGameState() {
 
         return state;
+
+    }
+
+    private void updateFace(final GameState.State newState) {
+
+        // First reload the normal button texture, in order
+        // to hide the old face.
+
+        loadTexture("resetNormal", TextureAtlas.RESET_NORMAL);
+
+        // FIXME: This thing is a result of the janky way you wrote
+        // TextureAtlas, FIX WHEN YOU REWRITE IT
+
+        // Update the currentFace based off the gameState,
+        // and then get the respective face texture for that.
+
+        currentFace = "face" + String.valueOf(newState);
+
+        switch (newState) {
+
+            case UNSTARTED: faceSprite = TextureAtlas.FACE_NORMAL; break;
+
+            case STARTED: faceSprite = TextureAtlas.FACE_NORMAL; break;
+
+            case UNCERTAIN: faceSprite = TextureAtlas.FACE_UNCERTAIN; break;
+
+            case EXPLOSION: faceSprite = TextureAtlas.FACE_EXPLOSION; break;
+
+            case CLEARED: faceSprite = TextureAtlas.FACE_CLEARED; break;
+
+        }
+
+        loadTexture(currentFace, faceSprite);
 
     }
 

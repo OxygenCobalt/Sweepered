@@ -6,12 +6,13 @@ package nodes.panes;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
+import events.observable.Listener;
 import events.states.GameState;
 
 import nodes.entities.ResetButton;
 import nodes.entities.Corner;
 
-public class StatPane extends Pane {
+public class StatPane extends Pane implements Listener<GameState> {
 
     public final int height;
     public final int width;
@@ -52,6 +53,8 @@ public class StatPane extends Pane {
 
         reset = new ResetButton((width - 36) / 2);
 
+        reset.getGameState().addListener(this);
+
         getChildren().addAll(reset);
 
         generateCorners();
@@ -71,6 +74,12 @@ public class StatPane extends Pane {
             }
 
         }
+
+    }
+
+    public void propertyChanged(final GameState changed) {
+
+        state.setState(changed.getState());
 
     }
 

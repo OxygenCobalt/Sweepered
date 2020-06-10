@@ -1,13 +1,15 @@
 // ChangePacket
 // Small class for communicating changed tiles from board to tilepane
 
-package generation.board;
+package generation;
 
 import events.states.TileState;
 
 public class UpdatePacket {
 
     public enum Change {
+
+        COVER,
 
         MINE, FLAG,
 

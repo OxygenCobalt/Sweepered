@@ -1,7 +1,7 @@
 // Board
 // Object that handles interactions between tiles
 
-package generation.board;
+package generation;
 
 import java.util.List;
 import java.util.Random;
@@ -434,6 +434,40 @@ public class Board {
                 originY
 
             ));
+
+        }
+
+        return changedTiles;
+
+    }
+
+    public ArrayList<UpdatePacket> resetBoard() {
+
+        ArrayList<UpdatePacket> changedTiles = new ArrayList<UpdatePacket>();
+
+        TileState.State tile;
+
+        // Iterate through the entire board and reset every tile to COVERED
+
+        for (int x = 0; x < width; x++) {
+
+            for (int y = 0; y < height; y++) {
+
+                board[x][y] = TileState.State.COVERED;
+
+                changedTiles.add(new UpdatePacket(
+
+                    UpdatePacket.Change.COVER,
+                    0,
+                    0,
+
+                    TileState.State.COVERED,
+                    x,
+                    y
+
+                ));
+
+            }
 
         }
 
