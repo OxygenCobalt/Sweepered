@@ -8,6 +8,11 @@ import javafx.scene.Group;
 
 import javafx.scene.paint.Color;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+
+import javafx.geometry.Rectangle2D;
+
 import events.observable.Listener;
 import events.states.GameState;
 
@@ -16,7 +21,7 @@ import media.Audio;
 import nodes.panes.TilePane;
 import nodes.panes.StatPane;
 
-public class GameScene extends Scene implements Listener<GameState> {
+public class GameScene extends Scene implements Listener<GameState>, EventHandler<MouseEvent> {
 
     private Group root;
 
@@ -27,6 +32,10 @@ public class GameScene extends Scene implements Listener<GameState> {
 
     private final int offset;
     private final int mineCount;
+
+    private Rectangle2D tileRect;
+
+    private String[] owners;
 
     public GameScene(final Group group,
                      final int mineWidth,
@@ -49,13 +58,24 @@ public class GameScene extends Scene implements Listener<GameState> {
         stats = new StatPane(40, (mineWidth * 32), this.offset, 0);
         tiles = new TilePane(mineWidth, mineHeight, this.mineCount, this.offset);
 
+        // Set up the gameStates and add listeners to GameScene
+        masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
+
         stats.getGameState().addListener(this);
         tiles.getGameState().addListener(this);
+        masterState.addListener(this);
 
         root = group;
         root.getChildren().addAll(stats, tiles);
 
-        masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
+        // tileRect is used to detect if the mouse is outside of
+        // TilePane, and then correcting the gameState accordingly.
+        tileRect = new Rectangle2D(tiles.getLayoutX(),
+                                   tiles.getLayoutY(),
+                                   mineWidth * 32,
+                                   mineHeight * 32);
+
+        setOnMouseMoved(this);
 
     }
 
@@ -65,12 +85,45 @@ public class GameScene extends Scene implements Listener<GameState> {
         GameState.State newState = changed.getState();
         String owner = changed.getOwner();
 
+        // Check the owner of the changed gamestate, and update the
+        // other owners respectively to sync the new state.
+        switch (owner) {
+
+            case "TilePane": stats.updateGameState(newState); break;
+
+            case "StatPane": tiles.updateGameState(newState); break;
+
+            case "GameScene": stats.updateGameState(newState);
+                              tiles.updateGameState(newState);
+                              break;
+
+        }
+
         // Update the master state once everything is done.
         masterState.setStateSilent(newState);
 
-        System.out.println(changed.getState());
+    }
+
+    public void handle(final MouseEvent event) {
+
+        // If the game is started, find if the pointer is
+        // still within TilePane. If not, then correct the gamestate
+        // to STARTED to prevent it from being stuck on UNCERTAIN
+
+        if (masterState.isStarted()) {
+
+            Boolean isInPane = tileRect.contains(event.getSceneX(), event.getSceneY());
+
+            if (!isInPane) {
+
+                masterState.setState(GameState.State.STARTED);
+
+            }
+
+        }
 
     }
+
 }
 
 // OxygenCobalt

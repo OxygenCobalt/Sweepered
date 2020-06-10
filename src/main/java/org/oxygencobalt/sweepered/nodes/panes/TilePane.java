@@ -89,6 +89,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         state = new GameState(GameState.State.UNSTARTED, "TilePane");
 
+        // FIXME: Eliminate these please.
         safeTiles = Arrays.asList(
 
             TileState.State.UNCOVERED,
@@ -299,7 +300,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
     public void updateGameState(final GameState.State newState) {
 
-
+        state.setStateSilent(newState);
 
     }
 

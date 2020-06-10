@@ -58,10 +58,10 @@ public final class TextureAtlas {
 
     // Faces [For the reset button]
     public static final Image FACE_ATLAS = new Image(RES_PATH + "faceAtlas.png");
-    public static final Sprite FACE_NORMAL = new Sprite(FACE_ATLAS, 0, 0);
-    public static final Sprite FACE_UNCERTAIN = new Sprite(FACE_ATLAS, 1, 0);
-    public static final Sprite FACE_EXPLODED = new Sprite(FACE_ATLAS, 2, 0);
-    public static final Sprite FACE_CLEARED = new Sprite(FACE_ATLAS, 3, 0);
+    public static final Sprite FACE_NORMAL = new Sprite(FACE_ATLAS, 0, 0, 36, 36);
+    public static final Sprite FACE_UNCERTAIN = new Sprite(FACE_ATLAS, 1, 0, 36, 36);
+    public static final Sprite FACE_EXPLOSION = new Sprite(FACE_ATLAS, 2, 0, 36, 36);
+    public static final Sprite FACE_CLEARED = new Sprite(FACE_ATLAS, 3, 0, 36, 36);
 
     // Uncovered Number-Tiles
     // These are indexed by mineCount [See: Tile's uncover()], so its an array.

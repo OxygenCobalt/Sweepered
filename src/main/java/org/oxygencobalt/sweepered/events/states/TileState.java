@@ -116,6 +116,7 @@ public class TileState extends Observable<TileState> {
         return isState(State.DISABLED, State.EXPLODED, State.UNCOVERED, State.DISABLED_MINED);
 
     }
+
 }
 
 // OxygenCobalt

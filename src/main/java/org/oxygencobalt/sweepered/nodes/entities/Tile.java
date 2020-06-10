@@ -30,11 +30,11 @@ import media.Audio;
 
 public class Tile extends Pane implements EventHandler<MouseEvent> {
 
-    private final int width;
-    private final int height;
-
     private final int x;
     private final int y;
+
+    private final int width;
+    private final int height;
 
     private final int simpleX;
     private final int simpleY;

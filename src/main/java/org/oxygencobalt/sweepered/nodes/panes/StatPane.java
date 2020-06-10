@@ -8,6 +8,7 @@ import javafx.scene.layout.Region;
 
 import events.states.GameState;
 
+import nodes.entities.ResetButton;
 import nodes.entities.Corner;
 
 public class StatPane extends Pane {
@@ -16,6 +17,8 @@ public class StatPane extends Pane {
     public final int width;
 
     private final GameState state;
+
+    private final ResetButton reset;
 
     public StatPane(final int height,
                     final int width,
@@ -47,6 +50,10 @@ public class StatPane extends Pane {
 
         state = new GameState(GameState.State.UNSTARTED, "StatPane");
 
+        reset = new ResetButton((width - 36) / 2);
+
+        getChildren().addAll(reset);
+
         generateCorners();
 
     }
@@ -69,7 +76,10 @@ public class StatPane extends Pane {
 
     public void updateGameState(final GameState.State newState) {
 
+        // Update the state of ResetButton
+        reset.updateGameState(newState);
 
+        state.setStateSilent(newState);
 
     }
 
