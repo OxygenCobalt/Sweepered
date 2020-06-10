@@ -1,7 +1,7 @@
 // TileState
 // Observable enum for the Tile State
 
-package generation.states;
+package events.states;
 
 import events.observable.Observable;
 
@@ -12,8 +12,6 @@ public class TileState extends Observable<TileState> {
         COVERED, MINED,
 
         FLAGGED, FLAGGED_MINED,
-
-        FLAG_QUERY, FLAG_QUERY_, // Flag values used to pulse listeners
 
         EXPLODED, UNCOVERED_CLEARED, // Game end scenarios
 
@@ -43,7 +41,6 @@ public class TileState extends Observable<TileState> {
 
     public final void setState(final State newState, final String newMessage) {
 
-        State oldState = state;
         state = newState;
 
         message = newMessage;
@@ -94,6 +91,31 @@ public class TileState extends Observable<TileState> {
 
     }
 
+    public final Boolean isState(final State... states) {
+
+        // Iterate through all given states and return
+        // true if one matches the current state,
+        // otherwise return false.
+
+        for (State compareState : states) {
+
+            if (state == compareState) {
+
+                return true;
+
+            }
+
+        }
+
+        return false;
+
+    }
+
+    public final Boolean isDisabled() {
+
+        return isState(State.DISABLED, State.EXPLODED, State.UNCOVERED, State.DISABLED_MINED);
+
+    }
 }
 
 // OxygenCobalt

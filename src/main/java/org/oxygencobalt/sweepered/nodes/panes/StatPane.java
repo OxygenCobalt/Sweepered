@@ -6,12 +6,16 @@ package nodes.panes;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
+import events.states.GameState;
+
 import nodes.entities.Corner;
 
 public class StatPane extends Pane {
 
     public final int height;
     public final int width;
+
+    private final GameState state;
 
     public StatPane(final int height,
                     final int width,
@@ -41,6 +45,8 @@ public class StatPane extends Pane {
 
         );
 
+        state = new GameState(GameState.State.UNSTARTED, "StatPane");
+
         generateCorners();
 
     }
@@ -58,6 +64,18 @@ public class StatPane extends Pane {
             }
 
         }
+
+    }
+
+    public void updateGameState(final GameState.State newState) {
+
+
+
+    }
+
+    public GameState getGameState() {
+
+        return state;
 
     }
 

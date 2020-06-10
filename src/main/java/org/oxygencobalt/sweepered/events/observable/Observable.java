@@ -15,6 +15,9 @@ public abstract class Observable<T> {
 
     public void addListener(final Listener<T> newListener) {
 
+        // No need to check if the listener is of a valid type for this observable,
+        // as the identifier handles that for us.
+
         listener = newListener;
 
     }

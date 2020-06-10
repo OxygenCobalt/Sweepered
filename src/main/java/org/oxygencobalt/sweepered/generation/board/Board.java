@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-import generation.states.TileState;
+import events.states.TileState;
 
 public class Board {
 
@@ -438,6 +438,12 @@ public class Board {
         }
 
         return changedTiles;
+
+    }
+
+    public TileState.State getTileAt(final int x, final int y) {
+
+        return board[x][y];
 
     }
 

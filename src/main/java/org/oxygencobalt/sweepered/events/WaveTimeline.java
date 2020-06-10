@@ -13,7 +13,7 @@ import javafx.util.Duration;
 import media.TextureAtlas;
 import media.Sprite;
 
-import generation.states.TileState;
+import events.states.TileState;
 
 import nodes.entities.Tile;
 

@@ -31,19 +31,17 @@ public final class TextureAtlas {
     // Image Data
     // Abandon all hope ye who enter here
 
-    // Note: Tile coordinates are based off their actual x/y values divided by 32.
+    // Note: Tile coordinates are based off their actual x/y values divided by their width/height.
 
     private static final String RES_PATH = "file:src/main/resources/textures/";
 
-    // Basic Tiles
+    // Basic UI elements
     private static final Image UI_ATLAS = new Image(RES_PATH + "uiAtlas.png");
     public static final Sprite TILE_NORMAL = new Sprite(UI_ATLAS, 0, 0);
     public static final Sprite TILE_PRESSED = new Sprite(UI_ATLAS, 1, 0);
 
-    private static final Image WAVE_ATLAS = new Image(RES_PATH + "waveAtlas.png");
-    public static final Sprite CLEAR_WAVE = new Sprite(WAVE_ATLAS, 0, 0);
-    public static final Sprite INVALID_WAVE = new Sprite(WAVE_ATLAS, 1, 0);
-    public static final Sprite EXPLODE_WAVE = new Sprite(WAVE_ATLAS, 2, 0);
+    public static final Sprite RESET_NORMAL = new Sprite(UI_ATLAS, 0, 1, 36, 36);
+    public static final Sprite RESET_PRESSED = new Sprite(UI_ATLAS, 1, 1, 36, 36);
 
     // Tile States
     private static final Image STATE_ATLAS = new Image(RES_PATH + "stateAtlas.png");
@@ -52,6 +50,19 @@ public final class TextureAtlas {
     public static final Sprite STATE_MINED = new Sprite(STATE_ATLAS, 0, 1);
     public static final Sprite STATE_EXPLODED = new Sprite(STATE_ATLAS, 0, 2);
 
+    // Waves
+    private static final Image WAVE_ATLAS = new Image(RES_PATH + "waveAtlas.png");
+    public static final Sprite CLEAR_WAVE = new Sprite(WAVE_ATLAS, 0, 0);
+    public static final Sprite INVALID_WAVE = new Sprite(WAVE_ATLAS, 1, 0);
+    public static final Sprite EXPLODE_WAVE = new Sprite(WAVE_ATLAS, 2, 0);
+
+    // Faces [For the reset button]
+    public static final Image FACE_ATLAS = new Image(RES_PATH + "faceAtlas.png");
+    public static final Sprite FACE_NORMAL = new Sprite(FACE_ATLAS, 0, 0);
+    public static final Sprite FACE_UNCERTAIN = new Sprite(FACE_ATLAS, 1, 0);
+    public static final Sprite FACE_EXPLODED = new Sprite(FACE_ATLAS, 2, 0);
+    public static final Sprite FACE_CLEARED = new Sprite(FACE_ATLAS, 3, 0);
+
     // Uncovered Number-Tiles
     // These are indexed by mineCount [See: Tile's uncover()], so its an array.
     public static final Sprite[] STATE_UNCOVERED = new Sprite[]{
@@ -59,7 +70,7 @@ public final class TextureAtlas {
         // TODO: If you add anims, please point
         // this sprite to another blank tile.
 
-        new Sprite(STATE_ATLAS, 1, 2), // FIXME: Move this when you add anims
+        new Sprite(STATE_ATLAS, 1, 2),
         new Sprite(STATE_ATLAS, 0, 3),
         new Sprite(STATE_ATLAS, 1, 3),
         new Sprite(STATE_ATLAS, 2, 3),

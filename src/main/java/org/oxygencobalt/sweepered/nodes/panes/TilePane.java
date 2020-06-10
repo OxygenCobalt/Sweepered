@@ -6,15 +6,19 @@ package nodes.panes;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
+import javafx.geometry.Rectangle2D;
+
+import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 import events.observable.Listener;
 
+import events.states.GameState;
+import events.states.TileState;
+
 import generation.board.Board;
 import generation.board.UpdatePacket;
-
-import generation.states.GameState;
-import generation.states.TileState;
 
 import nodes.entities.Tile;
 import nodes.entities.Corner;
@@ -32,7 +36,11 @@ public class TilePane extends Pane implements Listener<TileState> {
 
     private final int mineCount;
 
+    private Rectangle2D mouseRect;
+
     private final GameState state;
+
+    private final List<TileState.State> safeTiles;
 
     private Board board;
     private Tile[][] tiles;
@@ -74,7 +82,21 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         this.mineCount = mineCount;
 
-        state = new GameState(GameState.State.UNSTARTED);
+        // mouseRect is used to detect when the mouse
+        // is being moved *within* the tile, as I cant get
+        // the mouse location relative to the pane.
+        mouseRect = new Rectangle2D(x, y, width, height);
+
+        state = new GameState(GameState.State.UNSTARTED, "TilePane");
+
+        safeTiles = Arrays.asList(
+
+            TileState.State.UNCOVERED,
+            TileState.State.FLAGGED,
+            TileState.State.FLAGGED_MINED
+
+        );
+
 
         board = new Board(tileWidth, tileHeight, mineCount);
         tiles = new Tile[tileWidth][tileHeight];
@@ -98,7 +120,7 @@ public class TilePane extends Pane implements Listener<TileState> {
                         // Pass tile positions
                         tileX,
                         tileY,
-                        // Pass pane positions for MouseRect creation
+                        // Pass pane positions for the tiles MouseRect creation
                         x,
                         y
 
@@ -132,6 +154,8 @@ public class TilePane extends Pane implements Listener<TileState> {
 
     }
 
+    // Tile Management functions
+
     public void propertyChanged(final TileState changed) {
 
         String message = changed.getMessage();
@@ -147,22 +171,30 @@ public class TilePane extends Pane implements Listener<TileState> {
 
             case "Flag": toChange = startFlag(originX, originY); break;
 
-        }
-
-        // Get the last [The index where an exploded or cleared tile would be added to] and check if
-        // its one of the special changes [EXPLODE or CLEAR]
-        UpdatePacket.Change originTile = toChange.get(toChange.size() - 1).getChange();
-
-        // If so, run its respective function.
-        switch (originTile) {
-
-            case EXPLODE: toChange.addAll(startExplode(originX, originY)); break;
-
-            case CLEAR: toChange.addAll(startClear(originX, originY)); break;
+            case "Hover": startHover(originX, originY); break;
 
         }
 
-        updateTiles(toChange);
+        // If startHover was called, toChange would have nothing to update it, so
+        // don't run this code if nothing needs to be updated.
+        if (toChange.size() > 0) {
+
+            // Get the last [The index where an exploded or cleared tile would be added to]
+            // and check if its one of the special changes [EXPLODE or CLEAR]
+            UpdatePacket.Change originTile = toChange.get(toChange.size() - 1).getChange();
+
+            // If so, run its respective function.
+            switch (originTile) {
+
+                case EXPLODE: toChange.addAll(startExplode(originX, originY)); break;
+
+                case CLEAR: toChange.addAll(startClear(originX, originY)); break;
+
+            }
+
+            updateTiles(toChange);
+
+        }
 
     }
 
@@ -194,6 +226,31 @@ public class TilePane extends Pane implements Listener<TileState> {
     private ArrayList<UpdatePacket> startFlag(final int originX, final int originY) {
 
         return board.flagTile(originX, originY);
+
+    }
+
+    private void startHover(final int originX, final int originY) {
+
+        TileState.State tile;
+
+        if (state.isStarted()) {
+
+            // Get the current tile state from board, and check
+            // if the tile is safe before inverting the game state
+
+            tile = board.getTileAt(originX, originY);
+
+            if (safeTiles.contains(tile)) {
+
+                state.setState(GameState.State.STARTED);
+
+            } else {
+
+                state.setState(GameState.State.UNCERTAIN);
+
+            }
+
+        }
 
     }
 
@@ -239,6 +296,13 @@ public class TilePane extends Pane implements Listener<TileState> {
         }
 
     }
+
+    public void updateGameState(final GameState.State newState) {
+
+
+
+    }
+
 
     public GameState getGameState() {
 

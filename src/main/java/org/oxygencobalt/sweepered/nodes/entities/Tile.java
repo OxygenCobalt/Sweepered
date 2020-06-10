@@ -17,15 +17,12 @@ import javafx.scene.image.ImageView;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
 
-import java.util.List;
-import java.util.Arrays;
-
 import java.util.HashMap;
 
 import events.WaveTimeline;
+import events.states.TileState;
 
 import generation.board.UpdatePacket;
-import generation.states.TileState;
 
 import media.TextureAtlas;
 import media.Sprite;
@@ -47,8 +44,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     private Rectangle2D mouseRect;
 
     private HashMap<String, ImageView> images;
-
-    private final List<TileState.State> disabledStates;
 
     public Tile(final int simpleX,
                 final int simpleY,
@@ -76,32 +71,52 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         // relative to the scene, as I cant do that w/MouseEvent
         mouseRect = new Rectangle2D(x + paneX, y + paneY, 32, 32);
 
-        // Create/Add the disabled states to their respective list
-        disabledStates = Arrays.asList(
-
-            TileState.State.DISABLED,
-            TileState.State.EXPLODED,
-            TileState.State.UNCOVERED,
-            TileState.State.DISABLED_MINED
-
-        );
-
         // Create image map and load the main tile texture
         images = new HashMap<String, ImageView>();
         loadTexture("Normal", TextureAtlas.TILE_NORMAL);
 
         setOnMousePressed(this);
         setOnMouseReleased(this);
+        setOnMouseMoved(this);
 
     }
 
     // Mouse Input functions
     public void handle(final MouseEvent event) {
 
+        EventType type = event.getEventType();
+
+        if (type == MouseEvent.MOUSE_MOVED) {
+
+            onHover(event);
+
+        } else {
+
+            onClick(event);
+
+        }
+
+    }
+
+    private void onHover(final MouseEvent event) {
+
+        // Find if the mouse pointer is still within the Rect2D
+        Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
+
+        if (isInBox) {
+
+            state.pulse("Hover");
+
+        }
+
+    }
+
+    private void onClick(final MouseEvent event) {
+
         MouseButton button = event.getButton();
 
         // Prevent tile from being clicked on if its in any state other than COVERED
-        if (!disabledStates.contains(state.getState())) {
+        if (!state.isDisabled()) {
 
             switch (button) {
 
@@ -114,7 +129,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         }
 
     }
-
     private void onPrimary(final MouseEvent event) {
 
         Boolean isNotFlagged = !String.valueOf(state.getState()).contains("FLAGGED");
@@ -300,6 +314,9 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             loadTexture("Normal", TextureAtlas.TILE_NORMAL);
 
         }
+
+        // Pulse hover again, to update the GameState
+        state.pulse("Hover");
 
     }
 

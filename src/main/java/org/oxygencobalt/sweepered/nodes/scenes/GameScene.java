@@ -9,8 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 import events.observable.Listener;
-
-import generation.states.GameState;
+import events.states.GameState;
 
 import media.Audio;
 
@@ -22,7 +21,7 @@ public class GameScene extends Scene implements Listener<GameState> {
     private Group root;
 
     private StatPane stats;
-    private TilePane board;
+    private TilePane tiles;
 
     private GameState masterState;
 
@@ -48,23 +47,28 @@ public class GameScene extends Scene implements Listener<GameState> {
 
         // Load the main panes
         stats = new StatPane(40, (mineWidth * 32), this.offset, 0);
-        board = new TilePane(mineWidth, mineHeight, this.mineCount, this.offset);
+        tiles = new TilePane(mineWidth, mineHeight, this.mineCount, this.offset);
 
-        board.getGameState().addListener(this);
+        stats.getGameState().addListener(this);
+        tiles.getGameState().addListener(this);
 
         root = group;
-        root.getChildren().addAll(stats, board);
+        root.getChildren().addAll(stats, tiles);
 
-        masterState = new GameState(GameState.State.UNSTARTED);
+        masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
 
     }
 
     public void propertyChanged(final GameState changed) {
 
-        // TODO: Add GameState communication from MinePane/StatPane
+        // Get information from changed object
+        GameState.State newState = changed.getState();
+        String owner = changed.getOwner();
 
         // Update the master state once everything is done.
-        masterState.setStateSilent(changed.getState());
+        masterState.setStateSilent(newState);
+
+        System.out.println(changed.getState());
 
     }
 }
