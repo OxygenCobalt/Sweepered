@@ -41,7 +41,6 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     public ResetButton(final int x, final int offset) {
 
-        // X is the only param needed, to center ResetButton
         this.x = x;
         this.y = 2;
 
@@ -68,8 +67,8 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
         // position relative to the pane itself.
         mouseRect = new Rectangle2D(x + offset, y + offset, width, height);
 
-        loadTexture("Normal", TextureAtlas.RESET_NORMAL);
-        loadTexture(currentFace, faceSprite);
+        loadTexture("Normal", TextureAtlas.RESET_NORMAL, false);
+        loadTexture(currentFace, faceSprite, false);
 
         setOnMousePressed(this);
         setOnMouseReleased(this);
@@ -102,9 +101,9 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private void onPress(final MouseEvent event) {
 
-        loadTexture("Pressed", TextureAtlas.RESET_PRESSED);
+        loadTexture("Pressed", TextureAtlas.RESET_PRESSED, false);
 
-        loadTexture(currentFace, faceSprite);
+        loadTexture(currentFace, faceSprite, true);
 
     }
 
@@ -151,7 +150,7 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
         // First reload the normal button texture, in order
         // to hide the old face.
 
-        loadTexture("resetNormal", TextureAtlas.RESET_NORMAL);
+        loadTexture("resetNormal", TextureAtlas.RESET_NORMAL, false);
 
         // FIXME: This thing is a result of the janky way you wrote
         // TextureAtlas, FIX WHEN YOU REWRITE IT
@@ -175,28 +174,48 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
         }
 
-        loadTexture(currentFace, faceSprite);
+        loadTexture(currentFace, faceSprite, false);
 
     }
 
-    private void loadTexture(final String name, final Sprite fallback) {
+    private void loadTexture(final String name, final Sprite fallback, final Boolean dark) {
+
+        ImageView image;
 
         // Check if the image already exists in the map
         if (images.containsKey(name)) {
 
-            images.get(name).toFront();
+            image = images.get(name);
+
+            image.toFront();
+
+            // If dark is set to true, then the texture will
+            // be loaded slightly transparent, to make it
+            // look darker. This is used with the faces when
+            // ResetButton is pressed, to make it more natural.
+            if (dark) {
+
+                image.setOpacity(0.6);
+
+            } else {
+
+                image.setOpacity(1);
+            }
+
 
         // Otherwise, load it and add it to the map
         } else {
 
+            image = TextureAtlas.get(fallback);
+
             images.put(
 
                 name,
-                TextureAtlas.get(fallback)
+                image
 
             );
 
-            getChildren().add(images.get(name)); // Add it to the pane
+            getChildren().add(image); // Add it to the pane
 
         }
 
