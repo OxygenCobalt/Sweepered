@@ -12,6 +12,8 @@ import javafx.scene.input.MouseEvent;
 
 import javafx.scene.image.ImageView;
 
+import javafx.geometry.Rectangle2D;
+
 import java.util.HashMap;
 
 import events.states.GameState;
@@ -33,9 +35,11 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
     private String currentFace;
     private Sprite faceSprite;
 
+    private Rectangle2D mouseRect;
+
     private HashMap<String, ImageView> images;
 
-    public ResetButton(final int x) {
+    public ResetButton(final int x, final int offset) {
 
         // X is the only param needed, to center ResetButton
         this.x = x;
@@ -57,6 +61,12 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
         // Load basic textures, and set up the face values.
         currentFace = "faceUNSTARTED";
         faceSprite = TextureAtlas.FACE_NORMAL;
+
+        // mouseRect is used to detect when the mouse
+        // has been released *outside* of the ResetButton,
+        // albeit relative to StatPane as I cant get the mouse
+        // position relative to the pane itself.
+        mouseRect = new Rectangle2D(x + offset, y + offset, width, height);
 
         loadTexture("Normal", TextureAtlas.RESET_NORMAL);
         loadTexture(currentFace, faceSprite);
@@ -100,15 +110,23 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private void onRelease(final MouseEvent event) {
 
-        // Update the face to its UNSTARTED variant and
-        // then change the state to UNSTARTED, notifying
-        // the listeners.
+
+        // Find if the mouse pointer is still within the Rect2D
+        Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
+
+        if (isInBox) {
+
+            // If so, change the state to UNSTARTED, notifying the listeners.
+
+            state.setState(GameState.State.UNSTARTED);
+
+        }
+
+        // Either way, play the click sound
 
         Audio.CLICK_SOUND.play();
 
-        updateFace(GameState.State.UNSTARTED);
-
-        state.setState(GameState.State.UNSTARTED);
+        updateFace(state.getState());
 
     }
 

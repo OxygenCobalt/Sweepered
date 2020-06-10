@@ -51,7 +51,7 @@ public class StatPane extends Pane implements Listener<GameState> {
 
         state = new GameState(GameState.State.UNSTARTED, "StatPane");
 
-        reset = new ResetButton((width - 36) / 2);
+        reset = new ResetButton((width - 36) / 2, offset);
 
         reset.getGameState().addListener(this);
 
