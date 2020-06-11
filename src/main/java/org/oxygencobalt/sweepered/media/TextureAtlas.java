@@ -50,19 +50,6 @@ public final class TextureAtlas {
     public static final Sprite STATE_MINED = new Sprite(STATE_ATLAS, 0, 1);
     public static final Sprite STATE_EXPLODED = new Sprite(STATE_ATLAS, 0, 2);
 
-    // Waves
-    private static final Image WAVE_ATLAS = new Image(RES_PATH + "waveAtlas.png");
-    public static final Sprite CLEAR_WAVE = new Sprite(WAVE_ATLAS, 0, 0);
-    public static final Sprite INVALID_WAVE = new Sprite(WAVE_ATLAS, 1, 0);
-    public static final Sprite EXPLODE_WAVE = new Sprite(WAVE_ATLAS, 2, 0);
-
-    // Faces [For the reset button]
-    public static final Image FACE_ATLAS = new Image(RES_PATH + "faceAtlas.png");
-    public static final Sprite FACE_NORMAL = new Sprite(FACE_ATLAS, 0, 0, 36, 36);
-    public static final Sprite FACE_UNCERTAIN = new Sprite(FACE_ATLAS, 1, 0, 36, 36);
-    public static final Sprite FACE_EXPLOSION = new Sprite(FACE_ATLAS, 2, 0, 36, 36);
-    public static final Sprite FACE_CLEARED = new Sprite(FACE_ATLAS, 3, 0, 36, 36);
-
     // Uncovered Number-Tiles
     // These are indexed by mineCount [See: Tile's uncover()], so its an array.
     public static final Sprite[] STATE_UNCOVERED = new Sprite[]{
@@ -79,6 +66,37 @@ public final class TextureAtlas {
         new Sprite(STATE_ATLAS, 1, 4),
         new Sprite(STATE_ATLAS, 2, 4),
         new Sprite(STATE_ATLAS, 3, 4)
+
+    };
+
+    // Waves
+    private static final Image WAVE_ATLAS = new Image(RES_PATH + "waveAtlas.png");
+    public static final Sprite CLEAR_WAVE = new Sprite(WAVE_ATLAS, 0, 0);
+    public static final Sprite INVALID_WAVE = new Sprite(WAVE_ATLAS, 1, 0);
+    public static final Sprite EXPLODE_WAVE = new Sprite(WAVE_ATLAS, 2, 0);
+
+    // Faces [For the reset button]
+    public static final Image FACE_ATLAS = new Image(RES_PATH + "faceAtlas.png");
+    public static final Sprite FACE_NORMAL = new Sprite(FACE_ATLAS, 0, 0, 36, 36);
+    public static final Sprite FACE_UNCERTAIN = new Sprite(FACE_ATLAS, 1, 0, 36, 36);
+    public static final Sprite FACE_EXPLOSION = new Sprite(FACE_ATLAS, 2, 0, 36, 36);
+    public static final Sprite FACE_CLEARED = new Sprite(FACE_ATLAS, 3, 0, 36, 36);
+
+    // Digits [Used w/the timer and flag count]
+    public static final Image DIGIT_ATLAS = new Image(RES_PATH + "digitAtlas.png");
+    public static final Sprite[] DIGITS = new Sprite[]{
+
+        new Sprite(DIGIT_ATLAS, 0, 0, 19, 32),
+        new Sprite(DIGIT_ATLAS, 1, 0, 19, 32),
+        new Sprite(DIGIT_ATLAS, 2, 0, 19, 32),
+        new Sprite(DIGIT_ATLAS, 3, 0, 19, 32),
+        new Sprite(DIGIT_ATLAS, 0, 1, 19, 32),
+        new Sprite(DIGIT_ATLAS, 2, 1, 19, 32),
+        new Sprite(DIGIT_ATLAS, 3, 1, 19, 32),
+        new Sprite(DIGIT_ATLAS, 0, 2, 19, 32),
+        new Sprite(DIGIT_ATLAS, 1, 2, 19, 32),
+        new Sprite(DIGIT_ATLAS, 2, 2, 19, 32),
+        new Sprite(DIGIT_ATLAS, 3, 2, 19, 32)
 
     };
 

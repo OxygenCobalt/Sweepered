@@ -9,6 +9,7 @@ import javafx.scene.layout.Region;
 import events.observable.Listener;
 import events.states.GameState;
 
+import nodes.entities.counter.Timer;
 import nodes.entities.ResetButton;
 import nodes.entities.Corner;
 
@@ -20,6 +21,7 @@ public class StatPane extends Pane implements Listener<GameState> {
     private final GameState state;
 
     private final ResetButton reset;
+    private final Timer timer;
 
     public StatPane(final int height,
                     final int width,
@@ -52,28 +54,13 @@ public class StatPane extends Pane implements Listener<GameState> {
         state = new GameState(GameState.State.UNSTARTED, "StatPane");
 
         reset = new ResetButton((width - 36) / 2, offset);
+        timer = new Timer(width - ((19 * 3) + 6), 3);
 
         reset.getGameState().addListener(this);
 
-        getChildren().addAll(reset);
+        getChildren().addAll(reset, timer);
 
-        generateCorners();
-
-    }
-
-    private void generateCorners() {
-
-        // Iterate through every corner of the pane
-        // and generate a corner for them all
-        for (int cornerX = 0; cornerX < 2; cornerX++) {
-
-            for (int cornerY = 0; cornerY < 2; cornerY++) {
-
-                getChildren().add(new Corner(cornerX, cornerY, width, height));
-
-            }
-
-        }
+        Corner.generateCorners(this, false);
 
     }
 

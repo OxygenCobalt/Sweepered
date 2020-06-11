@@ -103,11 +103,12 @@ public class TilePane extends Pane implements Listener<TileState> {
         tiles = new Tile[tileWidth][tileHeight];
 
         generateTiles();
-        Corner.generateCorners(this);
+        Corner.generateCorners(this, false);
 
     }
 
     private void generateTiles() {
+
         Tile tile;
 
         // Simply iterate through all the X and Y coordinates on the board,
@@ -118,12 +119,12 @@ public class TilePane extends Pane implements Listener<TileState> {
 
                 tile = new Tile(
 
-                        // Pass tile positions
-                        tileX,
-                        tileY,
-                        // Pass pane positions for the tiles MouseRect creation
-                        x,
-                        y
+                    // Pass tile positions
+                    tileX,
+                    tileY,
+                    // Pass pane positions for the tiles MouseRect creation
+                    x,
+                    y
 
                 );
 
@@ -132,22 +133,6 @@ public class TilePane extends Pane implements Listener<TileState> {
                 tiles[tileX][tileY] = tile;
 
                 getChildren().add(tiles[tileX][tileY]);
-
-            }
-
-        }
-
-    }
-
-    private void generateCorners() {
-
-        // Iterate through every corner of the pane
-        // and generate a corner for them all
-        for (int cornerX = 0; cornerX < 2; cornerX++) {
-
-            for (int cornerY = 0; cornerY < 2; cornerY++) {
-
-                getChildren().add(new Corner(cornerX, cornerY, width, height));
 
             }
 

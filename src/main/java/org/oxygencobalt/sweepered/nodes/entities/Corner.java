@@ -25,15 +25,33 @@ public class Corner extends Pane {
     public Corner(final int simpleX,
                   final int simpleY,
                   final int paneWidth,
-                  final int paneHeight) {
+                  final int paneHeight,
+                  final Boolean small) {
+
+        int offset = 4;
+        int textureX = simpleX;
+        int textureY = simpleY;
+
+        if (small) {
+
+            // If the corner should be small, subtract 2 from the
+            // offset to get the correct coordinate for a half-size corner
+            offset = offset - 2;
+
+            // Also increment the texture coordinates
+            // to index cornerAtlas correctly.
+            textureX = textureX + 4;
+
+        }
 
         // The paneWidth is multiplied by a simple coordinate [which is 0 or 1] to
-        // find a real coordinate, whether -4 [Left] or the width of the pane [Right]
-        x = -4 + (simpleX * (paneWidth + 4));
-        y = -4 + (simpleY * (paneHeight + 4));
+        // find a real coordinate, whether -4/-2 [Left] or the width of the pane [Right]
+        x = -offset + (simpleX * (paneWidth + offset));
+        y = -offset + (simpleY * (paneHeight + offset));
 
-        width = 4;
-        height = 4;
+        // The offset also applies to the corners w/h, so set that accordingly.
+        width = offset;
+        height = offset;
 
         relocate(x, y);
         setPrefSize(width, height);
@@ -44,8 +62,8 @@ public class Corner extends Pane {
         cornerSprite = new Sprite(
 
             TextureAtlas.CORNER_ATLAS,
-            simpleX,
-            simpleY,
+            textureX,
+            textureY,
             width,
             height
 
@@ -60,7 +78,7 @@ public class Corner extends Pane {
     // This function allows a pane to generate their own corners
     // Without a function of their own.
 
-    public static void generateCorners(final Pane pane) {
+    public static void generateCorners(final Pane pane, final Boolean small) {
 
         // Get the preferred with of the panes
         int paneWidth = (int) pane.getPrefWidth();
@@ -74,7 +92,16 @@ public class Corner extends Pane {
 
                 pane.getChildren().add(
 
-                    new Corner(cornerX, cornerY, paneWidth, paneHeight)
+                    new Corner(
+                        cornerX,
+                        cornerY,
+
+                        paneWidth,
+                        paneHeight,
+
+                        // Small is used to return smaller corners
+                        // to be used by the counter
+                        small)
 
                 );
 

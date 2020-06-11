@@ -193,9 +193,11 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
             // be loaded slightly transparent, to make it
             // look darker. This is used with the faces when
             // ResetButton is pressed, to make it more natural.
+
+            // FIXME: This probably wont work with any theme other than dark.
             if (dark) {
 
-                image.setOpacity(0.6);
+                image.setOpacity(0.5);
 
             } else {
 
@@ -222,3 +224,5 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
     }
 
 }
+
+// OxygenCobalt
