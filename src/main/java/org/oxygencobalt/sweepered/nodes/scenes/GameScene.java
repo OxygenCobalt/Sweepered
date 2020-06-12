@@ -14,14 +14,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.geometry.Rectangle2D;
 
 import events.observable.Listener;
+
 import events.states.GameState;
+import events.values.EventInteger;
 
 import media.Audio;
 
 import nodes.panes.TilePane;
 import nodes.panes.StatPane;
 
-public class GameScene extends Scene implements Listener<GameState>, EventHandler<MouseEvent> {
+public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
     private Group root;
 
@@ -29,6 +31,7 @@ public class GameScene extends Scene implements Listener<GameState>, EventHandle
     private TilePane tiles;
 
     private GameState masterState;
+
 
     private final int offset;
     private final int mineCount;
@@ -61,9 +64,11 @@ public class GameScene extends Scene implements Listener<GameState>, EventHandle
         // Set up the gameStates and add listeners to GameScene
         masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
 
-        stats.getGameState().addListener(this);
-        tiles.getGameState().addListener(this);
-        masterState.addListener(this);
+        stats.getGameState().addListener(gameStateListener);
+        tiles.getGameState().addListener(gameStateListener);
+        masterState.addListener(gameStateListener);
+
+        tiles.getFlagCount().addListener(flagCountListener);
 
         root = group;
         root.getChildren().addAll(stats, tiles);
@@ -79,7 +84,8 @@ public class GameScene extends Scene implements Listener<GameState>, EventHandle
 
     }
 
-    public void propertyChanged(final GameState changed) {
+    // Used to monitor changes in the Game State
+    Listener<GameState> gameStateListener = changed -> {
 
         // Get information from changed object
         GameState.State newState = changed.getState();
@@ -92,7 +98,14 @@ public class GameScene extends Scene implements Listener<GameState>, EventHandle
         // Update the master state once everything is done.
         masterState.setStateSilent(newState);
 
-    }
+    };
+
+    // Used to monitor changes in the flag count
+    Listener<EventInteger> flagCountListener = changed -> {
+
+        System.out.println(changed.getValue());
+
+    };
 
     public void handle(final MouseEvent event) {
 

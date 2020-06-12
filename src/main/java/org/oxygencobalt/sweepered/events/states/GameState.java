@@ -47,7 +47,7 @@ public class GameState extends Observable<GameState> {
 
     }
 
-    // Used to set the value of this boolean w/o notifying the listeners
+    // Used to set the value w/o notifying the listeners
     public void setStateSilent(final State newState) {
 
         this.state = newState;

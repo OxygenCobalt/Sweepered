@@ -17,6 +17,8 @@ import events.observable.Listener;
 import events.states.GameState;
 import events.states.TileState;
 
+import events.values.EventInteger;
+
 import generation.Board;
 import generation.UpdatePacket;
 
@@ -39,6 +41,8 @@ public class TilePane extends Pane implements Listener<TileState> {
     private Rectangle2D mouseRect;
 
     private final GameState state;
+
+    private final EventInteger flagCount;
 
     private final List<TileState.State> safeTiles;
 
@@ -81,6 +85,8 @@ public class TilePane extends Pane implements Listener<TileState> {
         this.tileHeight = tileHeight;
 
         this.mineCount = mineCount;
+
+        flagCount = new EventInteger(mineCount);
 
         // mouseRect is used to detect when the mouse
         // is being moved *within* the tile, as I cant get
@@ -153,11 +159,26 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         switch (message) {
 
+            // State functions
+            // These messages usually result to a change in tile states
+
             case "Uncover": toChange = startUncover(originX, originY); break;
 
             case "Flag": toChange = startFlag(originX, originY); break;
 
+            // Pulse functions
+            // These functions result in no changes to tile states and only serve
+            // as a communication line between TilePane and Tile
+
             case "Hover": startHover(originX, originY); break;
+
+            // When incrementing, its done by two in order to turn the amount of
+            // bad flags into a positive number. [E.G 2 bad flags with 33 mines
+            // would create a bad flag count of 0, but 2 * 2 bad flags w/33 mines
+            // would create a bad flag count of 2, which is correct.
+            case "Increment": flagCount.increment(2); break;
+
+            case "Deincrement": flagCount.deincrement(1); break;
 
         }
 
@@ -219,6 +240,8 @@ public class TilePane extends Pane implements Listener<TileState> {
             // Get the result of a flagging a tile at the coordinates
             // specified, and then update the new flag count.
             toChange.addAll(board.flagTile(originX, originY));
+
+            flagCount.setValue(board.getFlagCount());
 
         }
 
@@ -297,11 +320,14 @@ public class TilePane extends Pane implements Listener<TileState> {
     public void updateGameState(final GameState.State newState) {
 
         // If the new value is UNSTARTED, then reset the
-        // entire board and pass the updates to the tiles.
+        // entire board and pass the updates to the tiles, along
+        // with resetting the flag count.
 
         if (newState == GameState.State.UNSTARTED) {
 
             ArrayList<UpdatePacket> toChange = board.resetBoard();
+
+            flagCount.setValueSilent(board.getFlagCount());
 
             updateTiles(toChange);
 
@@ -315,6 +341,12 @@ public class TilePane extends Pane implements Listener<TileState> {
     public GameState getGameState() {
 
         return state;
+
+    }
+
+    public EventInteger getFlagCount() {
+
+        return flagCount;
 
     }
 

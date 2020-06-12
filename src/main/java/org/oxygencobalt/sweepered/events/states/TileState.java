@@ -17,7 +17,11 @@ public class TileState extends Observable<TileState> {
 
         UNCOVERED,
 
-        DISABLED, DISABLED_MINED, DISABLED_FLAGGED
+        DISABLED,
+
+        DISABLED_MINED, DISABLED_EXPLODED,
+
+        DISABLED_FLAGGED, DISABLED_BAD_FLAG
 
     }
 
@@ -41,12 +45,16 @@ public class TileState extends Observable<TileState> {
 
     public final void setState(final State newState, final String newMessage) {
 
-        state = newState;
+        if (state != newState) {
 
-        message = newMessage;
+            state = newState;
 
-        // Notify listeners of value change
-        fireChange(this);
+            message = newMessage;
+
+            // Notify listeners of value change
+            fireChange(this);
+
+        }
 
     }
 
@@ -59,7 +67,7 @@ public class TileState extends Observable<TileState> {
 
     }
 
-    // Used to set the value of this boolean w/o notifying the listeners
+    // Used to set the value w/o notifying the listeners
     public final void setStateSilent(final State newState) {
 
         this.state = newState;
@@ -113,7 +121,32 @@ public class TileState extends Observable<TileState> {
 
     public final Boolean isDisabled() {
 
-        return isState(State.DISABLED, State.EXPLODED, State.UNCOVERED, State.DISABLED_MINED);
+        return isState(
+
+            State.UNCOVERED,
+            State.DISABLED,
+
+            State.DISABLED_MINED,
+            State.DISABLED_EXPLODED,
+
+            State.DISABLED_FLAGGED,
+            State.DISABLED_BAD_FLAG
+
+        );
+
+    }
+
+    public final Boolean isMined() {
+
+        return isState(
+
+            State.MINED,
+            State.DISABLED_MINED,
+
+            State.EXPLODED,
+            State.DISABLED_EXPLODED
+
+        );
 
     }
 

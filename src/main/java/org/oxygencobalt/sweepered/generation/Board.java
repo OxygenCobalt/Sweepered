@@ -18,6 +18,8 @@ public class Board {
     private final int height;
     private final int mineCount;
 
+    private Integer flagCount;
+
     private int remainingTiles;
 
     private final List<TileState.State> minedTiles;
@@ -30,6 +32,8 @@ public class Board {
         this.width = width;
         this.height = height;
         this.mineCount = mineCount;
+
+        flagCount = mineCount;
 
         this.remainingTiles = (width * height) - mineCount;
 
@@ -295,13 +299,22 @@ public class Board {
 
         if (!stringTile.contains("FLAGGED")) {
 
-            if (tile == TileState.State.MINED) {
+            // Once the amount of flags exceeds mineCount,
+            // then flagging should be disabled, albeit
+            // unflagging should still be possible.
+            if (flagCount > 0) {
 
-                tile = TileState.State.FLAGGED_MINED;
+                if (tile == TileState.State.MINED) {
 
-            } else {
+                    tile = TileState.State.FLAGGED_MINED;
 
-                tile = TileState.State.FLAGGED;
+                } else {
+
+                    tile = TileState.State.FLAGGED;
+
+                }
+
+                flagCount--;
 
             }
 
@@ -318,22 +331,31 @@ public class Board {
 
             }
 
+            flagCount++;
+
         }
 
-        // Update tile on board and create corresponding UpdatePacket
-        board[originX][originY] = tile;
+        // Due to the possibility that the flagging operation could not happen,
+        // dont create a new changepacket if no change has been made.
 
-        changedTiles.add(new UpdatePacket(
+        if (tile != board[originX][originY]) {
 
-            UpdatePacket.Change.FLAG,
-            originX,
-            originY,
+            // Update tile on board and create corresponding UpdatePacket
+            board[originX][originY] = tile;
 
-            tile,
-            originX,
-            originY
+            changedTiles.add(new UpdatePacket(
 
-        ));
+                UpdatePacket.Change.FLAG,
+                originX,
+                originY,
+
+                tile,
+                originX,
+                originY
+
+            ));
+
+        }
 
         return changedTiles;
 
@@ -360,11 +382,17 @@ public class Board {
 
                     case MINED: tile = TileState.State.DISABLED_MINED; break;
 
+                    case EXPLODED: tile = TileState.State.DISABLED_EXPLODED; break;
+
                     // This flagged state only allows WaveTimeline to differentiate from
                     // tiles that were flagged correctly and ones that werent.
-                    case FLAGGED: tile = TileState.State.DISABLED_FLAGGED; break;
+                    case FLAGGED: tile = TileState.State.DISABLED_BAD_FLAG; break;
+
+                    // Tiles that were flagged correctly have their own state.
+                    case FLAGGED_MINED: tile = TileState.State.DISABLED_FLAGGED; break;
 
                     default: tile = TileState.State.DISABLED;
+
                 }
 
                 board[x][y] = tile;
@@ -447,6 +475,9 @@ public class Board {
 
         TileState.State tile;
 
+        // Reset flagCount to mineCount
+        flagCount = mineCount;
+
         // Iterate through the entire board and reset every tile to COVERED
 
         for (int x = 0; x < width; x++) {
@@ -478,6 +509,12 @@ public class Board {
     public TileState.State getTileAt(final int x, final int y) {
 
         return board[x][y];
+
+    }
+
+    public Integer getFlagCount() {
+
+        return flagCount;
 
     }
 
