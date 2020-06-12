@@ -102,9 +102,9 @@ public class Timer extends Counter {
             case STARTED: startTime(); break;
 
             // If its a game end condition, stop the timer;
-            case EXPLOSION: stopTime(); break;
+            case EXPLOSION: stopTime(true); break;
 
-            case CLEARED: stopTime(); break;
+            case CLEARED: stopTime(false); break;
 
         }
 
@@ -128,11 +128,30 @@ public class Timer extends Counter {
 
     }
 
-    private void stopTime() {
+    private void stopTime(final Boolean removeDigits) {
 
         started = false;
 
         countTime.stop();
+
+        // If removeDigits is enabled, change every digit
+        // to a simple line to remove the current time.
+
+        // This is used w/the EXPLOSION Game End state,
+        // as the time it took the complete the board
+        // shouldnt be shown if you lost.
+
+        if (removeDigits) {
+
+            for (int digit = 0; digit < digits.length; digit++) {
+
+                digits[digit] = 10;
+
+            }
+
+            updateDigits(false);
+
+        }
 
     }
 

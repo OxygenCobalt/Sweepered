@@ -50,8 +50,6 @@ public class WaveTimeline {
 
         }
 
-        System.out.println(type);
-
         // Make sure to remove the original wave before loading the new wave
         // to prevent a strange bug where a different wave type will persist after resets.
 
