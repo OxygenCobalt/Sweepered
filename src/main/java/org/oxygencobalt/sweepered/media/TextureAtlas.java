@@ -91,12 +91,13 @@ public final class TextureAtlas {
         new Sprite(DIGIT_ATLAS, 2, 0, 19, 32),
         new Sprite(DIGIT_ATLAS, 3, 0, 19, 32),
         new Sprite(DIGIT_ATLAS, 0, 1, 19, 32),
+        new Sprite(DIGIT_ATLAS, 1, 1, 19, 32),
         new Sprite(DIGIT_ATLAS, 2, 1, 19, 32),
         new Sprite(DIGIT_ATLAS, 3, 1, 19, 32),
         new Sprite(DIGIT_ATLAS, 0, 2, 19, 32),
         new Sprite(DIGIT_ATLAS, 1, 2, 19, 32),
         new Sprite(DIGIT_ATLAS, 2, 2, 19, 32),
-        new Sprite(DIGIT_ATLAS, 3, 2, 19, 32)
+        new Sprite(DIGIT_ATLAS, 3, 2, 19, 32),
 
     };
 

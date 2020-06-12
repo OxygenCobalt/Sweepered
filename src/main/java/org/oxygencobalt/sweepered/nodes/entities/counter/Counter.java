@@ -22,7 +22,7 @@ public abstract class Counter extends Pane {
     private final int width;
     private final int height;
 
-    private int[] digits;
+    public int[] digits;
     private int[] digitCache;
 
     private ImageView[] digitViews;
@@ -114,12 +114,11 @@ public abstract class Counter extends Pane {
 
                 getChildren().add(digitViews[i]);
 
+                digitCache[i] = digits[i];
+
             }
 
         }
-
-        // Store the new digits array within digitCache.
-        digitCache = digits.clone();
 
     }
 

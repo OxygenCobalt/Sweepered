@@ -72,9 +72,11 @@ public class StatPane extends Pane implements Listener<GameState> {
 
     public void updateGameState(final GameState.State newState) {
 
-        // Update the state of ResetButton
+        // Update the state of ResetButton & the timer
         reset.updateGameState(newState);
+        timer.updateGameState(newState);
 
+        // Then update itself.
         state.setStateSilent(newState);
 
     }

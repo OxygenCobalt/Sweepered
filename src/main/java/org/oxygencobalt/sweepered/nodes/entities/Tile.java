@@ -355,7 +355,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         }
 
-
         // Create a wavetimeline w/the given type [Usually EXPLOSION
         // or CLEARED] and the object itself, and then play it
         WaveTimeline timeline = new WaveTimeline(
@@ -403,6 +402,14 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             getChildren().add(images.get(name)); // Add it to the pane
 
         }
+
+    }
+
+    public void removeTexture(final String name) {
+
+        getChildren().remove(images.get(name));
+
+        images.remove(name);
 
     }
 

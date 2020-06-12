@@ -85,19 +85,9 @@ public class GameScene extends Scene implements Listener<GameState>, EventHandle
         GameState.State newState = changed.getState();
         String owner = changed.getOwner();
 
-        // Check the owner of the changed gamestate, and update the
-        // other owners respectively to sync the new state.
-        switch (owner) {
-
-            case "TilePane": stats.updateGameState(newState); break;
-
-            case "StatPane": tiles.updateGameState(newState); break;
-
-            case "GameScene": stats.updateGameState(newState);
-                              tiles.updateGameState(newState);
-                              break;
-
-        }
+        // Update every nodes state indescriminately
+        stats.updateGameState(newState);
+        tiles.updateGameState(newState);
 
         // Update the master state once everything is done.
         masterState.setStateSilent(newState);

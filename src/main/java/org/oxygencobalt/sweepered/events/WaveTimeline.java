@@ -50,6 +50,13 @@ public class WaveTimeline {
 
         }
 
+        System.out.println(type);
+
+        // Make sure to remove the original wave before loading the new wave
+        // to prevent a strange bug where a different wave type will persist after resets.
+
+        // FIXME: h o w  d o e s  t h i s  b u g  e v e n  h a p p e n
+        tile.removeTexture("Wave");
         tile.loadTexture("Wave", waveSprite);
 
         timeline = new Timeline(
