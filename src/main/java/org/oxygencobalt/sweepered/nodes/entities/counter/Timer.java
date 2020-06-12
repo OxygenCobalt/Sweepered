@@ -7,8 +7,8 @@ import javafx.animation.AnimationTimer;
 
 import java.time.Instant;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import events.states.GameState;
 
@@ -17,7 +17,7 @@ public class Timer extends Counter {
     private Boolean started;
     private long startTime;
 
-    private String elapsedCache;
+    private int elapsedCache;
 
     public Timer(final int x, final int digitCount) {
 
@@ -32,56 +32,35 @@ public class Timer extends Counter {
         @Override
         public void handle(final long now) {
 
+            ArrayList<Integer> passedDigits = new ArrayList<Integer>();
+
             long currentTime;
-
-            String elapsedTime;
-
-            ArrayList<String> elapsedDigits;
-            int elapsedSize;
+            int elapsedTime;
 
             // Get the amount of seconds that has elapsed by
             // subtracting the new epoch time from the old epoch time.
             currentTime = Instant.now().getEpochSecond();
 
-            elapsedTime = String.valueOf(currentTime - startTime);
+            elapsedTime = (int) (currentTime - startTime);
 
             // If the new time hasnt changed, then ignore this code.
-            if (!elapsedCache.equals(elapsedTime)) {
+            if (elapsedCache != elapsedTime) {
 
-                // elapsedDigits is converted into an array to fit more easily w/the digits array
-                elapsedDigits = new ArrayList<>(Arrays.asList(elapsedTime.split("(?!^)")));
+                // Fill the array of each value seperated into its individual digits,
+                // and then reverse it to get the correct order of the digits
+                while (elapsedTime > 0) {
 
-                // Correct the contents of elapsed if it does
-                // not match up w/the length of digits
-                while (elapsedDigits.size() != digits.length) {
+                    passedDigits.add(elapsedTime % 10);
 
-                    elapsedSize = elapsedDigits.size();
-
-                    // If its too short, pad the front of
-                    // elapsed with zeroes
-                    if (elapsedSize < digits.length) {
-
-                        elapsedDigits.add(0, "0");
-
-                    // If its too long, trunicate any digits outside
-                    // of it to create a rollover-type effect.
-                    } else if (elapsedSize > digits.length) {
-
-                        elapsedDigits.remove(0);
-
-                    }
+                    elapsedTime = elapsedTime / 10;
 
                 }
 
-                // For every digit in the list, update them
-                // with the new digits from elapsed.
-                for (int digit = 0; digit < digits.length; digit++) {
+                Collections.reverse(passedDigits);
 
-                    digits[digit] = Integer.parseInt(elapsedDigits.get(digit));
-
-                }
-
-                updateDigits(false);
+                // Then update the counters digits
+                // with the new value.
+                updateDigits(passedDigits);
 
                 elapsedCache = elapsedTime;
 
@@ -96,15 +75,16 @@ public class Timer extends Counter {
         switch (newState) {
 
             // Reset the timer if the board is being reset w/UNSTARTED
-            case UNSTARTED: resetTime(); break;
+            case UNSTARTED: resetTime(0); break;
 
             // Start the timer if the game is being started
             case STARTED: startTime(); break;
 
-            // If its a game end condition, stop the timer;
-            case EXPLOSION: stopTime(true); break;
+            // If its the game ends with a loss, reset the timer with the dash value
+            case EXPLOSION: resetTime(10); break;
 
-            case CLEARED: stopTime(false); break;
+            // If the board is cleared, just stop the time.
+            case CLEARED: stopTime(); break;
 
         }
 
@@ -120,7 +100,7 @@ public class Timer extends Counter {
             // such as the time this function was called
             // and the last stored time difference.
             startTime = Instant.now().getEpochSecond();
-            elapsedCache = "";
+            elapsedCache = 0;
 
             countTime.start();
 
@@ -128,42 +108,31 @@ public class Timer extends Counter {
 
     }
 
-    private void stopTime(final Boolean removeDigits) {
+    private void stopTime() {
 
         started = false;
 
         countTime.stop();
 
-        // If removeDigits is enabled, change every digit
-        // to a simple line to remove the current time.
-
-        // This is used w/the EXPLOSION Game End state,
-        // as the time it took the complete the board
-        // shouldnt be shown if you lost.
-
-        if (removeDigits) {
-
-            for (int digit = 0; digit < digits.length; digit++) {
-
-                digits[digit] = 10;
-
-            }
-
-            updateDigits(false);
-
-        }
-
     }
 
-    private void resetTime() {
+    // resetTime is similar to stopTime, but it also
+    // reverts all digits to their disabled "Dash" state.
+    private void resetTime(final int digitType) {
 
-        for (int digit = 0; digit < digits.length; digit++) {
+        stopTime();
 
-            digits[digit] = 0;
+        // Fill a new array of digits with the value 10 [The dash
+        // value] and then update the counter with that array
+        ArrayList<Integer> resetNumbers = new ArrayList<Integer>();
+
+        for (int digit = 0; digit < getDigitCount(); digit++) {
+
+            resetNumbers.add(digitType);
 
         }
 
-        updateDigits(false);
+        updateDigits(resetNumbers);
 
     }
 

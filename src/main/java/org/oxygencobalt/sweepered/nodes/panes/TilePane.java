@@ -211,7 +211,18 @@ public class TilePane extends Pane implements Listener<TileState> {
 
     private ArrayList<UpdatePacket> startFlag(final int originX, final int originY) {
 
-        return board.flagTile(originX, originY);
+        ArrayList<UpdatePacket> toChange = new ArrayList<UpdatePacket>();
+
+        // Flagging is only allowed when a game is started.
+        if (state.isStarted()) {
+
+            // Get the result of a flagging a tile at the coordinates
+            // specified, and then update the new flag count.
+            toChange.addAll(board.flagTile(originX, originY));
+
+        }
+
+        return toChange;
 
     }
 

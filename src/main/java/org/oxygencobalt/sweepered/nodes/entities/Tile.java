@@ -164,11 +164,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         // a flag from being placed and then immediately removed
         if (type == MouseEvent.MOUSE_PRESSED) {
 
-            // Playing the flag sound is seperate from any function due to
-            // how the invertFlagged() function does not always run
-
-            Audio.FLAG_SOUND.play();
-
             // Run the pulse function in order to notify the listeners
             // that the tile needs to be flagged, without changing the value.
             state.pulse("Flag");
@@ -330,6 +325,8 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             loadTexture("Normal", TextureAtlas.TILE_NORMAL);
 
         }
+
+        Audio.FLAG_SOUND.play();
 
         // Pulse hover again, to update the GameState
         state.pulse("Hover");

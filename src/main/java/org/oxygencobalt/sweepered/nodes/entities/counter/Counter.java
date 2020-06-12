@@ -9,6 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.image.ImageView;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 
 import media.TextureAtlas;
 
@@ -22,8 +23,10 @@ public abstract class Counter extends Pane {
     private final int width;
     private final int height;
 
-    public int[] digits;
+    private int[] digits;
     private int[] digitCache;
+
+    private int digitCount;
 
     private ImageView[] digitViews;
 
@@ -63,19 +66,59 @@ public abstract class Counter extends Pane {
         // Create the digit array, its cache, and the list of digit ImageViews
         digits = new int[digitCount];
         digitCache = new int[digitCount];
+
+        this.digitCount = digitCount;
+
         digitViews = new ImageView[digitCount];
 
-        // Then, fill digits/digitCache with all zeros, the base value
+        // Then, fill digits/digitCache with 10, the disabled value [Simply a dash]
         Arrays.fill(digits, 0);
         Arrays.fill(digitCache, 0);
 
-        updateDigits(true);
+        updateDigitDisplay(true);
 
         Corner.generateCorners(this, true);
 
     }
 
-    public void updateDigits(final Boolean doInitGeneration) {
+    public void updateDigits(final ArrayList<Integer> digitArgs) {
+
+        int digitSize;
+
+        // First, correct the list of digits if its too large/small to be displayed.
+        while (digitArgs.size() != digits.length) {
+
+            digitSize = digitArgs.size();
+
+            // If its too short, pad the front of
+            // elapsed with zeroes
+            if (digitSize < digits.length) {
+
+                digitArgs.add(0, 0);
+
+            // If its too long, trunicate any digits outside
+            // of it to create a rollover effect.
+            } else if (digitSize > digits.length) {
+
+                digitArgs.remove(0);
+
+            }
+
+        }
+
+        // For every digit in the list, update them
+        // with the new digits from elapsed.
+        for (int digit = 0; digit < digits.length; digit++) {
+
+            digits[digit] = digitArgs.get(digit);
+
+        }
+
+        updateDigitDisplay(false);
+
+    }
+
+    private void updateDigitDisplay(final Boolean doInitGeneration) {
 
         Boolean isUpdated;
         ImageView newDigit;
@@ -119,6 +162,12 @@ public abstract class Counter extends Pane {
             }
 
         }
+
+    }
+
+    public int getDigitCount() {
+
+        return digitCount;
 
     }
 

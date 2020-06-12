@@ -10,6 +10,8 @@ import events.observable.Listener;
 import events.states.GameState;
 
 import nodes.entities.counter.Timer;
+// import nodes.entities.counter.FlagCounter;
+
 import nodes.entities.ResetButton;
 import nodes.entities.Corner;
 
@@ -20,6 +22,7 @@ public class StatPane extends Pane implements Listener<GameState> {
 
     private final GameState state;
 
+    // private final FlagCounter flags;
     private final ResetButton reset;
     private final Timer timer;
 
@@ -53,6 +56,7 @@ public class StatPane extends Pane implements Listener<GameState> {
 
         state = new GameState(GameState.State.UNSTARTED, "StatPane");
 
+        // flags = new FlagCounter(6, 3);
         reset = new ResetButton((width - 36) / 2, offset);
         timer = new Timer(width - ((19 * 3) + 6), 3);
 
