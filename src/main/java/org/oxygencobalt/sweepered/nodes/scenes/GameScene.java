@@ -32,7 +32,6 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
     private GameState masterState;
 
-
     private final int offset;
     private final int mineCount;
 
@@ -58,7 +57,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         Audio.loadSounds();
 
         // Load the main panes
-        stats = new StatPane(40, (mineWidth * 32), this.offset, 0);
+        stats = new StatPane(40, (mineWidth * 32), this.offset, this.mineCount);
         tiles = new TilePane(mineWidth, mineHeight, this.mineCount, this.offset);
 
         // Set up the gameStates and add listeners to GameScene
@@ -103,7 +102,9 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
     // Used to monitor changes in the flag count
     Listener<EventInteger> flagCountListener = changed -> {
 
-        System.out.println(changed.getValue());
+        // If a change is detected, just pass it off to statpane
+        // as only TilePane does anything w/flagCount
+        stats.updateFlagCount(changed.getValue());
 
     };
 

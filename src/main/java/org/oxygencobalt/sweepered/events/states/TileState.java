@@ -19,9 +19,7 @@ public class TileState extends Observable<TileState> {
 
         DISABLED,
 
-        DISABLED_MINED, DISABLED_EXPLODED,
-
-        DISABLED_FLAGGED, DISABLED_BAD_FLAG
+        DISABLED_MINED, DISABLED_BAD_FLAG
 
     }
 
@@ -127,9 +125,6 @@ public class TileState extends Observable<TileState> {
             State.DISABLED,
 
             State.DISABLED_MINED,
-            State.DISABLED_EXPLODED,
-
-            State.DISABLED_FLAGGED,
             State.DISABLED_BAD_FLAG
 
         );
@@ -143,8 +138,7 @@ public class TileState extends Observable<TileState> {
             State.MINED,
             State.DISABLED_MINED,
 
-            State.EXPLODED,
-            State.DISABLED_EXPLODED
+            State.EXPLODED
 
         );
 

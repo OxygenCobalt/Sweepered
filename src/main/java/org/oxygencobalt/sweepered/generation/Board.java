@@ -382,14 +382,9 @@ public class Board {
 
                     case MINED: tile = TileState.State.DISABLED_MINED; break;
 
-                    case EXPLODED: tile = TileState.State.DISABLED_EXPLODED; break;
-
                     // This flagged state only allows WaveTimeline to differentiate from
                     // tiles that were flagged correctly and ones that werent.
                     case FLAGGED: tile = TileState.State.DISABLED_BAD_FLAG; break;
-
-                    // Tiles that were flagged correctly have their own state.
-                    case FLAGGED_MINED: tile = TileState.State.DISABLED_FLAGGED; break;
 
                     default: tile = TileState.State.DISABLED;
 
@@ -503,6 +498,28 @@ public class Board {
         }
 
         return changedTiles;
+
+    }
+
+    public int getBadFlagCount() {
+
+        int badFlagCount = 0;
+
+        for (int x = 0; x < width; x++) {
+
+            for (int y = 0; y < height; y++) {
+
+                if (board[x][y] == TileState.State.FLAGGED) {
+
+                    badFlagCount++;
+
+                }
+
+            }
+
+        }
+
+        return badFlagCount;
 
     }
 

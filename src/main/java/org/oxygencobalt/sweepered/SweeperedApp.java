@@ -26,7 +26,7 @@ public class SweeperedApp extends Application {
         // width, height - specified board size [in tiles, not pixels]
         // mine count - number of mines on the board
         // offset - the spacing between each pane in GameScene
-        GameScene mainScene = new GameScene(new Group(), 9, 9, 35, 10);
+        GameScene mainScene = new GameScene(new Group(), 16, 16, 99, 10);
 
         window.setScene(mainScene);
         window.show();

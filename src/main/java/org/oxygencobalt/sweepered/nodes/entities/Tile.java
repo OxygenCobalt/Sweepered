@@ -280,6 +280,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             gridSprite.setX(0);
 
         }
+
         if (y == 0) {
 
             gridSprite.setY(0);
@@ -298,8 +299,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
     private void becomeMine(final UpdatePacket packet) {
 
         // Nothing needs to be run when a tile becomes a mine, so this function remains empty.
-
-        loadTexture("Mined", TextureAtlas.STATE_MINED);
 
     }
 

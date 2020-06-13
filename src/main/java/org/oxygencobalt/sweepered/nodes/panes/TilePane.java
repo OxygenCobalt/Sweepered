@@ -172,14 +172,6 @@ public class TilePane extends Pane implements Listener<TileState> {
 
             case "Hover": startHover(originX, originY); break;
 
-            // When incrementing, its done by two in order to turn the amount of
-            // bad flags into a positive number. [E.G 2 bad flags with 33 mines
-            // would create a bad flag count of 0, but 2 * 2 bad flags w/33 mines
-            // would create a bad flag count of 2, which is correct.
-            case "Increment": flagCount.increment(2); break;
-
-            case "Deincrement": flagCount.deincrement(1); break;
-
         }
 
         // If startHover was called, toChange would have nothing to update it, so
@@ -282,6 +274,8 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         state.setState(GameState.State.EXPLOSION);
 
+        flagCount.setValue(board.getBadFlagCount());
+
         return board.disableAllTiles("EXPLOSION", originX, originY);
 
 
@@ -294,6 +288,8 @@ public class TilePane extends Pane implements Listener<TileState> {
         // win condition.
 
         state.setState(GameState.State.CLEARED);
+
+        flagCount.setValue(0);
 
         return board.disableAllTiles("CLEARED", originX, originY);
 
@@ -327,7 +323,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
             ArrayList<UpdatePacket> toChange = board.resetBoard();
 
-            flagCount.setValueSilent(board.getFlagCount());
+            flagCount.setValue(board.getFlagCount());
 
             updateTiles(toChange);
 

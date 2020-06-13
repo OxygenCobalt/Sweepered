@@ -79,23 +79,11 @@ public class WaveTimeline {
 
         }
 
-        // If the tile is "Mined" in any way [INCLUDING EXPLODED],
-        // then deincrement the amount of flags by 1.
-
-        // This is used to calculate the remaining flag count during a
-        // game end scenario [Exploded: Number of incorrectly placed flags,
-        // Cleared: Just reduce the remaining count to 0]
-        if (tileState.isMined()) {
-
-            tileState.pulse("Deincrement");
-
-        }
-
         // Bring waveTile back to front if another tile is loaded from above,
         // but only if the tile is DISABLED in any way to prevent the wave from
         // persisting past a reset.
 
-        if (String.valueOf(state).contains("DISABLED")) {
+        if (tileState.isDisabled()) {
 
             tile.loadTexture("Wave", waveSprite);
 
@@ -130,20 +118,13 @@ public class WaveTimeline {
 
         tile.loadTexture("Incorrect", TextureAtlas.STATE_BAD_FLAG);
 
-        // Also increment up the flag count, to display the amount
-        // of bad flags if the game end state is EXPLOSION
-
-        // No if statement is needed as theres no logistical way to
-        // incorrectly place a flag and then clear the board. [I think]
-        tileState.pulse("Increment");
-
     }
 
     private void fade() {
 
         TileState.State state = tileState.getState();
 
-        if (String.valueOf(state).contains("DISABLED")) {
+        if (tileState.isDisabled()) {
 
             tile.getImages().get("Wave").setOpacity(0.5);
 
@@ -155,7 +136,7 @@ public class WaveTimeline {
 
         TileState.State state = tileState.getState();
 
-        if (String.valueOf(state).contains("DISABLED")) {
+        if (tileState.isDisabled()) {
 
             // Once the mine is shown, theres no need to unshow it, remove the wave texture
             tile.removeTexture("Wave");
