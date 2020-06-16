@@ -49,19 +49,7 @@ public abstract class Counter extends Pane {
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Set Style for the background and the borders
-        // Despite being an entity, Counter follows the same
-        // border pattern as the panes.
-        setStyle(
-
-            "-fx-background-color: #000000;"
-            +
-            "-fx-border-width: 2px;"
-            +
-            "-fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;"
-            +
-            "-fx-border-style: solid outside;"
-
-        );
+        getStyleClass().add("counter");
 
         // Create the digit array, its cache, and the list of digit ImageViews
         digits = new int[digitCount];

@@ -20,12 +20,15 @@ import events.values.EventInteger;
 
 import media.audio.Audio;
 
+import game.panes.ConfigPane;
 import game.panes.TilePane;
 import game.panes.StatPane;
 
 public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
     private Group root;
+
+    private ConfigPane config;
 
     private StatPane stats;
     private TilePane tiles;
@@ -40,13 +43,16 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
     private String[] owners;
 
     public GameScene(final Group group,
-                     final int mineWidth,
-                     final int mineHeight,
+                     final int tileWidth,
+                     final int tileHeight,
                      final int mineCount,
                      final int offset) {
 
         // Call super to construct Scene(), and then add passed group to class.
-        super(group, (mineWidth * 32) + (18 + offset), (mineHeight * 32) + (76 + offset));
+        super(group, (tileWidth * 32) + (18 + offset), (tileHeight * 32) + (96 + offset));
+
+        // Also set up the stylesheet that is used throughout the program
+        getStylesheets().add("file:src/main/resources/stylesheets/main.css");
 
         setFill(Color.web("3d3d3d")); // Background color matches w/the tile color, mostly
 
@@ -56,9 +62,10 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // Load the sounds in from Audio
         Audio.loadSounds();
 
-        // Load the main panes
-        stats = new StatPane(40, (mineWidth * 32), this.offset, this.mineCount);
-        tiles = new TilePane(mineWidth, mineHeight, this.mineCount, this.offset);
+        // Load the main nodes
+        config = new ConfigPane((int) getWidth());
+        stats = new StatPane(40, (tileWidth * 32), this.offset, this.mineCount);
+        tiles = new TilePane(tileWidth, tileHeight, this.mineCount, this.offset);
 
         // Set up the gameStates and add listeners to GameScene
         masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
@@ -70,14 +77,14 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         tiles.getFlagCount().addListener(flagCountListener);
 
         root = group;
-        root.getChildren().addAll(stats, tiles);
+        root.getChildren().addAll(config, stats, tiles);
 
         // tileRect is used to detect if the mouse is outside of
         // TilePane, and then correcting the gameState accordingly.
         tileRect = new Rectangle2D(tiles.getLayoutX(),
                                    tiles.getLayoutY(),
-                                   mineWidth * 32,
-                                   mineHeight * 32);
+                                   tileWidth * 32,
+                                   tileHeight * 32);
 
         setOnMouseMoved(this);
 

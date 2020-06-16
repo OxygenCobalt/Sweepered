@@ -39,7 +39,7 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private HashMap<String, ImageView> images;
 
-    public ResetButton(final int x, final int offset) {
+    public ResetButton(final int x, final int paneX, final int paneY) {
 
         this.x = x;
         this.y = 2;
@@ -65,7 +65,7 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
         // has been released *outside* of the ResetButton,
         // albeit relative to StatPane as I cant get the mouse
         // position relative to the pane itself.
-        mouseRect = new Rectangle2D(x + offset, y + offset, width, height);
+        mouseRect = new Rectangle2D(x + paneX, y + paneY, width, height);
 
         loadTexture("Normal", TextureAtlas.RESET_NORMAL, false);
         loadTexture(currentFace, faceSprite, false);

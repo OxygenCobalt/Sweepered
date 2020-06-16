@@ -55,7 +55,9 @@ public class TilePane extends Pane implements Listener<TileState> {
                     final int offset) {
 
         x = offset;
-        y = (offset * 2) + 44; // 44 is added to account for StatPane and its border.
+
+        // 64 is added to y to account for StatPane, its border, and ConfigPane.
+        y = (offset * 2) + 64;
 
         // w/h is multiplied by the tile count to get the actual pixel size
         width = tileWidth * 32;
@@ -69,17 +71,7 @@ public class TilePane extends Pane implements Listener<TileState> {
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Set Style for the background and the borders
-        setStyle(
-
-            "-fx-background-color: #3d3d3d;"
-            +
-            "-fx-border-width: 4px;"
-            +
-            "-fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;"
-            +
-            "-fx-border-style: solid outside;"
-
-        );
+        getStyleClass().add("game-pane");
 
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
