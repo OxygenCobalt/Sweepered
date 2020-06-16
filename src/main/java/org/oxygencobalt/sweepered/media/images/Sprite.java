@@ -5,7 +5,7 @@
 // based on their width and height, So, a 32x32
 // sprite with coordinates at 32x/64y would become 1x/2y.
 
-package media;
+package media.images;
 
 import javafx.scene.image.Image;
 import javafx.geometry.Rectangle2D;

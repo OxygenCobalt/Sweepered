@@ -1,7 +1,7 @@
 // Timer
 // Counter that keeps track of the time that has elapsed in the game.
 
-package nodes.entities.counter;
+package game.counter;
 
 import javafx.animation.AnimationTimer;
 

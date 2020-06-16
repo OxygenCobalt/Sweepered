@@ -1,7 +1,7 @@
 // GameScene
 // Main Minesweeper game scene.
 
-package nodes.scenes;
+package game;
 
 import javafx.scene.Scene;
 import javafx.scene.Group;
@@ -18,10 +18,10 @@ import events.observable.Listener;
 import events.states.GameState;
 import events.values.EventInteger;
 
-import media.Audio;
+import media.audio.Audio;
 
-import nodes.panes.TilePane;
-import nodes.panes.StatPane;
+import game.panes.TilePane;
+import game.panes.StatPane;
 
 public class GameScene extends Scene implements EventHandler<MouseEvent> {
 

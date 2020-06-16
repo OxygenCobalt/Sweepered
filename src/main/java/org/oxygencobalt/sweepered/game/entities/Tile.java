@@ -1,7 +1,7 @@
 // Tile
 // Main button-like object, may or may not contain a mine
 
-package nodes.entities;
+package game.entities;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -19,14 +19,14 @@ import javafx.geometry.Point2D;
 
 import java.util.HashMap;
 
-import events.animations.WaveTimeline;
 import events.states.TileState;
 
 import generation.UpdatePacket;
 
-import media.TextureAtlas;
-import media.Sprite;
-import media.Audio;
+import media.animations.WaveTimeline;
+import media.images.TextureAtlas;
+import media.images.Sprite;
+import media.audio.Audio;
 
 public class Tile extends Pane implements EventHandler<MouseEvent> {
 

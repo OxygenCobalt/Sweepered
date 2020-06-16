@@ -1,15 +1,15 @@
 // Corner
 // Largely decorative object
 
-package nodes.entities;
+package game.decor;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
 import javafx.scene.image.ImageView;
 
-import media.TextureAtlas;
-import media.Sprite;
+import media.images.TextureAtlas;
+import media.images.Sprite;
 
 public class Corner extends Pane {
 

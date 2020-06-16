@@ -1,7 +1,7 @@
 // Audio
 // Very small class holding static Audioclips.
 
-package media;
+package media.audio;
 
 import javafx.scene.media.AudioClip;
 

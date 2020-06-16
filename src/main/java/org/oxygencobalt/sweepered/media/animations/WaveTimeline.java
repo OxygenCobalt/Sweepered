@@ -1,7 +1,7 @@
 // ShockwaveTimeline
 // Timeline that handles explosion shockwaves.
 
-package events.animations;
+package media.animations;
 
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
@@ -10,12 +10,12 @@ import javafx.geometry.Point2D;
 
 import javafx.util.Duration;
 
-import media.TextureAtlas;
-import media.Sprite;
+import media.images.TextureAtlas;
+import media.images.Sprite;
 
 import events.states.TileState;
 
-import nodes.entities.Tile;
+import game.entities.Tile;
 
 public class WaveTimeline {
 

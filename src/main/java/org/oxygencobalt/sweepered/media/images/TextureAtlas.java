@@ -1,7 +1,7 @@
 // TextureAtlas
 // Class containing all image coordinates and the function to turn them into imageviews.
 
-package media;
+package media.images;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

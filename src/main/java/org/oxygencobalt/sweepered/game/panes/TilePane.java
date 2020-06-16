@@ -1,7 +1,7 @@
 // MinePane
 // Pane where Tiles and mines are generated,
 
-package nodes.panes;
+package game.panes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -22,8 +22,8 @@ import events.values.EventInteger;
 import generation.Board;
 import generation.UpdatePacket;
 
-import nodes.entities.Tile;
-import nodes.entities.Corner;
+import game.entities.Tile;
+import game.decor.Corner;
 
 public class TilePane extends Pane implements Listener<TileState> {
 
