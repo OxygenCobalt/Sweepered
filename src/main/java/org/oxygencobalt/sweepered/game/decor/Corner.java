@@ -16,6 +16,9 @@ public class Corner extends Pane {
     private final int x;
     private final int y;
 
+    private int textureX;
+    private int textureY;
+
     private final int width;
     private final int height;
 
@@ -26,11 +29,21 @@ public class Corner extends Pane {
                   final int simpleY,
                   final int paneWidth,
                   final int paneHeight,
-                  final Boolean small) {
+                  final Boolean small,
+                  final Boolean inverted) {
 
         int offset = 4;
-        int textureX = simpleX;
-        int textureY = simpleY;
+        textureX = simpleX;
+        textureY = simpleY;
+
+        if (inverted) {
+
+            // If inverted, change the Y value to index the second
+            // spritesheet that has the inverted corner images
+
+            textureY = textureY + 2;
+
+        }
 
         if (small) {
 
@@ -75,14 +88,63 @@ public class Corner extends Pane {
 
     }
 
+    // This function inverts/uninverts the corner image, in a similar
+    // way of setting "invert" to true in the class constructor.
+
+    public void setInverted(final Boolean isInverted) {
+
+        // Either move the texture index to the second
+        // corner spritesheet if the corner needs to be inverted,
+        // or move the texture index back to the original sprites
+        // it it needs to be uninverted
+
+        if (isInverted) {
+
+            textureY = textureY + 2;
+
+        } else {
+
+            textureY = textureY - 2;
+
+        }
+
+        // Then. load the texture like in the class constructor,
+        // but remove the cornerImage until the new one is loaded in.
+
+        cornerSprite = new Sprite(
+
+            TextureAtlas.CORNER_ATLAS,
+            textureX,
+            textureY,
+            width,
+            height
+
+        );
+
+        getChildren().remove(cornerImage);
+
+        cornerImage = TextureAtlas.get(cornerSprite);
+
+        getChildren().add(cornerImage);
+
+    }
+
     // This function allows a pane to generate their own corners
     // Without a function of their own.
 
-    public static void generateCorners(final Pane pane, final Boolean small) {
+    public static Corner[] generateCorners(final Pane pane,
+                                           final Boolean small,
+                                           final Boolean inverted) {
+
+        Corner[] toReturn = new Corner[4];
+
+        Corner newCorner;
 
         // Get the preferred with of the panes
         int paneWidth = (int) pane.getPrefWidth();
         int paneHeight = (int) pane.getPrefHeight();
+
+        int i = 0;
 
         // Then, iterate through every corner of the pane
         // and generate a corner for them all
@@ -90,24 +152,35 @@ public class Corner extends Pane {
 
             for (int cornerY = 0; cornerY < 2; cornerY++) {
 
-                pane.getChildren().add(
+                newCorner = new Corner(
 
-                    new Corner(
-                        cornerX,
-                        cornerY,
+                    cornerX,
+                    cornerY,
 
-                        paneWidth,
-                        paneHeight,
+                    paneWidth,
+                    paneHeight,
 
-                        // Small is used to return smaller corners
-                        // to be used by the counter
-                        small)
+                    // Small is used to return smaller corners
+                    // to be used by the counter/configbuttons
+                    small,
+
+                    // Inverted is used to return the opposite-colored
+                    // corner, used by configbutton
+                    inverted
 
                 );
+
+                pane.getChildren().add(newCorner);
+
+                toReturn[i] = newCorner;
+
+                i++;
 
             }
 
         }
+
+        return toReturn;
 
     }
 

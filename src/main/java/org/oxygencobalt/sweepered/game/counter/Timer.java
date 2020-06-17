@@ -16,6 +16,7 @@ public class Timer extends Counter {
 
     private Boolean started;
     private long startTime;
+    private int time;
 
     private int elapsedCache;
 
@@ -32,10 +33,12 @@ public class Timer extends Counter {
         @Override
         public void handle(final long now) {
 
-            ArrayList<Integer> passedDigits = new ArrayList<Integer>();
+            ArrayList<Integer> timeDigits = new ArrayList<Integer>();
 
             long currentTime;
             int elapsedTime;
+
+            int timeClone;
 
             // Get the amount of seconds that has elapsed by
             // subtracting the new epoch time from the old epoch time.
@@ -46,21 +49,28 @@ public class Timer extends Counter {
             // If the new time hasnt changed, then ignore this code.
             if (elapsedCache != elapsedTime) {
 
+                // If it has changed, increment the time by 1 and update the digits
+                time++;
+
+                // timeClone is used to seperate time into digits w/o
+                // actually changing the value of time
+                timeClone = time;
+
                 // Fill the array of each value seperated into its individual digits,
                 // and then reverse it to get the correct order of the digits
-                while (elapsedTime > 0) {
+                while (timeClone > 0) {
 
-                    passedDigits.add(elapsedTime % 10);
+                    timeDigits.add(timeClone % 10);
 
-                    elapsedTime = elapsedTime / 10;
+                    timeClone = timeClone / 10;
 
                 }
 
-                Collections.reverse(passedDigits);
+                Collections.reverse(timeDigits);
 
                 // Then update the counters digits
                 // with the new value.
-                updateDigits(passedDigits);
+                updateDigits(timeDigits);
 
                 elapsedCache = elapsedTime;
 
@@ -112,6 +122,8 @@ public class Timer extends Counter {
 
     private void stopTime() {
 
+        // If needed, the timer itself can be stopped, but the time on it
+        // can remain the same to be restarted again in the future.
         started = false;
 
         countTime.stop();
@@ -123,6 +135,8 @@ public class Timer extends Counter {
     private void resetTime(final int digitType) {
 
         stopTime();
+
+        time = 0;
 
         // Fill a new array of digits with the value 10 [The dash
         // value] and then update the counter with that array

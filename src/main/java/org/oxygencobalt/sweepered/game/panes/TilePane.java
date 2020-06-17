@@ -101,7 +101,8 @@ public class TilePane extends Pane implements Listener<TileState> {
         tiles = new Tile[tileWidth][tileHeight];
 
         generateTiles();
-        Corner.generateCorners(this, false);
+
+        Corner.generateCorners(this, false, false);
 
     }
 

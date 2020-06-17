@@ -171,18 +171,19 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private void openConfigMenu() {
 
+        // TODO: could likely make this stage its own class
+
         stateCache = state.getState();
 
         state.setState(GameState.State.DISABLED);
 
         // Build a new window with the config menu set as the scene,
-        // and make sure that the Game State is reverted to the original
-        // state that was stored earlier when the window is closed.
         Stage configStage = new Stage();
         ConfigScene configScene = new ConfigScene(new Group());
 
-        configStage.setTitle("About Sweepered");
+        configStage.setTitle("Settings");
         configStage.setScene(configScene);
+        configStage.setResizable(false);
 
         // Center the new window with the width of configScene
         configStage.setX(configScene.getCenterX());
@@ -190,6 +191,8 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
         configStage.show();
 
+        // Make sure that the Game State is reverted to the original
+        // state that was stored earlier when the window is closed.
         configStage.setOnHidden(event -> {
 
             state.setState(stateCache);

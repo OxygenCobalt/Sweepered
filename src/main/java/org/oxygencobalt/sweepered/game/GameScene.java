@@ -79,10 +79,6 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         tiles.getGameState().addListener(gameStateListener);
         masterState.addListener(gameStateListener);
 
-        Pane testPane = new Pane();
-
-        testPane.setPrefSize(getWidth(), getHeight());
-
         tiles.getFlagCount().addListener(flagCountListener);
 
         root = group;

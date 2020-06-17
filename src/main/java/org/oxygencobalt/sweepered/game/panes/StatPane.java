@@ -58,9 +58,13 @@ public class StatPane extends Pane implements Listener<GameState> {
 
         reset.getGameState().addListener(this);
 
-        getChildren().addAll(flags, reset, timer);
+        getChildren().addAll(
 
-        Corner.generateCorners(this, false);
+            flags, reset, timer
+
+        );
+
+        Corner.generateCorners(this, false, false);
 
     }
 

@@ -65,7 +65,7 @@ public abstract class Counter extends Pane {
 
         updateDigitDisplay(true);
 
-        Corner.generateCorners(this, true);
+        Corner.generateCorners(this, true, false);
 
     }
 
