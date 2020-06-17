@@ -35,9 +35,7 @@ public class StatPane extends Pane implements Listener<GameState> {
                     final int mineCount) {
 
         x = offset;
-
-        // The Y offset has 15 added to it to make up for ConfigPane
-        y = offset + 20;
+        y = offset;
 
         this.height = height;
         this.width = width;

@@ -16,7 +16,11 @@ public class GameState extends Observable<GameState> {
         // the mouse is hovering over a tile.
         UNCERTAIN,
 
-        CLEARED, EXPLOSION // Cleared is the win case, explosion is the loss case
+        CLEARED, EXPLOSION, // Cleared is the win case, explosion is the loss case
+
+        // Disabled is active when the config menu is open to prevent any
+        // game events from happening until the menu is closed
+        DISABLED
 
     }
 
@@ -90,6 +94,12 @@ public class GameState extends Observable<GameState> {
     public Boolean isStarted() {
 
         return isState(State.STARTED, State.UNCERTAIN);
+
+    }
+
+    public Boolean isDisabled() {
+
+        return isState(State.DISABLED);
 
     }
 

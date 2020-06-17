@@ -6,15 +6,22 @@ package game.entities;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
+import javafx.stage.Stage;
+import javafx.scene.Group;
+
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
 
 import javafx.scene.image.ImageView;
 
 import javafx.geometry.Rectangle2D;
 
 import java.util.HashMap;
+
+import config.ConfigScene;
 
 import events.states.GameState;
 
@@ -30,9 +37,11 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
     private final int width;
     private final int height;
 
-    GameState state;
+    private GameState state;
+    private GameState.State stateCache;
 
     private String currentFace;
+
     private Sprite faceSprite;
 
     private Rectangle2D mouseRect;
@@ -78,10 +87,11 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
     public void handle(final MouseEvent event) {
 
         EventType type = event.getEventType();
+        MouseButton button = event.getButton();
 
         // Disable ResetButton if the game is already unstarted
 
-        if (state.getState() != GameState.State.UNSTARTED) {
+        if (state.getState() != GameState.State.UNSTARTED || button == MouseButton.SECONDARY) {
 
             if (type == MouseEvent.MOUSE_PRESSED) {
 
@@ -101,23 +111,47 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private void onPress(final MouseEvent event) {
 
+        MouseButton button = event.getButton();
+
         loadTexture("Pressed", TextureAtlas.RESET_PRESSED, false);
 
-        loadTexture(currentFace, faceSprite, true);
+        // If the left mouse button is being pressed, then do not show
+        // the normal face when pressing down, instead the WAITING icon
+        // to indicate the action about to be performed
+        if (button == MouseButton.SECONDARY) {
+
+            loadTexture("faceDISABLED", TextureAtlas.FACE_WAITING, true);
+
+        } else {
+
+            loadTexture(currentFace, faceSprite, true);
+
+        }
 
     }
 
     private void onRelease(final MouseEvent event) {
 
-
         // Find if the mouse pointer is still within the Rect2D
         Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
+        MouseButton button;
 
         if (isInBox) {
 
-            // If so, change the state to UNSTARTED, notifying the listeners.
+            button = event.getButton();
 
-            state.setState(GameState.State.UNSTARTED);
+            // Check which mouse button has been released.
+            // If its the right click, then reset the board by setting the state
+            // to UNSTARTED. If its a left click, open up the config menu and
+            // disable the game by setting the state to DISABLED
+
+            switch (button) {
+
+                case PRIMARY: resetGame(); break;
+
+                case SECONDARY: openConfigMenu(); break;
+
+            }
 
         }
 
@@ -126,6 +160,41 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
         Audio.CLICK_SOUND.play();
 
         updateFace(state.getState());
+
+    }
+
+    private void resetGame() {
+
+        state.setState(GameState.State.UNSTARTED);
+
+    }
+
+    private void openConfigMenu() {
+
+        stateCache = state.getState();
+
+        state.setState(GameState.State.DISABLED);
+
+        // Build a new window with the config menu set as the scene,
+        // and make sure that the Game State is reverted to the original
+        // state that was stored earlier when the window is closed.
+        Stage configStage = new Stage();
+        ConfigScene configScene = new ConfigScene(new Group());
+
+        configStage.setTitle("About Sweepered");
+        configStage.setScene(configScene);
+
+        // Center the new window with the width of configScene
+        configStage.setX(configScene.getCenterX());
+        configStage.setY(configScene.getCenterY());
+
+        configStage.show();
+
+        configStage.setOnHidden(event -> {
+
+            state.setState(stateCache);
+
+        });
 
     }
 
@@ -172,6 +241,8 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
             case CLEARED: faceSprite = TextureAtlas.FACE_CLEARED; break;
 
+            case DISABLED: faceSprite = TextureAtlas.FACE_WAITING; break;
+
         }
 
         loadTexture(currentFace, faceSprite, false);
@@ -182,33 +253,40 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
         ImageView image;
 
+        double opacity;
+
+        // If dark is set to true, then the texture will
+        // be loaded slightly transparent, to make it
+        // look darker. This is used with the faces when
+        // ResetButton is pressed, to make it more natural.
+
+        // FIXME: This probably wont work with any theme other than dark.
+
+        if (dark) {
+
+            opacity = 0.5;
+
+        } else {
+
+            opacity = 1;
+        }
+
         // Check if the image already exists in the map
         if (images.containsKey(name)) {
 
             image = images.get(name);
 
+            image.setOpacity(opacity);
+
             image.toFront();
-
-            // If dark is set to true, then the texture will
-            // be loaded slightly transparent, to make it
-            // look darker. This is used with the faces when
-            // ResetButton is pressed, to make it more natural.
-
-            // FIXME: This probably wont work with any theme other than dark.
-            if (dark) {
-
-                image.setOpacity(0.5);
-
-            } else {
-
-                image.setOpacity(1);
-            }
 
 
         // Otherwise, load it and add it to the map
         } else {
 
             image = TextureAtlas.get(fallback);
+
+            image.setOpacity(opacity);
 
             images.put(
 

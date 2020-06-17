@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 import events.states.TileState;
 
-import generation.UpdatePacket;
+import game.generation.UpdatePacket;
 
 import media.animations.WaveTimeline;
 import media.images.TextureAtlas;
@@ -353,20 +353,26 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         }
 
-        // Create a wavetimeline w/the given type [Usually EXPLOSION
-        // or CLEARED] and the object itself, and then play it
-        WaveTimeline timeline = new WaveTimeline(
+        // Make sure this disabling is due to a game end
+        // scenario before creating a new wave animation
+        if (!type.equals("configOpen")) {
 
-            this,
+            // Create a wavetimeline w/the given type [Usually EXPLOSION
+            // or CLEARED] and the object itself, and then play it
+            WaveTimeline timeline = new WaveTimeline(
 
-            new Point2D(simpleX, simpleY),
-            new Point2D(originX, originY),
+                this,
 
-            type
+                new Point2D(simpleX, simpleY),
+                new Point2D(originX, originY),
 
-        );
+                type
 
-        timeline.getTimeline().play();
+            );
+
+            timeline.getTimeline().play();
+
+        }
 
     }
 

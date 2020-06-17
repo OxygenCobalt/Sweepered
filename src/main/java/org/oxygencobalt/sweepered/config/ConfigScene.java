@@ -1,7 +1,7 @@
 // AboutScene
 // Scene for the about page of this game
 
-package game.scenes;
+package config;
 
 import javafx.scene.Scene;
 import javafx.scene.Group;
@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 
 import javafx.geometry.Rectangle2D;
 
-public class AboutScene extends Scene {
+public class ConfigScene extends Scene {
 
     private Group root;
 
@@ -21,7 +21,7 @@ public class AboutScene extends Scene {
 
     private final Rectangle2D screenBounds;
 
-    public AboutScene(final Group group) {
+    public ConfigScene(final Group group) {
 
         super(group, 300, 200);
 

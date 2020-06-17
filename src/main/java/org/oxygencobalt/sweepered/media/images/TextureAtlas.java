@@ -81,6 +81,7 @@ public final class TextureAtlas {
     public static final Sprite FACE_UNCERTAIN = new Sprite(FACE_ATLAS, 1, 0, 36, 36);
     public static final Sprite FACE_EXPLOSION = new Sprite(FACE_ATLAS, 2, 0, 36, 36);
     public static final Sprite FACE_CLEARED = new Sprite(FACE_ATLAS, 3, 0, 36, 36);
+    public static final Sprite FACE_WAITING = new Sprite(FACE_ATLAS, 0, 1, 36, 36);
 
     // Digits [Used w/the timer and flag count]
     public static final Image DIGIT_ATLAS = new Image(RES_PATH + "digitAtlas.png");

@@ -1,7 +1,7 @@
 // Board
 // Object that handles interactions between tiles
 
-package generation;
+package game.generation;
 
 import java.util.List;
 import java.util.Random;

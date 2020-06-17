@@ -1,10 +1,12 @@
 // GameScene
 // Main Minesweeper game scene.
 
-package game.scenes;
+package game;
 
 import javafx.scene.Scene;
 import javafx.scene.Group;
+
+import javafx.scene.layout.Pane;
 
 import javafx.scene.paint.Color;
 
@@ -20,7 +22,6 @@ import events.values.EventInteger;
 
 import media.audio.Audio;
 
-import game.panes.ConfigPane;
 import game.panes.TilePane;
 import game.panes.StatPane;
 
@@ -28,10 +29,10 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
     private Group root;
 
-    private ConfigPane config;
-
     private StatPane stats;
     private TilePane tiles;
+
+    private Pane coverPane;
 
     private GameState masterState;
 
@@ -49,7 +50,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
                      final int offset) {
 
         // Call super to construct Scene(), and then add passed group to class.
-        super(group, (tileWidth * 32) + (18 + offset), (tileHeight * 32) + (96 + offset));
+        super(group, (tileWidth * 32) + (18 + offset), (tileHeight * 32) + (76 + offset));
 
         // Also set up the stylesheet that is used throughout the program
         getStylesheets().add("file:src/main/resources/style/main.css");
@@ -63,9 +64,13 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         Audio.loadSounds();
 
         // Load the main nodes
-        config = new ConfigPane((int) getWidth());
         stats = new StatPane(40, (tileWidth * 32), this.offset, this.mineCount);
         tiles = new TilePane(tileWidth, tileHeight, this.mineCount, this.offset);
+
+        // coverPane is a pane used to disable the entire game
+        // if the config menu is ever shown.
+        coverPane = new Pane();
+        coverPane.setPrefSize(getWidth(), getHeight());
 
         // Set up the gameStates and add listeners to GameScene
         masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
@@ -74,10 +79,14 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         tiles.getGameState().addListener(gameStateListener);
         masterState.addListener(gameStateListener);
 
+        Pane testPane = new Pane();
+
+        testPane.setPrefSize(getWidth(), getHeight());
+
         tiles.getFlagCount().addListener(flagCountListener);
 
         root = group;
-        root.getChildren().addAll(config, stats, tiles);
+        root.getChildren().addAll(coverPane, stats, tiles);
 
         // tileRect is used to detect if the mouse is outside of
         // TilePane, and then correcting the gameState accordingly.
@@ -100,6 +109,29 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // Update every nodes state indescriminately
         stats.updateGameState(newState);
         tiles.updateGameState(newState);
+
+        if (changed.isDisabled()) {
+
+            // If the game is disabled, then bring the coverPane
+            // to the front in order to disable the game, as placing
+            // a blank pane over other panes will cause those panes
+            // to stop registering mouse input.
+            coverPane.toFront();
+
+        } else {
+
+            // If the disabled state is being replaced with any
+            // other state [While the masterState is still DISABLED,
+            // as it hasnt been updated set], then move the coverPane
+            // to the back in order to reenable game functions again.
+
+            if (masterState.isDisabled()) {
+
+                coverPane.toBack();
+
+            }
+
+        }
 
         // Update the master state once everything is done.
         masterState.setStateSilent(newState);

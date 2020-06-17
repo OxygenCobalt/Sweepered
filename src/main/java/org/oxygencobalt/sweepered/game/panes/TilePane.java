@@ -19,8 +19,8 @@ import events.states.TileState;
 
 import events.values.EventInteger;
 
-import generation.Board;
-import generation.UpdatePacket;
+import game.generation.Board;
+import game.generation.UpdatePacket;
 
 import game.entities.Tile;
 import game.decor.Corner;
@@ -56,8 +56,8 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         x = offset;
 
-        // 64 is added to y to account for StatPane, its border, and ConfigPane.
-        y = (offset * 2) + 64;
+        // 44 is added to y to account for StatPane, its border.
+        y = (offset * 2) + 44;
 
         // w/h is multiplied by the tile count to get the actual pixel size
         width = tileWidth * 32;

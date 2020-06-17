@@ -83,8 +83,10 @@ public class Timer extends Counter {
             // If its the game ends with a loss, reset the timer with the dash value
             case EXPLOSION: resetTime(10); break;
 
-            // If the board is cleared, just stop the time.
+            // If the board is cleared or disabled, just stop the time.
             case CLEARED: stopTime(); break;
+
+            case DISABLED: stopTime(); break;
 
         }
 
@@ -102,9 +104,9 @@ public class Timer extends Counter {
             startTime = Instant.now().getEpochSecond();
             elapsedCache = 0;
 
-            countTime.start();
-
         }
+
+        countTime.start();
 
     }
 
