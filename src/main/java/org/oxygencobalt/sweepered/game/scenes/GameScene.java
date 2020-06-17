@@ -1,7 +1,7 @@
 // GameScene
 // Main Minesweeper game scene.
 
-package game;
+package game.scenes;
 
 import javafx.scene.Scene;
 import javafx.scene.Group;
@@ -52,7 +52,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         super(group, (tileWidth * 32) + (18 + offset), (tileHeight * 32) + (96 + offset));
 
         // Also set up the stylesheet that is used throughout the program
-        getStylesheets().add("file:src/main/resources/stylesheets/main.css");
+        getStylesheets().add("file:src/main/resources/style/main.css");
 
         setFill(Color.web("3d3d3d")); // Background color matches w/the tile color, mostly
 
