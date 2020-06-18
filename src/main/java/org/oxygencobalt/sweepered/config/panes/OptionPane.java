@@ -6,7 +6,7 @@ package config.panes;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-import config.entities.ConfigButton;
+import config.ui.ConfigButton;
 import game.decor.Corner;
 
 public class OptionPane extends Pane {
@@ -33,12 +33,11 @@ public class OptionPane extends Pane {
         // Set Style for the background and the borders
         getStyleClass().add("game-pane");
 
-        aboutButton = new ConfigButton("About", 17,  17);
+        aboutButton = new ConfigButton("Mode", 17,  17);
 
         getChildren().addAll(aboutButton);
 
         Corner.generateCorners(this, false, false);
-
 
     }
 

@@ -1,7 +1,7 @@
 // ConfigButton
 // Entity that primarily acts as a button with some extra effects.
 
-package config.entities;
+package config.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;

@@ -6,9 +6,6 @@ package game.entities;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-import javafx.stage.Stage;
-import javafx.scene.Group;
-
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 
@@ -21,7 +18,7 @@ import javafx.geometry.Rectangle2D;
 
 import java.util.HashMap;
 
-import config.ConfigScene;
+import config.ConfigStage;
 
 import events.states.GameState;
 
@@ -171,25 +168,13 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private void openConfigMenu() {
 
-        // TODO: could likely make this stage its own class
+        // TODO: Make this stage its own class
 
         stateCache = state.getState();
 
         state.setState(GameState.State.DISABLED);
 
-        // Build a new window with the config menu set as the scene,
-        Stage configStage = new Stage();
-        ConfigScene configScene = new ConfigScene(new Group());
-
-        configStage.setTitle("Settings");
-        configStage.setScene(configScene);
-        configStage.setResizable(false);
-
-        // Center the new window with the width of configScene
-        configStage.setX(configScene.getCenterX());
-        configStage.setY(configScene.getCenterY());
-
-        configStage.show();
+        ConfigStage configStage = new ConfigStage();
 
         // Make sure that the Game State is reverted to the original
         // state that was stored earlier when the window is closed.
