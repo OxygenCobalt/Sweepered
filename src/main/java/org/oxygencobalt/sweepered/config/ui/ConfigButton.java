@@ -28,14 +28,18 @@ public class ConfigButton extends Pane implements EventHandler<MouseEvent> {
 
     private final Corner[] corners;
 
-    public ConfigButton(final String name, final int x, final int y) {
+    public ConfigButton(final String name,
+                        final int x,
+                        final int y,
+                        final int width,
+                        final int height) {
 
         this.x = x;
         this.y = y;
 
         // This pane should be no bigger than the button it contains.
-        this.height = 26;
-        this.width = 91;
+        this.height = height;
+        this.width = width;
 
         relocate(x, y);
 
@@ -45,6 +49,11 @@ public class ConfigButton extends Pane implements EventHandler<MouseEvent> {
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         internalButton = new Button(name);
+
+        internalButton.setMinSize(width, height);
+        internalButton.setPrefSize(width, height);
+        internalButton.setMaxSize(width, height);
+
         internalButton.setOnMousePressed(this);
         internalButton.setOnMouseReleased(this);
 
@@ -79,6 +88,13 @@ public class ConfigButton extends Pane implements EventHandler<MouseEvent> {
         }
 
     }
+
+    public Button getInternalButton() {
+
+        return internalButton;
+
+    }
+
 
 }
 

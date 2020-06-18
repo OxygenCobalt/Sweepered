@@ -24,14 +24,6 @@ may be subject to change if different themes are added
     -fx-background-color: #3d3d3d;
     -fx-background-radius: 0px;
 
-    -fx-min-height: 26px;
-    -fx-pref-height: 26px;
-    -fx-max-height: 26px;
-
-    -fx-min-width: 91px;
-    -fx-pref-width: 91px;
-    -fx-max-width: 91px;
-
     -fx-border-width: 2px;
     -fx-border-color: #565656 #1d1d1d #1d1d1d #565656;
     -fx-border-style: solid outside;
@@ -41,6 +33,12 @@ may be subject to change if different themes are added
     -fx-text-fill: #d0d0d0;
 
     -fx-padding: 0px 3px 0px 3px;
+
+}
+
+.icon-button {
+
+    -fx-alignment: CENTER-LEFT;
 
 }
 

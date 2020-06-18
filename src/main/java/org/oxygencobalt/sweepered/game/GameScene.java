@@ -25,6 +25,7 @@ import media.audio.Audio;
 import game.panes.TilePane;
 import game.panes.StatPane;
 
+// TODO: You can possibly make this a stage instead of a scene
 public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
     private Group root;
