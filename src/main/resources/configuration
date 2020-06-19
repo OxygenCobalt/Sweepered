@@ -2,7 +2,7 @@
 // Normally, the only value is the mode, but you can also create
 // a custom mode by changing the mode to a value above 3
 
-[Mode] {4}
+[Mode] {1}
 
 [tileWidth] {9}
 [tileHeight] {9}

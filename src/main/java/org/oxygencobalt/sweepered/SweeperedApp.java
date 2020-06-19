@@ -70,7 +70,7 @@ public class SweeperedApp extends Application implements Listener<EventInteger> 
 
             case "Width": window.setWidth(newValue); break;
 
-            case "Height": window.setHeight(newValue); break;
+            case "Height": window.setHeight(newValue + 26); break;
 
         }
 

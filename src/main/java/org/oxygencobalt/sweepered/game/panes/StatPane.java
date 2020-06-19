@@ -20,14 +20,16 @@ public class StatPane extends Pane implements Listener<GameState> {
     private final int x;
     private final int y;
 
-    public final int height;
-    public final int width;
+    public int height;
+    public int width;
 
     private final GameState state;
 
     private final FlagCounter flags;
     private final ResetButton reset;
     private final Timer timer;
+
+    private Corner[] corners;
 
     public StatPane(final int height,
                     final int width,
@@ -52,7 +54,7 @@ public class StatPane extends Pane implements Listener<GameState> {
 
         state = new GameState(GameState.State.UNSTARTED, "StatPane");
 
-        flags = new FlagCounter(6, (width / 32), 3, mineCount);
+        flags = new FlagCounter(6, 3, mineCount);
         reset = new ResetButton((width - 36) / 2, x, y);
         timer = new Timer(width - ((19 * 3) + 6), 3);
 
@@ -64,7 +66,7 @@ public class StatPane extends Pane implements Listener<GameState> {
 
         );
 
-        Corner.generateCorners(this, false, false);
+        corners = Corner.generateCorners(this, false, false);
 
     }
 
@@ -91,6 +93,34 @@ public class StatPane extends Pane implements Listener<GameState> {
         // new count, no need to store it otherwise.
 
         flags.updateFlagCount(newFlagCount);
+
+    }
+
+    public void updateBoardValues(final int newTileWidth,
+                                  final int newTileHeight) {
+
+        width = newTileWidth * 32;
+
+        setPrefWidth(width);
+
+        // Lock Size to prevent unintential resizing
+        setMaxWidth(Region.USE_PREF_SIZE);
+
+        // Update the positoning of only the resetbutton and the
+        // timer, as they are dependent on the dimensions of statpane.
+        reset.updatePosition((width - 36) / 2, x, y);
+        timer.updatePosition(width - ((19 * 3) + 6));
+
+        timer.resetTime(0);
+
+        // Also destroy all corners and regenerate them with the new dimensions
+        for (Corner corner : corners) {
+
+            getChildren().remove(corner);
+
+        }
+
+        corners = Corner.generateCorners(this, false, false);
 
     }
 

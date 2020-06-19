@@ -107,7 +107,7 @@ public class MenuPane extends Pane {
         // name/graphic from the list of presets
         if (mode >= 0 && mode <= 3) {
 
-            internalButton.setText(modeNames[mode]);
+            internalButton.setText("Mode: " + modeNames[mode]);
 
             internalButton.setGraphic(
 
@@ -120,7 +120,7 @@ public class MenuPane extends Pane {
             // If invalid, load the "Custom" values as those would
             // be the fallback values loaded by Configuration
 
-            internalButton.setText("Custom");
+            internalButton.setText("Mode: Custom");
 
             internalButton.setGraphic(
 

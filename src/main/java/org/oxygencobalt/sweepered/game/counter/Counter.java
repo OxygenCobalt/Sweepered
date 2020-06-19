@@ -17,8 +17,8 @@ import game.decor.Corner;
 
 public abstract class Counter extends Pane {
 
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
     private final int width;
     private final int height;
@@ -150,6 +150,14 @@ public abstract class Counter extends Pane {
             }
 
         }
+
+    }
+
+    public void updatePosition(final int newX) {
+
+        x = newX;
+
+        relocate(x, y);
 
     }
 

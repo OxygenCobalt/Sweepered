@@ -27,16 +27,16 @@ import game.decor.Corner;
 
 public class TilePane extends Pane implements Listener<TileState> {
 
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
     private final int x;
     private final int y;
 
-    private final int tileWidth;
-    private final int tileHeight;
+    private int tileWidth;
+    private int tileHeight;
 
-    private final int mineCount;
+    private int mineCount;
 
     private Rectangle2D mouseRect;
 
@@ -49,6 +49,8 @@ public class TilePane extends Pane implements Listener<TileState> {
     private Board board;
     private Tile[][] tiles;
 
+    private Corner[] corners;
+
     public TilePane(final int tileWidth, // w/h is given by number of tiles, not pixels.
                     final int tileHeight,
                     final int mineCount,
@@ -56,7 +58,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         x = offset;
 
-        // 44 is added to y to account for StatPane, its border.
+        // 44 is added to y to account for StatPane, and its border.
         y = (offset * 2) + 44;
 
         // w/h is multiplied by the tile count to get the actual pixel size
@@ -102,7 +104,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         generateTiles();
 
-        Corner.generateCorners(this, false, false);
+        corners = Corner.generateCorners(this, false, false);
 
     }
 
@@ -323,6 +325,55 @@ public class TilePane extends Pane implements Listener<TileState> {
         }
 
         state.setStateSilent(newState);
+
+    }
+
+    public void updateBoardValues(final int newTileWidth,
+                                  final int newTileHeight,
+                                  final int newMineCount) {
+
+        // Update the internal values with the new values given
+        tileWidth = newTileWidth;
+        tileHeight = newTileHeight;
+        mineCount = newMineCount;
+
+        // Update the flag count, which will also update StatPanes value
+        flagCount.setValue(mineCount);
+
+        // Destroy all existing tiles, and then reset the Tile array in general
+        for (Tile[] tileColumn : tiles) {
+
+            for (Tile tile : tileColumn) {
+
+                getChildren().remove(tile);
+
+            }
+
+        }
+
+        tiles = new Tile[tileWidth][tileHeight];
+
+        // Instead of resetting the board, just create a new one
+        board = new Board(tileWidth, tileHeight, mineCount);
+
+        // Then, regenerate the tiles with the new dimensions
+        generateTiles();
+
+        // Recalculate the width of TilePane with the new dimensions
+        width = tileWidth * 32;
+        height = tileHeight * 32;
+
+        setPrefSize(width, height);
+        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+        // Also destroy all corners and regenerate them with the new dimensions
+        for (Corner corner : corners) {
+
+            getChildren().remove(corner);
+
+        }
+
+        corners = Corner.generateCorners(this, false, false);
 
     }
 

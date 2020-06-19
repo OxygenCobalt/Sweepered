@@ -15,9 +15,18 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
+import events.values.EventInteger;
+
 public final class Configuration {
 
     private static final HashMap<String, Integer> CONFIG_VALUES = new HashMap<String, Integer>();
+
+    private static final HashMap<String, EventInteger> CONFIG_EVENT_VALUES = (
+
+        new HashMap<String, EventInteger>()
+
+    );
+
     private static final HashMap<Integer, String> CONFIG_LINES = new HashMap<Integer, String>();
 
     private static final String CONFIGURATION_PATH = "src/main/resources/configuration";
@@ -165,6 +174,7 @@ public final class Configuration {
 
     }
 
+    // Retrieve a configuration value
     public static int getConfigValue(final String name) {
 
         if (CONFIG_VALUES.containsKey(name)) {
@@ -175,17 +185,53 @@ public final class Configuration {
 
             System.out.println("Config entry not found");
 
-            return -1;
+            return -1; // FIXME: may or may not be a liability
 
         }
 
     }
 
+    // Retrieve a configuration value as an event integer
+    public static EventInteger getEventConfigValue(final String name) {
+
+        int rawValue = getConfigValue(name);
+
+        // Create a new EventInteger w/that value and store it,
+        // while returning the same value to whoever called the function
+        CONFIG_EVENT_VALUES.put(
+
+            name,
+
+            new EventInteger(rawValue, name)
+
+        );
+
+        return CONFIG_EVENT_VALUES.get(name);
+
+    }
+
+    // Set a configuration
     public static void setConfigValue(final String name, final int value) {
 
         if (CONFIG_VALUES.containsKey(name)) {
 
             CONFIG_VALUES.put(name, value);
+
+            // Make sure to also iterate through the list of Event
+            // values and update the values of all of them, notifying
+            // any listeners
+
+            for (String key : CONFIG_EVENT_VALUES.keySet()) {
+
+                if (key.equals(name)) {
+
+                    EventInteger eventValue = CONFIG_EVENT_VALUES.get(name);
+
+                    eventValue.setValue(value);
+
+                }
+
+            }
 
         } else {
 

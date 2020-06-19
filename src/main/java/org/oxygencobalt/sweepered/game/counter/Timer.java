@@ -132,7 +132,7 @@ public class Timer extends Counter {
 
     // resetTime is similar to stopTime, but it also
     // reverts all digits to their disabled "Dash" state.
-    private void resetTime(final int digitType) {
+    public void resetTime(final int digitType) {
 
         stopTime();
 

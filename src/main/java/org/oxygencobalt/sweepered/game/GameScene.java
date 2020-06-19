@@ -32,6 +32,8 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
     private EventInteger width;
     private EventInteger height;
 
+    private EventInteger mode;
+
     private int tileWidth;
     private int tileHeight;
     private int mineCount;
@@ -44,8 +46,9 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
     private Pane coverPane;
 
     private GameState masterState;
+    private GameState.State stateCache;
 
-    private final int offset;
+    private int offset;
 
     private Rectangle2D tileRect;
 
@@ -56,9 +59,9 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // Call super to construct Scene()
         super(group);
 
-        int mode = Configuration.getConfigValue("Mode");
-
-        setModeValues(mode);
+        mode = Configuration.getEventConfigValue("Mode");
+        mode.addListener(modeListener);
+        setModeValues(mode.getValue());
 
         // The offset is simply a value used to space out
         // the different panes in GameScene
@@ -109,27 +112,27 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
     }
 
-    private void setModeValues(final int mode) {
+    private void setModeValues(final int newMode) {
 
         // Each mode has a different mine count, so create an array to be indexed
         // to be indexed later on
         int[] mineCounts = new int[]{10, 35, 40, 99};
 
         // All modes below 2 operate on a 9x9 board, so set that as such
-        if (mode >= 0 && mode < 2) {
+        if (newMode >= 0 && newMode < 2) {
 
             tileWidth = 9;
             tileHeight = 9;
 
-            mineCount = mineCounts[mode];
+            mineCount = mineCounts[newMode];
 
         // Otherwise, create a 16x16 board
-        } else if (mode >= 2 && mode <= 3) {
+        } else if (newMode >= 2 && newMode <= 3) {
 
             tileWidth = 16;
             tileHeight = 16;
 
-            mineCount = mineCounts[mode];
+            mineCount = mineCounts[newMode];
 
         // Otherwise, the mode is invalid and the width/height/mineCount are loaded
         // from the alternate values loaded by configuration. This is also a custom
@@ -164,6 +167,13 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
             // to stop registering mouse input.
             coverPane.toFront();
 
+            // Store the previous state, in order to be loaded later
+            // if the settings menu is exited, and then set the state to
+            // DISABLED
+            stateCache = masterState.getState();
+
+            masterState.setStateSilent(newState);
+
         } else {
 
             // If the disabled state is being replaced with any
@@ -175,12 +185,16 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
                 coverPane.toBack();
 
+                masterState.setState(stateCache);
+
+            } else {
+
+                // Update the master state once everything is done.
+                masterState.setStateSilent(newState);
+
             }
 
         }
-
-        // Update the master state once everything is done.
-        masterState.setStateSilent(newState);
 
     };
 
@@ -190,6 +204,24 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // If a change is detected, just pass it off to statpane
         // as only TilePane does anything w/flagCount
         stats.updateFlagCount(changed.getValue());
+
+    };
+
+    Listener<EventInteger> modeListener = changed -> {
+
+        int newMode = changed.getValue();
+
+        setModeValues(newMode);
+
+        stats.updateBoardValues(tileWidth, tileHeight);
+        tiles.updateBoardValues(tileWidth, tileHeight, mineCount);
+
+        width.setValue((tileWidth * 32) + (18 + offset));
+        height.setValue((tileHeight * 32) + (76 + offset));
+
+        // If the mode is changed, make sure to change the game state to
+        // UNSTARTED as effectively the entire game is being restarted
+        stateCache = GameState.State.UNSTARTED;
 
     };
 

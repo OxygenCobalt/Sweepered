@@ -8,18 +8,13 @@ import java.util.Collections;
 
 public class FlagCounter extends Counter {
 
-    private final int tileWidth;
-
     private int flagCount;
 
     public FlagCounter(final int x,
-                       final int tileWidth,
                        final int digitCount,
                        final int flagCount) {
 
         super(x, digitCount);
-
-        this.tileWidth = tileWidth;
 
         updateFlagCount(flagCount);
 
@@ -56,8 +51,6 @@ public class FlagCounter extends Counter {
         updateDigits(flagDigits);
 
     }
-
-    // TODO: Possibly readd the smooth deincrementing that didnt work out earlier.
 
 }
 

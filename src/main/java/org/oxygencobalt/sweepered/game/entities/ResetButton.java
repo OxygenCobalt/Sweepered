@@ -28,8 +28,8 @@ import media.audio.Audio;
 
 public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
     private final int width;
     private final int height;
@@ -183,6 +183,17 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
             state.setState(stateCache);
 
         });
+
+    }
+
+    public void updatePosition(final int newX, final int paneX, final int paneY) {
+
+        // Given the new values, update the X position and the rect positon
+        this.x = newX;
+
+        relocate(x, y);
+
+        mouseRect = new Rectangle2D(x + paneX, y + paneY, width, height);
 
     }
 
