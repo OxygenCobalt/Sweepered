@@ -14,6 +14,8 @@ import events.values.EventInteger;
 
 import game.GameScene;
 
+import media.images.TextureAtlas;
+
 public class SweeperedApp extends Application implements Listener<EventInteger> {
 
     private Stage window;
@@ -43,6 +45,8 @@ public class SweeperedApp extends Application implements Listener<EventInteger> 
 
         sceneWidth.addListener(this);
         sceneHeight.addListener(this);
+
+        window.getIcons().add(TextureAtlas.WINDOW_ICON);
 
         window.setWidth(sceneWidth.getValue());
         window.setHeight(sceneHeight.getValue() + 26);

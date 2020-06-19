@@ -19,6 +19,8 @@ import events.states.ConfigState;
 import config.panes.MenuPane;
 import config.panes.AboutPane;
 
+import media.images.TextureAtlas;
+
 public class ConfigStage extends Stage implements Listener<ConfigState> {
 
     private Scene internalScene;
@@ -46,6 +48,8 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
         setTitle("Settings");
         setScene(internalScene);
         setResizable(false);
+
+        getIcons().add(TextureAtlas.WINDOW_ICON);
 
         // Screenbounds is the given size of the screen,
         // used to get a centered position of this window

@@ -110,10 +110,14 @@ public final class TextureAtlas {
     public static final Sprite ICON_EXPLODE = new Sprite(ICON_ATLAS, 0, 1);
     public static final Sprite ICON_CUSTOM = new Sprite(ICON_ATLAS, 1, 1);
     public static final Sprite ICON_ABOUT = new Sprite(ICON_ATLAS, 2, 1);
+    public static final Sprite ICON_LARGE = new Sprite(ICON_ATLAS, 3, 1);
 
     // Grid/Corners are special cases, as their respective nodes generate their own sprite objects
     public static final Image GRID_ATLAS = new Image(RES_PATH + "gridAtlas.png");
     public static final Image CORNER_ATLAS = new Image(RES_PATH + "cornerAtlas.png");
+
+    // Or in the case of WINDOW_ICON, its loaded as an icon
+    public static final Image WINDOW_ICON = new Image(RES_PATH + "windowIcon.png");
 
 }
 
