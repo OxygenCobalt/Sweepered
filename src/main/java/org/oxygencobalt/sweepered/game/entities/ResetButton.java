@@ -34,6 +34,8 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
     private final int width;
     private final int height;
 
+    private ConfigStage configStage;
+
     private GameState state;
     private GameState.State stateCache;
 
@@ -168,48 +170,25 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private void openConfigMenu() {
 
-        // TODO: Make this stage its own class
+        if (configStage == null) {
 
-        stateCache = state.getState();
+            stateCache = state.getState();
 
-        state.setState(GameState.State.DISABLED);
+            state.setState(GameState.State.DISABLED);
 
-        ConfigStage configStage = new ConfigStage();
+            configStage = new ConfigStage();
 
-        // Make sure that the Game State is reverted to the original
-        // state that was stored earlier when the window is closed.
-        configStage.setOnHidden(event -> {
+            // Make sure that the Game State is reverted to the original
+            // state that was stored earlier when the window is closed.
+            configStage.setOnHidden(event -> {
 
-            state.setState(stateCache);
+                state.setState(stateCache);
 
-        });
+                configStage = null;
 
-    }
+            });
 
-    public void updatePosition(final int newX, final int paneX, final int paneY) {
-
-        // Given the new values, update the X position and the rect positon
-        this.x = newX;
-
-        relocate(x, y);
-
-        mouseRect = new Rectangle2D(x + paneX, y + paneY, width, height);
-
-    }
-
-    public void updateGameState(final GameState.State newState) {
-
-        // Update the face and then set the state to the new value given.
-
-        updateFace(newState);
-
-        state.setStateSilent(newState);
-
-    }
-
-    public GameState getGameState() {
-
-        return state;
+        }
 
     }
 
@@ -219,9 +198,6 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
         // to hide the old face.
 
         loadTexture("resetNormal", TextureAtlas.RESET_NORMAL, false);
-
-        // FIXME: This thing is a result of the janky way you wrote
-        // TextureAtlas, FIX WHEN YOU REWRITE IT
 
         // Update the currentFace based off the gameState,
         // and then get the respective face texture for that.
@@ -297,6 +273,33 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
             getChildren().add(image); // Add it to the pane
 
         }
+
+    }
+
+    public void updatePosition(final int newX, final int paneX, final int paneY) {
+
+        // Given the new values, update the X position and the rect positon
+        this.x = newX;
+
+        relocate(x, y);
+
+        mouseRect = new Rectangle2D(x + paneX, y + paneY, width, height);
+
+    }
+
+    public void updateGameState(final GameState.State newState) {
+
+        // Update the face and then set the state to the new value given.
+
+        updateFace(newState);
+
+        state.setStateSilent(newState);
+
+    }
+
+    public GameState getGameState() {
+
+        return state;
 
     }
 

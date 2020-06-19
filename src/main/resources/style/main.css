@@ -36,9 +36,23 @@ may be subject to change if different themes are added
 
 }
 
-.icon-button {
+.label {
 
-    -fx-alignment: CENTER-LEFT;
+    -fx-font-family: Inconsolata;
+    -fx-font-size: 15px;
+    -fx-text-fill: #d0d0d0;
+
+    -fx-min-width: 236px;
+    -fx-pref-width: 236px;
+    -fx-max-width: 236px;
+
+    -fx-min-height: 20px;
+    -fx-pref-height: 20px;
+    -fx-max-height: 20px;
+
+    -fx-alignment: CENTER;
+
+    -fx-padding: 0px;
 
 }
 

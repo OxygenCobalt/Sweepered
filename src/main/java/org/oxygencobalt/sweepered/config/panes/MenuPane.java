@@ -11,6 +11,8 @@ import javafx.event.ActionEvent;
 
 import javafx.scene.control.Button;
 
+import events.states.ConfigState;
+
 import config.ui.ConfigButton;
 import config.Configuration;
 
@@ -24,7 +26,10 @@ public class MenuPane extends Pane {
     private final int height;
     private final int width;
 
+    private ConfigState state;
+
     private ConfigButton modeButton;
+    private ConfigButton aboutButton;
 
     private final Sprite[] modeGraphics;
     private final String[] modeNames;
@@ -46,6 +51,8 @@ public class MenuPane extends Pane {
         // Set Style for the background and the borders
         getStyleClass().add("game-pane");
 
+        state = new ConfigState(ConfigState.State.MENU);
+
         // modeNames and modeGraphics are values used to
         // set the buttons text based of the current mode
         modeNames = new String[] {
@@ -66,14 +73,24 @@ public class MenuPane extends Pane {
 
         };
 
+        // Create the mode button, and then apply the correct graphic and name
         modeButton = new ConfigButton("Mode", 17, 17, 201, 26);
-        modeButton.getInternalButton().setOnAction(modeButtonListener);
 
-        getChildren().add(modeButton);
-
-        // Correct the graphic and name of the mode
-        // button based on the current mode
         updateModeButton();
+
+        // Then, create the about button and apply its graphic as well
+        aboutButton = new ConfigButton("About Sweepered", 17, 62, 201, 26);
+        aboutButton.getInternalButton().setGraphic(
+
+            TextureAtlas.get(TextureAtlas.ICON_ABOUT)
+
+        );
+
+        // Bind each listeners to their respective button
+        modeButton.getInternalButton().setOnAction(modeButtonListener);
+        aboutButton.getInternalButton().setOnAction(aboutButtonListener);
+
+        getChildren().addAll(modeButton, aboutButton);
 
         Corner.generateCorners(this, false, false);
 
@@ -92,6 +109,12 @@ public class MenuPane extends Pane {
         Configuration.setConfigValue("Mode", (mode + 1) % 5);
 
         updateModeButton();
+
+    };
+
+    EventHandler<ActionEvent> aboutButtonListener = event -> {
+
+        state.setState(ConfigState.State.ABOUT);
 
     };
 
@@ -129,6 +152,18 @@ public class MenuPane extends Pane {
             );
 
         }
+
+    }
+
+    public void updateConfigState(final ConfigState.State newState) {
+
+        state.setStateSilent(newState);
+
+    }
+
+    public ConfigState getConfigState() {
+
+        return state;
 
     }
 

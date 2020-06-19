@@ -11,27 +11,35 @@ import javafx.stage.Screen;
 import javafx.scene.paint.Color;
 import javafx.geometry.Rectangle2D;
 
-import config.panes.MenuPane;
+import javafx.scene.layout.Pane;
 
-public class ConfigStage extends Stage {
+import events.observable.Listener;
+import events.states.ConfigState;
+
+import config.panes.MenuPane;
+import config.panes.AboutPane;
+
+public class ConfigStage extends Stage implements Listener<ConfigState> {
 
     private Scene internalScene;
     private Group root;
 
-    private final int width;
-    private final int height;
+    private double width;
+    private double height;
 
-    private MenuPane about;
+    private ConfigState masterState;
+
+    private Pane frontPane;
+
+    private MenuPane menu;
+    private AboutPane about;
 
     public ConfigStage() {
-
-        width = 243;
-        height = 113;
 
         // Since this object is a stage, create the internal
         // Group and the Scene instead of calling the super constructor
         root = new Group();
-        internalScene = new Scene(root, width, height);
+        internalScene = new Scene(root);
         internalScene.getStylesheets().add("file:src/main/resources/style/main.css");
         internalScene.setFill(Color.web("3d3d3d"));
 
@@ -46,11 +54,62 @@ public class ConfigStage extends Stage {
         setX((screenBounds.getWidth() - width) / 2);
         setY((screenBounds.getHeight() - height) / 2);
 
-        about = new MenuPane(243, 113);
+        masterState = new ConfigState(ConfigState.State.MENU);
 
-        root.getChildren().addAll(about);
+        menu = new MenuPane(243, 113);
+        about = new AboutPane(243, 203);
+
+        menu.getConfigState().addListener(this);
+        about.getConfigState().addListener(this);
+
+        root.getChildren().addAll(about, menu);
+
+        updateFrontPane(masterState.getState());
 
         show();
+
+    }
+
+    public void propertyChanged(final ConfigState changed) {
+
+        ConfigState.State newState = changed.getState();
+
+        updateFrontPane(newState);
+
+        menu.updateConfigState(newState);
+        about.updateConfigState(newState);
+
+        masterState.setState(newState);
+
+    }
+
+    private void updateFrontPane(final ConfigState.State newState) {
+
+        // Set the currently shown pane to the
+        // states resepctive pane
+        switch (newState) {
+
+            case MENU:  setTitle("Settings");
+                        frontPane = menu;
+                        break;
+
+            case ABOUT: setTitle("About Sweepered");
+                        frontPane = about;
+                        break;
+
+        }
+
+        // Bring that pane to the front, and adjust the
+        // windows with to fit that pane
+        frontPane.toFront();
+
+        width = frontPane.getPrefWidth();
+        height = frontPane.getPrefHeight();
+
+        // Add 12/38 to the size, to make up for the borders
+        // and something else when it comes to height
+        setWidth(width + 12);
+        setHeight(height + 38);
 
     }
 

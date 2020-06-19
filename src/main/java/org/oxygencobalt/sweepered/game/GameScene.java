@@ -87,7 +87,6 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // coverPane is a pane used to disable the entire game
         // if the config menu is ever shown.
         coverPane = new Pane();
-        coverPane.setPrefSize(getWidth(), getHeight());
 
         // Set up the gameStates and add listeners to GameScene
         masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
@@ -166,6 +165,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
             // a blank pane over other panes will cause those panes
             // to stop registering mouse input.
             coverPane.toFront();
+            coverPane.setPrefSize(getWidth(), getHeight());
 
             // Store the previous state, in order to be loaded later
             // if the settings menu is exited, and then set the state to
@@ -218,6 +218,8 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
         width.setValue((tileWidth * 32) + (18 + offset));
         height.setValue((tileHeight * 32) + (76 + offset));
+
+        coverPane.setPrefSize(getWidth(), getHeight());
 
         // If the mode is changed, make sure to change the game state to
         // UNSTARTED as effectively the entire game is being restarted
