@@ -26,8 +26,6 @@ public final class TextureAtlas {
 
     }
 
-    // FIXME: Rewrite once you add different themes
-
     // Image Data
     // Abandon all hope ye who enter here
 

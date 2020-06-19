@@ -78,7 +78,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         this.mineCount = mineCount;
 
-        flagCount = new EventInteger(mineCount);
+        flagCount = new EventInteger(mineCount, "Flags");
 
         // mouseRect is used to detect when the mouse
         // is being moved *within* the tile, as I cant get

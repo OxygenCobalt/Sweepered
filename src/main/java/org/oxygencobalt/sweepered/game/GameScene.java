@@ -15,6 +15,8 @@ import javafx.scene.input.MouseEvent;
 
 import javafx.geometry.Rectangle2D;
 
+import config.Configuration;
+
 import events.observable.Listener;
 
 import events.states.GameState;
@@ -25,8 +27,14 @@ import media.audio.Audio;
 import game.panes.TilePane;
 import game.panes.StatPane;
 
-// TODO: You can possibly make this a stage instead of a scene
 public class GameScene extends Scene implements EventHandler<MouseEvent> {
+
+    private EventInteger width;
+    private EventInteger height;
+
+    private int tileWidth;
+    private int tileHeight;
+    private int mineCount;
 
     private Group root;
 
@@ -38,28 +46,33 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
     private GameState masterState;
 
     private final int offset;
-    private final int mineCount;
 
     private Rectangle2D tileRect;
 
     private String[] owners;
 
-    public GameScene(final Group group,
-                     final int tileWidth,
-                     final int tileHeight,
-                     final int mineCount,
-                     final int offset) {
+    public GameScene(final Group group) {
 
-        // Call super to construct Scene(), and then add passed group to class.
-        super(group, (tileWidth * 32) + (18 + offset), (tileHeight * 32) + (76 + offset));
+        // Call super to construct Scene()
+        super(group);
+
+        int mode = Configuration.getConfigValue("Mode");
+
+        setModeValues(mode);
+
+        // The offset is simply a value used to space out
+        // the different panes in GameScene
+        offset = 14;
+
+        // Width is only stored after the scene is set up
+        // as the super constructor has to be called first
+        width = new EventInteger((tileWidth * 32) + (18 + offset), "Width");
+        height = new EventInteger((tileHeight * 32) + (76 + offset), "Height");
 
         // Also set up the stylesheet that is used throughout the program
         getStylesheets().add("file:src/main/resources/style/main.css");
 
         setFill(Color.web("3d3d3d")); // Background color matches w/the tile color, mostly
-
-        this.offset = offset + 4; // 4 is added to make up for some of the borders
-        this.mineCount = mineCount;
 
         // Load the sounds in from Audio
         Audio.loadSounds();
@@ -93,6 +106,42 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
                                    tileHeight * 32);
 
         setOnMouseMoved(this);
+
+    }
+
+    private void setModeValues(final int mode) {
+
+        // Each mode has a different mine count, so create an array to be indexed
+        // to be indexed later on
+        int[] mineCounts = new int[]{10, 35, 40, 99};
+
+        // All modes below 2 operate on a 9x9 board, so set that as such
+        if (mode >= 0 && mode < 2) {
+
+            tileWidth = 9;
+            tileHeight = 9;
+
+            mineCount = mineCounts[mode];
+
+        // Otherwise, create a 16x16 board
+        } else if (mode >= 2 && mode <= 3) {
+
+            tileWidth = 16;
+            tileHeight = 16;
+
+            mineCount = mineCounts[mode];
+
+        // Otherwise, the mode is invalid and the width/height/mineCount are loaded
+        // from the alternate values loaded by configuration. This is also a custom
+        // value would be created.
+        } else {
+
+            tileWidth = Configuration.getConfigValue("tileWidth");
+            tileHeight = Configuration.getConfigValue("tileHeight");
+
+            mineCount = Configuration.getConfigValue("mineCount");
+
+        }
 
     }
 
@@ -163,6 +212,19 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         }
 
     }
+
+    public EventInteger getObservableWidth() {
+
+        return width;
+
+    }
+
+    public EventInteger getObservableHeight() {
+
+        return height;
+
+    }
+
 
 }
 

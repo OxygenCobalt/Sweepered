@@ -50,6 +50,14 @@ may be subject to change if different themes are added
 
 }
 
+.pane-permanent-press {
+
+    -fx-background-color: #353535;
+
+    -fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;
+
+}
+
 /* Style used for the counters */
 .counter {
 

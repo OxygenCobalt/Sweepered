@@ -9,9 +9,13 @@ public class EventInteger extends Observable<EventInteger> {
 
     private Integer value;
 
-    public EventInteger(final Integer value) {
+    private final String type;
+
+    public EventInteger(final Integer value, final String type) {
 
         this.value = value;
+
+        this.type = type;
 
     }
 
@@ -56,6 +60,12 @@ public class EventInteger extends Observable<EventInteger> {
     public Integer getValue() {
 
         return value;
+
+    }
+
+    public String getType() {
+
+        return type;
 
     }
 
