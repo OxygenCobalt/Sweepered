@@ -11,7 +11,7 @@ import javafx.stage.Screen;
 import javafx.scene.paint.Color;
 import javafx.geometry.Rectangle2D;
 
-import config.panes.OptionPane;
+import config.panes.MenuPane;
 
 public class ConfigStage extends Stage {
 
@@ -21,7 +21,7 @@ public class ConfigStage extends Stage {
     private final int width;
     private final int height;
 
-    private OptionPane options;
+    private MenuPane about;
 
     public ConfigStage() {
 
@@ -46,9 +46,9 @@ public class ConfigStage extends Stage {
         setX((screenBounds.getWidth() - width) / 2);
         setY((screenBounds.getHeight() - height) / 2);
 
-        options = new OptionPane(243, 113);
+        about = new MenuPane(243, 113);
 
-        root.getChildren().addAll(options);
+        root.getChildren().addAll(about);
 
         show();
 

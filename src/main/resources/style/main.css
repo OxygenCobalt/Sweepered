@@ -18,7 +18,7 @@ may be subject to change if different themes are added
     -fx-border-style: solid outside;
 }
 
-/* Style used for every button and its hovered/pressed states */
+/* Style used for every button and its pressed states */
 .button {
 
     -fx-background-color: #3d3d3d;
@@ -43,14 +43,6 @@ may be subject to change if different themes are added
 }
 
 .button:pressed {
-
-    -fx-background-color: #353535;
-
-    -fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;
-
-}
-
-.pane-permanent-press {
 
     -fx-background-color: #353535;
 

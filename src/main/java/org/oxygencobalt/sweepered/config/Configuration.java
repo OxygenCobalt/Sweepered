@@ -1,5 +1,6 @@
 // Configuration
-// Class that stores the configuration values used across the game
+// Class that stores the configuration values used across the game,
+// but they're not global variables, I swear.
 
 package config;
 
@@ -184,7 +185,7 @@ public final class Configuration {
 
         if (CONFIG_VALUES.containsKey(name)) {
 
-            CONFIG_VALUES.put(name, CONFIG_VALUES.get(name));
+            CONFIG_VALUES.put(name, value);
 
         } else {
 
