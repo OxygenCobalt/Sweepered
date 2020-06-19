@@ -5,22 +5,20 @@ package config.panes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 import javafx.scene.control.Label;
 
 import config.ui.ConfigButton;
-
-import events.states.ConfigState;
+import config.values.ConfigState;
 
 import media.images.TextureAtlas;
 
-import game.decor.Corner;
+import shared.ui.Corner;
 
 public class AboutPane extends Pane implements EventHandler<ActionEvent> {
 

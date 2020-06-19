@@ -7,19 +7,19 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 
+import javafx.scene.layout.Pane;
+
 import javafx.stage.Screen;
 import javafx.scene.paint.Color;
 import javafx.geometry.Rectangle2D;
 
-import javafx.scene.layout.Pane;
-
-import events.observable.Listener;
-import events.states.ConfigState;
-
 import config.panes.MenuPane;
 import config.panes.AboutPane;
+import config.values.ConfigState;
 
 import media.images.TextureAtlas;
+
+import shared.observable.Listener;
 
 public class ConfigStage extends Stage implements Listener<ConfigState> {
 

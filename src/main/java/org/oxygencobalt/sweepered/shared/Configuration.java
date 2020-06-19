@@ -2,7 +2,7 @@
 // Class that stores the configuration values used across the game,
 // but they're not global variables, I swear.
 
-package config;
+package shared;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
-import events.values.EventInteger;
+import shared.values.EventInteger;
 
 public final class Configuration {
 

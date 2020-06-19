@@ -1,7 +1,7 @@
 // FlagCounter
 // Counter that keeps track of the amount of flags have been placed.
 
-package game.counter;
+package stats.counter;
 
 import java.util.ArrayList;
 import java.util.Collections;

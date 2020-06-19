@@ -5,16 +5,14 @@ package config.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.control.Button;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 
-import javafx.scene.control.Button;
-
-import game.decor.Corner;
+import shared.ui.Corner;
 
 public class ConfigButton extends Pane implements EventHandler<MouseEvent> {
 

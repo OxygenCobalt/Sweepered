@@ -1,31 +1,26 @@
 // GameScene
 // Main Minesweeper game scene.
 
-package game;
+package org.oxygencobalt.sweepered;
 
 import javafx.scene.Scene;
 import javafx.scene.Group;
-
-import javafx.scene.layout.Pane;
-
 import javafx.scene.paint.Color;
+import javafx.scene.layout.Pane;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-
 import javafx.geometry.Rectangle2D;
-
-import config.Configuration;
-
-import events.observable.Listener;
-
-import events.states.GameState;
-import events.values.EventInteger;
 
 import media.audio.Audio;
 
-import game.panes.TilePane;
-import game.panes.StatPane;
+import shared.Configuration;
+import shared.values.GameState;
+import shared.values.EventInteger;
+import shared.observable.Listener;
+
+import stats.StatPane;
+import tiles.TilePane;
 
 public class GameScene extends Scene implements EventHandler<MouseEvent> {
 

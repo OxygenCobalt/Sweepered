@@ -3,19 +3,17 @@
 
 package media.animations;
 
+import javafx.util.Duration;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 
 import javafx.geometry.Point2D;
 
-import javafx.util.Duration;
-
 import media.images.TextureAtlas;
 import media.images.Sprite;
 
-import events.states.TileState;
-
-import game.entities.Tile;
+import tiles.values.TileState;
+import tiles.ui.Tile;
 
 public class WaveTimeline {
 

@@ -1,32 +1,29 @@
 // Tile
 // Main button-like object, may or may not contain a mine
 
-package game.entities;
+package tiles.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.image.ImageView;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
-
-import javafx.scene.image.ImageView;
 
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
 
 import java.util.HashMap;
 
-import events.states.TileState;
-
-import game.generation.UpdatePacket;
-
 import media.animations.WaveTimeline;
 import media.images.TextureAtlas;
 import media.images.Sprite;
 import media.audio.Audio;
+
+import tiles.values.TileState;
+import tiles.generation.UpdatePacket;
 
 public class Tile extends Pane implements EventHandler<MouseEvent> {
 

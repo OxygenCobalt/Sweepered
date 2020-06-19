@@ -1,19 +1,19 @@
 // StatPane
 // Pane where items such as the timer, number of mines remaining, and reset button are
 
-package game.panes;
+package stats;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-import events.observable.Listener;
-import events.states.GameState;
+import shared.ui.Corner;
+import shared.values.GameState;
+import shared.observable.Listener;
 
-import game.counter.Timer;
-import game.counter.FlagCounter;
+import stats.counter.Timer;
+import stats.counter.FlagCounter;
 
-import game.entities.ResetButton;
-import game.decor.Corner;
+import stats.ui.ResetButton;
 
 public class StatPane extends Pane implements Listener<GameState> {
 

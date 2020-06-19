@@ -1,9 +1,9 @@
 // EventInteger
 // An observable integer value.
 
-package events.values;
+package shared.values;
 
-import events.observable.Observable;
+import shared.observable.Observable;
 
 public class EventInteger extends Observable<EventInteger> {
 

@@ -1,9 +1,9 @@
 // TileState
 // Observable enum for the Tile State
 
-package events.states;
+package tiles.values;
 
-import events.observable.Observable;
+import shared.observable.Observable;
 
 public class TileState extends Observable<TileState> {
 

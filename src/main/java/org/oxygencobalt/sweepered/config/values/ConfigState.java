@@ -1,9 +1,9 @@
 // ConfigState
 // An Observable enum for the state of the Config Menu
 
-package events.states;
+package config.values;
 
-import events.observable.Observable;
+import shared.observable.Observable;
 
 public class ConfigState extends Observable<ConfigState> {
 

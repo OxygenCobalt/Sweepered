@@ -1,18 +1,16 @@
 // ResetButton
 // Button that displays the GameState but also has the ability to restart the game.
 
-package game.entities;
+package stats.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.image.ImageView;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
-
-import javafx.scene.image.ImageView;
 
 import javafx.geometry.Rectangle2D;
 
@@ -20,11 +18,11 @@ import java.util.HashMap;
 
 import config.ConfigStage;
 
-import events.states.GameState;
-
 import media.images.TextureAtlas;
 import media.images.Sprite;
 import media.audio.Audio;
+
+import shared.values.GameState;
 
 public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 

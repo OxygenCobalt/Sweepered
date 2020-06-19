@@ -1,9 +1,9 @@
 // ChangePacket
 // Small class for communicating changed tiles from board to tilepane
 
-package game.generation;
+package tiles.generation;
 
-import events.states.TileState;
+import tiles.values.TileState;
 
 public class UpdatePacket {
 

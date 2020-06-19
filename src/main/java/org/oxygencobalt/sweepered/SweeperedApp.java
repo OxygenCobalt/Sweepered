@@ -7,14 +7,11 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 
-import config.Configuration;
-
-import events.observable.Listener;
-import events.values.EventInteger;
-
-import game.GameScene;
-
 import media.images.TextureAtlas;
+
+import shared.Configuration;
+import shared.observable.Listener;
+import shared.values.EventInteger;
 
 public class SweeperedApp extends Application implements Listener<EventInteger> {
 

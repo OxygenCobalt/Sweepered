@@ -1,9 +1,9 @@
 // GameState
 // An Observable enum for the Game State
 
-package events.states;
+package shared.values;
 
-import events.observable.Observable;
+import shared.observable.Observable;
 
 public class GameState extends Observable<GameState> {
 

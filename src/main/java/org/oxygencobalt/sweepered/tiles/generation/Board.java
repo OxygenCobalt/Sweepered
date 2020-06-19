@@ -1,14 +1,14 @@
 // Board
 // Object that handles interactions between tiles
 
-package game.generation;
+package tiles.generation;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-import events.states.TileState;
+import tiles.values.TileState;
 
 public class Board {
 

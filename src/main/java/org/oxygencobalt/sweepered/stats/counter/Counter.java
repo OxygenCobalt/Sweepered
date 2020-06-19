@@ -1,11 +1,10 @@
 // Counter
 // Abstract class that serves as the base of Timer & FlagCount
 
-package game.counter;
+package stats.counter;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-
 import javafx.scene.image.ImageView;
 
 import java.util.Arrays;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 
 import media.images.TextureAtlas;
 
-import game.decor.Corner;
+import shared.ui.Corner;
 
 public abstract class Counter extends Pane {
 

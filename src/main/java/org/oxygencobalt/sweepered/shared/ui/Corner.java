@@ -1,11 +1,10 @@
 // Corner
 // Largely decorative object
 
-package game.decor;
+package shared.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-
 import javafx.scene.image.ImageView;
 
 import media.images.TextureAtlas;

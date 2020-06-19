@@ -1,16 +1,15 @@
 // Timer
 // Counter that keeps track of the time that has elapsed in the game.
 
-package game.counter;
+package stats.counter;
 
 import javafx.animation.AnimationTimer;
 
 import java.time.Instant;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
-import events.states.GameState;
+import shared.values.GameState;
 
 public class Timer extends Counter {
 

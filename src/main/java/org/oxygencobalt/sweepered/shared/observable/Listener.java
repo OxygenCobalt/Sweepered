@@ -1,7 +1,7 @@
 // Listener
 // Base interface to listen to value changes w/observable.
 
-package events.observable;
+package shared.observable;
 
 public interface Listener<T> {
 

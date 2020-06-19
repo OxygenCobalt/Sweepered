@@ -5,21 +5,19 @@ package config.panes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.control.Button;
 
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
-import javafx.scene.control.Button;
-
-import events.states.ConfigState;
-
+import config.values.ConfigState;
 import config.ui.ConfigButton;
-import config.Configuration;
 
 import media.images.TextureAtlas;
 import media.images.Sprite;
 
-import game.decor.Corner;
+import shared.Configuration;
+import shared.ui.Corner;
 
 public class MenuPane extends Pane {
 
