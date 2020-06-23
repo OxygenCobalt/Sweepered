@@ -47,7 +47,7 @@ public class AboutPane extends Pane implements EventHandler<ActionEvent> {
 
             "A Minesweeper Clone in Java",
             "", // Blank strings act as spaces
-            "All Code/Art by Me",
+            "All Code/Art by OxygenCobalt",
             "",
             "Sounds from Freesound.org:",
             "\"Click.m4a\" by SpiceProgram",
