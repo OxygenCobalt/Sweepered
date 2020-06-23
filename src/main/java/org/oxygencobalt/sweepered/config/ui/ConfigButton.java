@@ -40,10 +40,7 @@ public class ConfigButton extends Pane implements EventHandler<MouseEvent> {
         this.width = width;
 
         relocate(x, y);
-
         setPrefSize(this.width, this.height);
-
-        // Lock Size to prevent unintential resizing
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         internalButton = new Button(name);

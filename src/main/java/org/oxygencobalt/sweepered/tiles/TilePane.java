@@ -6,8 +6,6 @@ package tiles;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-import javafx.geometry.Rectangle2D;
-
 import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -35,8 +33,6 @@ public class TilePane extends Pane implements Listener<TileState> {
 
     private int mineCount;
 
-    private Rectangle2D mouseRect;
-
     private final GameState state;
 
     private final EventInteger flagCount;
@@ -55,7 +51,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         x = offset;
 
-        // 44 is added to y to account for StatPane, and its border.
+        // 44 is added to y to account for StatPane and its border.
         y = (offset * 2) + 44;
 
         // w/h is multiplied by the tile count to get the actual pixel size
@@ -66,7 +62,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         setPrefSize(width, height);
 
-        // Lock Size to prevent unintential resizing
+        // Lock Size to prevent unintentional resizing
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Set Style for the background and the borders
@@ -78,11 +74,6 @@ public class TilePane extends Pane implements Listener<TileState> {
         this.mineCount = mineCount;
 
         flagCount = new EventInteger(mineCount, "Flags");
-
-        // mouseRect is used to detect when the mouse
-        // is being moved *within* the tile, as I cant get
-        // the mouse location relative to the pane.
-        mouseRect = new Rectangle2D(x, y, width, height);
 
         state = new GameState(GameState.State.UNSTARTED, "TilePane");
 
@@ -166,7 +157,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         }
 
-        // If startHover was called, toChange would have nothing to update it, so
+        // If startHover was called, toChange would have nothing to update, so
         // don't run this code if nothing needs to be updated.
         if (toChange.size() > 0) {
 

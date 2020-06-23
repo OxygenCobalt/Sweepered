@@ -160,11 +160,11 @@ public class Corner extends Pane {
                     paneHeight,
 
                     // Small is used to return smaller corners
-                    // to be used by the counter/configbuttons
+                    // to be used by the Counter/ConfigButtons
                     small,
 
                     // Inverted is used to return the opposite-colored
-                    // corner, used by configbutton
+                    // corner, used by ConfigButton
                     inverted
 
                 );

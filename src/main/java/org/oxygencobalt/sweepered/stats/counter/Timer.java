@@ -45,17 +45,17 @@ public class Timer extends Counter {
 
             elapsedTime = (int) (currentTime - startTime);
 
-            // If the new time hasnt changed, then ignore this code.
+            // If the new time hasn't changed, then ignore this code.
             if (elapsedCache != elapsedTime) {
 
                 // If it has changed, increment the time by 1 and update the digits
                 time++;
 
-                // timeClone is used to seperate time into digits w/o
+                // timeClone is used to separate time into digits w/o
                 // actually changing the value of time
                 timeClone = time;
 
-                // Fill the array of each value seperated into its individual digits,
+                // Fill the array of each value separated into its individual digits,
                 // and then reverse it to get the correct order of the digits
                 while (timeClone > 0) {
 

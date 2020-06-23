@@ -1,5 +1,5 @@
 // TextureAtlas
-// Class containing all image coordinates and the function to turn them into imageviews.
+// Class containing all image coordinates and the function to turn them into ImageViews.
 
 package media.images;
 
@@ -10,12 +10,12 @@ public final class TextureAtlas {
 
     private TextureAtlas() {
 
-        // Isnt called.
+        // Isn't called.
 
     }
 
     // Main image fetching function
-    // Returns an imageview w/a viewport as I cant directly crop an Image
+    // Returns an ImageView w/a viewport as I cant directly crop an Image
 
     public static ImageView get(final Sprite sprite) {
 
@@ -45,25 +45,25 @@ public final class TextureAtlas {
     private static final Image STATE_ATLAS = new Image(RES_PATH + "stateAtlas.png");
     public static final Sprite STATE_FLAGGED = new Sprite(STATE_ATLAS, 0, 0);
     public static final Sprite STATE_BAD_FLAG = new Sprite(STATE_ATLAS, 1, 0);
-    public static final Sprite STATE_MINED = new Sprite(STATE_ATLAS, 0, 1);
-    public static final Sprite STATE_EXPLODED = new Sprite(STATE_ATLAS, 0, 2);
+    public static final Sprite STATE_MINED = new Sprite(STATE_ATLAS, 2, 0);
+    public static final Sprite STATE_EXPLODED = new Sprite(STATE_ATLAS, 3, 0);
 
     // Uncovered Number-Tiles
     // These are indexed by mineCount [See: Tile's uncover()], so its an array.
     public static final Sprite[] STATE_UNCOVERED = new Sprite[]{
 
-        // TODO: If you add anims, please point
-        // this sprite to another blank tile.
+        // The 0th uncovered tile points to an out of bounds
+        // location in order to appear transparent
+        new Sprite(STATE_ATLAS, 4, 0),
 
+        new Sprite(STATE_ATLAS, 0, 1),
+        new Sprite(STATE_ATLAS, 1, 1),
+        new Sprite(STATE_ATLAS, 2, 1),
+        new Sprite(STATE_ATLAS, 3, 1),
+        new Sprite(STATE_ATLAS, 0, 2),
         new Sprite(STATE_ATLAS, 1, 2),
-        new Sprite(STATE_ATLAS, 0, 3),
-        new Sprite(STATE_ATLAS, 1, 3),
-        new Sprite(STATE_ATLAS, 2, 3),
-        new Sprite(STATE_ATLAS, 3, 3),
-        new Sprite(STATE_ATLAS, 0, 4),
-        new Sprite(STATE_ATLAS, 1, 4),
-        new Sprite(STATE_ATLAS, 2, 4),
-        new Sprite(STATE_ATLAS, 3, 4)
+        new Sprite(STATE_ATLAS, 2, 2),
+        new Sprite(STATE_ATLAS, 3, 2)
 
     };
 
@@ -100,8 +100,7 @@ public final class TextureAtlas {
 
     };
 
-    // Icons [Used in the configmenu]
-
+    // Icons [Used in the ConfigMenu]
     public static final Image ICON_ATLAS = new Image(RES_PATH + "iconAtlas.png");
     public static final Sprite ICON_BACK = new Sprite(ICON_ATLAS, 0, 0);
     public static final Sprite ICON_ONE_MINE = new Sprite(ICON_ATLAS, 1, 0);

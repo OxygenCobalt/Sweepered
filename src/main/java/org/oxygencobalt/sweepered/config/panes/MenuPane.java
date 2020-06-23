@@ -16,7 +16,7 @@ import config.ui.ConfigButton;
 import media.images.TextureAtlas;
 import media.images.Sprite;
 
-import shared.Configuration;
+import shared.config.Configuration;
 import shared.ui.Corner;
 
 public class MenuPane extends Pane {
@@ -43,7 +43,7 @@ public class MenuPane extends Pane {
 
         setPrefSize(this.width, this.height);
 
-        // Lock Size to prevent unintential resizing
+        // Lock Size to prevent unintentional resizing
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Set Style for the background and the borders

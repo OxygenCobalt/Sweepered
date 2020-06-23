@@ -13,7 +13,7 @@ public class TileState extends Observable<TileState> {
 
         FLAGGED, FLAGGED_MINED,
 
-        EXPLODED, UNCOVERED_CLEARED, // Game end scenarios
+        EXPLODED, UNCOVERED_CLEARED, // Game end triggers
 
         UNCOVERED,
 
@@ -97,6 +97,7 @@ public class TileState extends Observable<TileState> {
 
     }
 
+    // State checking
     public final Boolean isState(final State... states) {
 
         // Iterate through all given states and return

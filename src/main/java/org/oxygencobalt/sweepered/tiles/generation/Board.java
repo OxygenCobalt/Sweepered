@@ -39,7 +39,7 @@ public class Board {
 
         // Having a size that exceeds (width * height) - 9 is
         // impossible, as the program will enter an infinite loop
-        // trying to fill in a tile that doesnt exist. There also
+        // trying to mine in a tile that doesnt exist. There also
         // cannot be a size lower than 9x9, as that will break
         // StatBar [May be subject to change.]
 
@@ -69,7 +69,7 @@ public class Board {
 
         // Create and fill the lists of tiles
         // used in some if functions to shorten them,
-        // so x != y & x != y would just become !a.contains(x)
+        // so x != y && x != z would just become !a.contains(x)
         minedTiles = Arrays.asList(
             TileState.State.MINED,
             TileState.State.FLAGGED_MINED,
@@ -205,12 +205,14 @@ public class Board {
 
                     // Also check if surrounding tile is not outside the bounds of the board
                     // before running any functions on it
-                    // TODO: THERE HAS TO BE A BETTER WAY TO WRITE THIS
                     isNotOutOfBounds = (
+
                         (nearX != width && nearX >= 0) && (nearY != height && nearY >= 0)
+
                     );
 
                     if (isNotOutOfBounds) {
+
                         nearTile = board[nearX][nearY];
 
                         // Add to mineCount if tile does contain a mine
@@ -227,7 +229,9 @@ public class Board {
                         // multiple times, but im not sure if thats possible to be fixed.
 
                         if (nearTile == TileState.State.COVERED) {
+
                             recursiveList.add(new int[]{nearX, nearY});
+
                         }
 
                     }
@@ -254,6 +258,7 @@ public class Board {
                 }
 
             }
+
         }
 
         // Finally, create a UpdatePacket for the original updated tile.
@@ -369,8 +374,8 @@ public class Board {
 
         TileState.State tile;
 
-        // Iterate through every tile, and set it to DISABLED,
-        // as notifyAllTiles is only activated at a Game End scenario.
+        // Iterate through every tile, and set it to DISABLED with the given reason,
+        // as disableAllTiles is only activated at a Game End scenario.
 
         for (int x = 0; x < width; x++) {
 
@@ -470,7 +475,8 @@ public class Board {
 
         TileState.State tile;
 
-        // Reset flagCount to mineCount
+        // Reset flagCount to the value of mineCount
+
         flagCount = mineCount;
 
         // Iterate through the entire board and reset every tile to COVERED
@@ -505,6 +511,9 @@ public class Board {
 
         int badFlagCount = 0;
 
+        // Iterate through the board and increment
+        // badFlagCount if any incorrectly flagged tiles
+        // are found [E.G Flagged, but the tile isnt mined]
         for (int x = 0; x < width; x++) {
 
             for (int y = 0; y < height; y++) {
@@ -523,6 +532,7 @@ public class Board {
 
     }
 
+    // Getters
     public TileState.State getTileAt(final int x, final int y) {
 
         return board[x][y];

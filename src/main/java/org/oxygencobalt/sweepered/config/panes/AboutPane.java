@@ -66,7 +66,7 @@ public class AboutPane extends Pane implements EventHandler<ActionEvent> {
 
         setPrefSize(this.width, this.height);
 
-        // Lock Size to prevent unintential resizing
+        // Lock Size to prevent unintentional resizing
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Create the logo and the back button
@@ -99,6 +99,8 @@ public class AboutPane extends Pane implements EventHandler<ActionEvent> {
 
         Label label;
 
+        // Iterate through every sentence in the
+        // words array and generate a label for it
         for (int i = 0; i < words.length; i++) {
 
             label = new Label(words[i]);

@@ -1,7 +1,7 @@
 // ShockwaveTimeline
-// Timeline that handles explosion shockwaves.
+// Timeline that handles game end event shockwaves.
 
-package media.animations;
+package tiles.animations;
 
 import javafx.util.Duration;
 import javafx.animation.Timeline;
@@ -47,20 +47,20 @@ public class WaveTimeline {
 
             case "CLEARED": waveSprite = TextureAtlas.CLEAR_WAVE; break;
 
-            case "INVALID": waveSprite = TextureAtlas.INVALID_WAVE; break;
+            default: waveSprite = TextureAtlas.INVALID_WAVE; break;
 
         }
 
-        // Make sure to remove the original wave before loading the new wave
-        // to prevent a strange bug where a different wave type will persist after resets.
-
         tile.loadTexture("Wave", waveSprite);
 
+        // Main timeline used
         timeline = new Timeline(
+
             new KeyFrame(Duration.ZERO,                        event -> inactive()),
             new KeyFrame(Duration.seconds(distanceTime),       event -> active()),
             new KeyFrame(Duration.seconds(distanceTime + 0.1), event -> fade()),
             new KeyFrame(Duration.seconds(distanceTime + 0.2), event -> inactive())
+
         );
 
     }
@@ -124,6 +124,8 @@ public class WaveTimeline {
 
         if (tileState.isDisabled()) {
 
+            // After the wave is shown, set the wave to partially
+            // transparent to make it look like its fading out
             tile.getImages().get("Wave").setOpacity(0.5);
 
         }
@@ -136,9 +138,9 @@ public class WaveTimeline {
 
         if (tileState.isDisabled()) {
 
-            // Once the mine is shown, theres no need to unshow it, remove the wave texture
+            // Once the mine is shown, theres no need to unshow it, so
+            // just remove the Wave texture instead.
             tile.removeTexture("Wave");
-
 
         }
 

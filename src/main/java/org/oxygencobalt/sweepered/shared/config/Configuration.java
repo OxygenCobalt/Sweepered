@@ -2,7 +2,7 @@
 // Class that stores the configuration values used across the game,
 // but they're not global variables, I swear.
 
-package shared;
+package shared.config;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public final class Configuration {
 
     private static final HashMap<Integer, String> CONFIG_LINES = new HashMap<Integer, String>();
 
-    private static final String CONFIGURATION_PATH = "src/main/resources/configuration";
+    private static final String CONFIGURATION_PATH = "src/main/resources/config/configuration";
 
     private Configuration() {
 

@@ -9,7 +9,7 @@ import javafx.scene.Group;
 
 import media.images.TextureAtlas;
 
-import shared.Configuration;
+import shared.config.Configuration;
 import shared.observable.Listener;
 import shared.values.EventInteger;
 
@@ -28,11 +28,7 @@ public class SweeperedApp extends Application implements Listener<EventInteger> 
         // Read the configuration file [To be used across the game]
         Configuration.readConfigFile();
 
-        // Arguments are passed to GameScene as followed:
-        // group - for the super() constructor to function
-        // width, height - specified board size [in tiles, not pixels]
-        // mine count - number of mines on the board
-        // offset - the spacing between each pane in GameScene
+        // Create the main game scene
         GameScene mainScene = new GameScene(new Group());
 
         // Get the calculated w/h from GameScene and
@@ -65,8 +61,8 @@ public class SweeperedApp extends Application implements Listener<EventInteger> 
         Integer newValue = changed.getValue();
         String type = changed.getType();
 
-        // Depending on the changed value, update the windows size
-        // with the new value comfing from GameScene
+        // Depending on the changed value, update the window's size
+        // with the new value coming from GameScene
         switch (type) {
 
             case "Width": window.setWidth(newValue); break;

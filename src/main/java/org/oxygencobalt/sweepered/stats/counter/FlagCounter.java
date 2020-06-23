@@ -32,7 +32,7 @@ public class FlagCounter extends Counter {
 
         int flagDigit;
 
-        // Fill the array of each value seperated into its individual digits,
+        // Fill the array of each value separated into its individual digits,
         // and then reverse it to get the correct order of the digits
         while (flagClone > 0) {
 

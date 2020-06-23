@@ -14,7 +14,7 @@ import javafx.geometry.Rectangle2D;
 
 import media.audio.Audio;
 
-import shared.Configuration;
+import shared.config.Configuration;
 import shared.values.GameState;
 import shared.values.EventInteger;
 import shared.observable.Listener;
@@ -83,20 +83,20 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // if the config menu is ever shown.
         coverPane = new Pane();
 
-        // Set up the gameStates and add listeners to GameScene
+        // Set up every gamestate and add GameScene as a listener
         masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
 
-        stats.getGameState().addListener(gameStateListener);
-        tiles.getGameState().addListener(gameStateListener);
         masterState.addListener(gameStateListener);
 
+        stats.getGameState().addListener(gameStateListener);
+
+        tiles.getGameState().addListener(gameStateListener);
         tiles.getFlagCount().addListener(flagCountListener);
 
         root = group;
         root.getChildren().addAll(coverPane, stats, tiles);
 
-        // tileRect is used to detect if the mouse is outside of
-        // TilePane, and then correcting the gameState accordingly.
+        // tileRect is used to detect if the mouse is within the TilePane
         tileRect = new Rectangle2D(tiles.getLayoutX(),
                                    tiles.getLayoutY(),
                                    tileWidth * 32,
@@ -120,7 +120,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
             mineCount = mineCounts[newMode];
 
-        // Otherwise, create a 16x16 board
+        // Otherwise, create a 16x16 board for values 2 and 3
         } else if (newMode >= 2 && newMode <= 3) {
 
             tileWidth = 16;
@@ -129,7 +129,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
             mineCount = mineCounts[newMode];
 
         // Otherwise, the mode is invalid and the width/height/mineCount are loaded
-        // from the alternate values loaded by configuration. This is also a custom
+        // from the alternate values stored in configuration. This is also how a custom
         // value would be created.
         } else {
 
@@ -149,7 +149,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         GameState.State newState = changed.getState();
         String owner = changed.getOwner();
 
-        // Update every nodes state indescriminately
+        // Update every nodes state indiscriminately
         stats.updateGameState(newState);
         tiles.updateGameState(newState);
 
@@ -173,7 +173,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
             // If the disabled state is being replaced with any
             // other state [While the masterState is still DISABLED,
-            // as it hasnt been updated set], then move the coverPane
+            // as it hasn't been updated set], then move the coverPane
             // to the back in order to reenable game functions again.
 
             if (masterState.isDisabled()) {
@@ -204,17 +204,29 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
     Listener<EventInteger> modeListener = changed -> {
 
+        // Get the new mode value, and update the
+        // dimensions/minecount with that new value
         int newMode = changed.getValue();
 
         setModeValues(newMode);
 
-        stats.updateBoardValues(tileWidth, tileHeight);
+        // Pass these new values to every child pane to allow
+        // them to change their size accordingly
+        stats.updateBoardValues(tileWidth);
         tiles.updateBoardValues(tileWidth, tileHeight, mineCount);
 
+        // Update the Scene's/Window size, and then
+        // also update the size of coverPane.
         width.setValue((tileWidth * 32) + (18 + offset));
         height.setValue((tileHeight * 32) + (76 + offset));
 
         coverPane.setPrefSize(getWidth(), getHeight());
+
+        // Update the tileRect as well to be in line with the new dimensions.
+        tileRect = new Rectangle2D(tiles.getLayoutX(),
+                                   tiles.getLayoutY(),
+                                   tileWidth * 32,
+                                   tileHeight * 32);
 
         // If the mode is changed, make sure to change the game state to
         // UNSTARTED as effectively the entire game is being restarted
@@ -242,6 +254,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
     }
 
+    // Basic getters
     public EventInteger getObservableWidth() {
 
         return width;

@@ -44,17 +44,17 @@ public abstract class Counter extends Pane {
 
         setPrefSize(width, height);
 
-        // Lock Size to prevent unintential resizing
+        // Lock Size to prevent unintentional resizing
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Set Style for the background and the borders
         getStyleClass().add("counter");
 
+        this.digitCount = digitCount;
+
         // Create the digit array, its cache, and the list of digit ImageViews
         digits = new int[digitCount];
         digitCache = new int[digitCount];
-
-        this.digitCount = digitCount;
 
         digitViews = new ImageView[digitCount];
 
@@ -78,12 +78,12 @@ public abstract class Counter extends Pane {
             digitSize = digitArgs.size();
 
             // If its too short, pad the front of
-            // elapsed with zeroes
+            // the digits with zeros
             if (digitSize < digits.length) {
 
                 digitArgs.add(0, 0);
 
-            // If its too long, trunicate any digits outside
+            // If its too long, truncate any digits outside
             // of it to create a rollover effect.
             } else if (digitSize > digits.length) {
 
@@ -114,7 +114,7 @@ public abstract class Counter extends Pane {
 
             // First, check if the digit has actually changed by comparing it
             // to digitCache. This can be disabled by setting doInitGeneration to
-            // true, but that is reserved to when a Counter is first initialized.
+            // true, but that is reserved to when a Counter is first created.
             if (digits[i] != digitCache[i] || doInitGeneration) {
 
                 newDigit = TextureAtlas.get(
@@ -154,6 +154,9 @@ public abstract class Counter extends Pane {
 
     public void updatePosition(final int newX) {
 
+        // The y value remains static, so only
+        // update the X value if called and relocate
+        // the Counter with the new value
         x = newX;
 
         relocate(x, y);

@@ -1,5 +1,5 @@
 // StatPane
-// Pane where items such as the timer, number of mines remaining, and reset button are
+// Pane where information about the current game and the reset button is shown
 
 package stats;
 
@@ -46,7 +46,7 @@ public class StatPane extends Pane implements Listener<GameState> {
 
         setPrefSize(width, height);
 
-        // Lock Size to prevent unintential resizing
+        // Lock Size to prevent unintentional resizing
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Set Style for the background and the borders
@@ -96,18 +96,18 @@ public class StatPane extends Pane implements Listener<GameState> {
 
     }
 
-    public void updateBoardValues(final int newTileWidth,
-                                  final int newTileHeight) {
+    public void updateBoardValues(final int newTileWidth) {
 
+        // Only the width needs to be updated during
+        // a mode change, as StatPanes height is static
+        // and the mineCount isn't needed
         width = newTileWidth * 32;
 
         setPrefWidth(width);
-
-        // Lock Size to prevent unintential resizing
         setMaxWidth(Region.USE_PREF_SIZE);
 
-        // Update the positoning of only the resetbutton and the
-        // timer, as they are dependent on the dimensions of statpane.
+        // Update the positioning of only the ResetButton and the
+        // timer, as they are dependent on the dimensions of StatPane.
         reset.updatePosition((width - 36) / 2, x, y);
         timer.updatePosition(width - ((19 * 3) + 6));
 

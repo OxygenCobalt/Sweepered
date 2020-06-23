@@ -41,22 +41,6 @@ public class EventInteger extends Observable<EventInteger> {
 
     }
 
-    public void increment(final Integer count) {
-
-        value = value + count;
-
-        System.out.println(value);
-
-    }
-
-    public void deincrement(final Integer count) {
-
-        value = value - count;
-
-        fireChange(this);
-
-    }
-
     public Integer getValue() {
 
         return value;

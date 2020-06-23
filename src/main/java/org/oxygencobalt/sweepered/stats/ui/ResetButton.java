@@ -233,8 +233,6 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
         // look darker. This is used with the faces when
         // ResetButton is pressed, to make it more natural.
 
-        // FIXME: This probably wont work with any theme other than dark.
-
         if (dark) {
 
             opacity = 0.5;
@@ -276,7 +274,7 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     public void updatePosition(final int newX, final int paneX, final int paneY) {
 
-        // Given the new values, update the X position and the rect positon
+        // Given the new values, update the X position and the mouseRect position
         this.x = newX;
 
         relocate(x, y);

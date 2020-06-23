@@ -59,8 +59,6 @@ public class UpdatePacket {
         // If the length is 1, then an auxillary arg was passed, so set the value to that
         // Otherwise, there are too many auxillary arguments, and an exception must be thrown.
 
-        // FIXME: Avoid undefined objects, use <T> :P
-
         switch (auxillary.length) {
 
             case 0: this.auxillary = null; break;
@@ -74,7 +72,6 @@ public class UpdatePacket {
     }
 
     // Getters
-
     public final Change getChange() {
 
         return change;

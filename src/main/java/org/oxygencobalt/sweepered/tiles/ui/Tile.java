@@ -17,13 +17,13 @@ import javafx.geometry.Point2D;
 
 import java.util.HashMap;
 
-import media.animations.WaveTimeline;
 import media.images.TextureAtlas;
 import media.images.Sprite;
 import media.audio.Audio;
 
 import tiles.values.TileState;
 import tiles.generation.UpdatePacket;
+import tiles.animations.WaveTimeline;
 
 public class Tile extends Pane implements EventHandler<MouseEvent> {
 
@@ -102,6 +102,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         if (isInBox) {
 
+            // If so, then notify TilePane that the mouse is hovering on this tile
             state.pulse("Hover");
 
         }
@@ -157,7 +158,7 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         EventType type = event.getEventType();
 
-        // First, check if the mouse is pressing or releasing, to prevent
+        // First, check if the mouse is pressing, to prevent
         // a flag from being placed and then immediately removed
         if (type == MouseEvent.MOUSE_PRESSED) {
 
@@ -350,26 +351,21 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         }
 
-        // Make sure this disabling is due to a game end
-        // scenario before creating a new wave animation
-        if (!type.equals("configOpen")) {
 
-            // Create a wavetimeline w/the given type [Usually EXPLOSION
-            // or CLEARED] and the object itself, and then play it
-            WaveTimeline timeline = new WaveTimeline(
+        // Create a wavetimeline w/the given type [Usually EXPLOSION
+        // or CLEARED] and the object itself, and then play it
+        WaveTimeline timeline = new WaveTimeline(
 
-                this,
+            this,
 
-                new Point2D(simpleX, simpleY),
-                new Point2D(originX, originY),
+            new Point2D(simpleX, simpleY),
+            new Point2D(originX, originY),
 
-                type
+            type
 
-            );
+        );
 
-            timeline.getTimeline().play();
-
-        }
+        timeline.getTimeline().play();
 
     }
 

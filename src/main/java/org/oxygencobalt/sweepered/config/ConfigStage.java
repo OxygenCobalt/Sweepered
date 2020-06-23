@@ -38,7 +38,7 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
 
     public ConfigStage() {
 
-        // Since this object is a stage, create the internal
+        // Since this object is a stage instead of a scene, create an internal
         // Group and the Scene instead of calling the super constructor
         root = new Group();
         internalScene = new Scene(root);
@@ -90,7 +90,7 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
     private void updateFrontPane(final ConfigState.State newState) {
 
         // Set the currently shown pane to the
-        // states resepctive pane
+        // states respective pane
         switch (newState) {
 
             case MENU:  setTitle("Settings");
