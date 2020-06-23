@@ -5,9 +5,9 @@ Sweepered is a simple clone of minesweeper in Java/JavaFX that I created as a le
 
 All the normal features of Minesweeper are here, along with some of my own personal design choices.
 
-[<img src="markdownData/gameStarted.png">](markdownData/gameStarted.png)
-[<img src="markdownData/gameExploded.png">](markdownData/gameExploded.png)
-[<img src="markdownData/gameCleared.png">](markdownData/gameCleared.png)
+[<img src="markdownData/gameStarted.png" width=187>](markdownData/gameStarted.png)
+[<img src="markdownData/gameExploded.png" width=187>](markdownData/gameExploded.png)
+[<img src="markdownData/gameCleared.png" width=187>](markdownData/gameCleared.png)
 
 To run it, enter the project directory and run the Maven command:
 
