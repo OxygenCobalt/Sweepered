@@ -70,7 +70,7 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
 
         updateFrontPane(masterState);
 
-        show();
+        // By default, ConfigStage isnt shown.
 
     }
 

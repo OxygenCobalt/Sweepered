@@ -1,6 +1,4 @@
 // Configuration file used by the Configuration object
-// Normally, the only value is the mode, but you can also create
-// a custom mode by changing the mode to a value above 3
 
 [Mode] {1}
 

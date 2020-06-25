@@ -25,7 +25,7 @@ import tiles.values.TileState;
 import tiles.generation.UpdatePacket;
 import tiles.animations.WaveTimeline;
 
-public class Tile extends Pane implements EventHandler<MouseEvent> {
+public class Tile extends Pane {
 
     private final int x;
     private final int y;
@@ -72,44 +72,13 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
         images = new HashMap<String, ImageView>();
         loadTexture("Normal", TextureAtlas.TILE_NORMAL);
 
-        setOnMousePressed(this);
-        setOnMouseReleased(this);
-        setOnMouseMoved(this);
+        setOnMousePressed(clickListener);
+        setOnMouseReleased(clickListener);
+        setOnMouseMoved(hoverListener);
 
     }
 
-    // Mouse Input functions
-    public void handle(final MouseEvent event) {
-
-        EventType type = event.getEventType();
-
-        if (type == MouseEvent.MOUSE_MOVED) {
-
-            onHover(event);
-
-        } else {
-
-            onClick(event);
-
-        }
-
-    }
-
-    private void onHover(final MouseEvent event) {
-
-        // Find if the mouse pointer is still within the Rect2D
-        Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
-
-        if (isInBox) {
-
-            // If so, then notify TilePane that the mouse is hovering on this tile
-            state.pulse("Hover");
-
-        }
-
-    }
-
-    private void onClick(final MouseEvent event) {
+    EventHandler<MouseEvent> clickListener = event -> {
 
         MouseButton button = event.getButton();
 
@@ -126,7 +95,22 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
 
         }
 
-    }
+    };
+
+    EventHandler<MouseEvent> hoverListener = event -> {
+
+        // Find if the mouse pointer is still within the Rect2D
+        Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
+
+        if (isInBox) {
+
+            // If so, then notify TilePane that the mouse is hovering on this tile
+            state.pulse("Hover");
+
+        }
+
+    };
+
     private void onPrimary(final MouseEvent event) {
 
         Boolean isNotFlagged = !String.valueOf(state.getState()).contains("FLAGGED");
@@ -149,22 +133,6 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
                 onRelease(event);
 
             }
-
-        }
-
-    }
-
-    private void onSecondary(final MouseEvent event) {
-
-        EventType type = event.getEventType();
-
-        // First, check if the mouse is pressing, to prevent
-        // a flag from being placed and then immediately removed
-        if (type == MouseEvent.MOUSE_PRESSED) {
-
-            // Run the pulse function in order to notify the listeners
-            // that the tile needs to be flagged, without changing the value.
-            state.pulse("Flag");
 
         }
 
@@ -201,6 +169,22 @@ public class Tile extends Pane implements EventHandler<MouseEvent> {
             Audio.CLICK_SOUND.play();
 
             loadTexture("Normal", TextureAtlas.TILE_NORMAL);
+
+        }
+
+    }
+
+    private void onSecondary(final MouseEvent event) {
+
+        EventType type = event.getEventType();
+
+        // First, check if the mouse is pressing, to prevent
+        // a flag from being placed and then immediately removed
+        if (type == MouseEvent.MOUSE_PRESSED) {
+
+            // Run the pulse function in order to notify the listeners
+            // that the tile needs to be flagged, without changing the value.
+            state.pulse("Flag");
 
         }
 

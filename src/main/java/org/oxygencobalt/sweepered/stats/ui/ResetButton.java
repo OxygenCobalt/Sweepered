@@ -8,7 +8,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.image.ImageView;
 
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 
@@ -24,7 +23,7 @@ import media.audio.Audio;
 
 import shared.values.GameState;
 
-public class ResetButton extends Pane implements EventHandler<MouseEvent> {
+public class ResetButton extends Pane {
 
     private int x;
     private int y;
@@ -32,13 +31,12 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
     private final int width;
     private final int height;
 
-    private ConfigStage configStage;
-
     private GameState state;
     private GameState.State stateCache;
 
-    private String currentFace;
+    private ConfigStage configStage;
 
+    private String currentFace;
     private Sprite faceSprite;
 
     private Rectangle2D mouseRect;
@@ -59,7 +57,7 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
         state = new GameState(GameState.State.UNSTARTED, "ResetButton");
 
-        currentFace = "Normal";
+        configStage = new ConfigStage();
 
         images = new HashMap<String, ImageView>();
 
@@ -76,89 +74,75 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
         loadTexture("Normal", TextureAtlas.RESET_NORMAL, false);
         loadTexture(currentFace, faceSprite, false);
 
-        setOnMousePressed(this);
-        setOnMouseReleased(this);
+        setOnMousePressed(pressListener);
+        setOnMouseReleased(releaseListener);
 
     }
 
-    public void handle(final MouseEvent event) {
-
-        EventType type = event.getEventType();
-        MouseButton button = event.getButton();
+    EventHandler<MouseEvent> pressListener = event -> {
 
         // Disable ResetButton if the game is already unstarted
 
-        if (state.getState() != GameState.State.UNSTARTED || button == MouseButton.SECONDARY) {
+        MouseButton button = event.getButton();
 
-            if (type == MouseEvent.MOUSE_PRESSED) {
+        if (!state.isUnstarted() || button == MouseButton.SECONDARY) {
 
-                onPress(event);
+            loadTexture("Pressed", TextureAtlas.RESET_PRESSED, false);
 
-            }
+            // If the left mouse button is being pressed, then do not show
+            // the normal face when pressing down, instead the WAITING icon
+            // to indicate the action about to be performed
+            if (button == MouseButton.SECONDARY) {
 
-            if (type == MouseEvent.MOUSE_RELEASED) {
+                loadTexture("faceDISABLED", TextureAtlas.FACE_WAITING, true);
 
-                onRelease(event);
+            } else {
+
+                loadTexture(currentFace, faceSprite, true);
 
             }
 
         }
 
-    }
+    };
 
-    private void onPress(final MouseEvent event) {
+    EventHandler<MouseEvent> releaseListener = event -> {
+
+        // Disable ResetButton if the game is already unstarted
 
         MouseButton button = event.getButton();
 
-        loadTexture("Pressed", TextureAtlas.RESET_PRESSED, false);
+        if (!state.isUnstarted() || button == MouseButton.SECONDARY) {
 
-        // If the left mouse button is being pressed, then do not show
-        // the normal face when pressing down, instead the WAITING icon
-        // to indicate the action about to be performed
-        if (button == MouseButton.SECONDARY) {
+            // Find if the mouse pointer is still within the Rect2D
+            Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
 
-            loadTexture("faceDISABLED", TextureAtlas.FACE_WAITING, true);
+            if (isInBox) {
 
-        } else {
+                // Check which mouse button has been released.
+                // If its the right click, then reset the board by setting the state
+                // to UNSTARTED. If its a left click, open up the config menu and
+                // disable the game by setting the state to DISABLED
 
-            loadTexture(currentFace, faceSprite, true);
+                switch (button) {
 
-        }
+                    case PRIMARY: resetGame(); break;
 
-    }
+                    case SECONDARY: openConfigMenu(); break;
 
-    private void onRelease(final MouseEvent event) {
-
-        // Find if the mouse pointer is still within the Rect2D
-        Boolean isInBox = mouseRect.contains(event.getSceneX(), event.getSceneY());
-        MouseButton button;
-
-        if (isInBox) {
-
-            button = event.getButton();
-
-            // Check which mouse button has been released.
-            // If its the right click, then reset the board by setting the state
-            // to UNSTARTED. If its a left click, open up the config menu and
-            // disable the game by setting the state to DISABLED
-
-            switch (button) {
-
-                case PRIMARY: resetGame(); break;
-
-                case SECONDARY: openConfigMenu(); break;
+                }
 
             }
 
+            // Either way, play the click sound
+
+            Audio.CLICK_SOUND.play();
+
+            updateFace(state.getState());
+
         }
 
-        // Either way, play the click sound
-
-        Audio.CLICK_SOUND.play();
-
-        updateFace(state.getState());
-
-    }
+    };
 
     private void resetGame() {
 
@@ -168,21 +152,21 @@ public class ResetButton extends Pane implements EventHandler<MouseEvent> {
 
     private void openConfigMenu() {
 
-        if (configStage == null) {
+        // Check if the configStage isnt already being
+        // shown before proceeding.
+        if (!configStage.isShowing()) {
+
+            configStage.show();
 
             stateCache = state.getState();
 
             state.setState(GameState.State.DISABLED);
-
-            configStage = new ConfigStage();
 
             // Make sure that the Game State is reverted to the original
             // state that was stored earlier when the window is closed.
             configStage.setOnHidden(event -> {
 
                 state.setState(stateCache);
-
-                configStage = null;
 
             });
 

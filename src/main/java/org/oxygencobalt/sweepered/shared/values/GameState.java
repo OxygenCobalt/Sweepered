@@ -90,6 +90,11 @@ public class GameState extends Observable<GameState> {
 
     }
 
+    public Boolean isUnstarted() {
+
+        return isState(State.UNSTARTED);
+
+    }
 
     public Boolean isStarted() {
 

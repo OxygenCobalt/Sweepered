@@ -13,7 +13,7 @@ import shared.config.Configuration;
 import shared.observable.Listener;
 import shared.values.EventInteger;
 
-public class SweeperedApp extends Application implements Listener<EventInteger> {
+public class SweeperedApp extends Application {
 
     private Stage window;
 
@@ -36,8 +36,8 @@ public class SweeperedApp extends Application implements Listener<EventInteger> 
         EventInteger sceneWidth = mainScene.getObservableWidth();
         EventInteger sceneHeight = mainScene.getObservableHeight();
 
-        sceneWidth.addListener(this);
-        sceneHeight.addListener(this);
+        sceneWidth.addListener(sceneWidthListener);
+        sceneHeight.addListener(sceneHeightListener);
 
         window.getIcons().add(TextureAtlas.WINDOW_ICON);
 
@@ -56,22 +56,23 @@ public class SweeperedApp extends Application implements Listener<EventInteger> 
 
     }
 
-    public void propertyChanged(final EventInteger changed) {
+    // Listeners that update the Stages height whenever the scenes
+    // height is updated, as a Scenes dimensions are normally Read-Only
+    Listener<EventInteger> sceneWidthListener = changed -> {
 
         Integer newValue = changed.getValue();
-        String type = changed.getType();
 
-        // Depending on the changed value, update the window's size
-        // with the new value coming from GameScene
-        switch (type) {
+        window.setWidth(newValue);
 
-            case "Width": window.setWidth(newValue); break;
+    };
 
-            case "Height": window.setHeight(newValue + 26); break;
+    Listener<EventInteger> sceneHeightListener = changed -> {
 
-        }
+        Integer newValue = changed.getValue();
 
-    }
+        window.setHeight(newValue + 26);
+
+    };
 
     public static void main(final String[] args) {
 
