@@ -91,7 +91,15 @@ public class AboutPane extends Pane implements EventHandler<ActionEvent> {
 
     public void handle(final ActionEvent event) {
 
-        state.setState(ConfigState.State.MENU);
+        // Make sure that the custom menu flag persists
+        // when the state is switched back to menu
+        switch (state.getState()) {
+
+            case ABOUT: state.setState(ConfigState.State.MENU); break;
+
+            case ABOUT_CUSTOM: state.setState(ConfigState.State.MENU_CUSTOM); break;
+
+        }
 
     }
 

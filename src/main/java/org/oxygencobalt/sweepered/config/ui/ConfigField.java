@@ -88,15 +88,42 @@ public class ConfigField extends Pane implements EventHandler<KeyEvent> {
 
     }
 
+    public void setValid(final Boolean valid) {
+
+        if (valid) {
+
+            internalField.getStyleClass().remove("invalid-field");
+
+        } else {
+
+            internalField.getStyleClass().add("invalid-field");
+
+        }
+
+    }
+
     public void setValue(final int newValue) {
 
         internalField.setText(String.valueOf(newValue));
 
     }
 
-    public TextField getInternalField() {
+    public int getValue() {
 
-        return internalField;
+        String text = internalField.getText();
+
+        // Make sure that the field isnt empty
+        // before converting it to an integer
+        if (!text.equals("")) {
+
+            return Integer.parseInt(text);
+
+        } else {
+
+            // If it is empty, just return zero
+            return 0;
+
+        }
 
     }
 

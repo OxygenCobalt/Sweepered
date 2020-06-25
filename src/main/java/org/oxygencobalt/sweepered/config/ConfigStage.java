@@ -68,7 +68,7 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
 
         root.getChildren().addAll(about, menu);
 
-        updateFrontPane(masterState.getState());
+        updateFrontPane(masterState);
 
         show();
 
@@ -78,7 +78,7 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
 
         ConfigState.State newState = changed.getState();
 
-        updateFrontPane(newState);
+        updateFrontPane(changed);
 
         menu.updateConfigState(newState);
         about.updateConfigState(newState);
@@ -87,19 +87,20 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
 
     }
 
-    private void updateFrontPane(final ConfigState.State newState) {
+    private void updateFrontPane(final ConfigState changed) {
 
         // Set the currently shown pane to the
         // states respective pane
-        switch (newState) {
 
-            case MENU:  setTitle("Settings");
-                        frontPane = menu;
-                        break;
+        if (changed.isMenu()) {
 
-            case ABOUT: setTitle("About Sweepered");
-                        frontPane = about;
-                        break;
+            setTitle("Settings");
+            frontPane = menu;
+
+        } else if (changed.isAbout()) {
+
+            setTitle("About Sweepered");
+            frontPane = about;
 
         }
 

@@ -103,13 +103,13 @@ public final class TextureAtlas {
     // Icons [Used in the ConfigMenu]
     public static final Image ICON_ATLAS = new Image(RES_PATH + "iconAtlas.png");
     public static final Sprite ICON_BACK = new Sprite(ICON_ATLAS, 0, 0);
-    public static final Sprite ICON_ONE_MINE = new Sprite(ICON_ATLAS, 1, 0);
-    public static final Sprite ICON_TWO_MINE = new Sprite(ICON_ATLAS, 2, 0);
-    public static final Sprite ICON_THREE_MINE = new Sprite(ICON_ATLAS, 3, 0);
-    public static final Sprite ICON_EXPLODE = new Sprite(ICON_ATLAS, 0, 1);
-    public static final Sprite ICON_CUSTOM = new Sprite(ICON_ATLAS, 1, 1);
-    public static final Sprite ICON_ABOUT = new Sprite(ICON_ATLAS, 2, 1);
-    public static final Sprite ICON_LARGE = new Sprite(ICON_ATLAS, 3, 1);
+    public static final Sprite ICON_CONFIRM = new Sprite(ICON_ATLAS, 1, 0);
+    public static final Sprite ICON_ONE_MINE = new Sprite(ICON_ATLAS, 2, 0);
+    public static final Sprite ICON_TWO_MINE = new Sprite(ICON_ATLAS, 3, 0);
+    public static final Sprite ICON_THREE_MINE = new Sprite(ICON_ATLAS, 0, 1);
+    public static final Sprite ICON_EXPLODE = new Sprite(ICON_ATLAS, 1, 1);
+    public static final Sprite ICON_CUSTOM = new Sprite(ICON_ATLAS, 2, 1);
+    public static final Sprite ICON_ABOUT = new Sprite(ICON_ATLAS, 3, 1);
 
     // Grid/Corners are special cases, as their respective nodes generate their own sprite objects
     public static final Image GRID_ATLAS = new Image(RES_PATH + "gridAtlas.png");

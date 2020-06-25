@@ -191,25 +191,6 @@ public final class Configuration {
 
     }
 
-    // Retrieve a configuration value as an event integer
-    public static EventInteger getEventConfigValue(final String name) {
-
-        int rawValue = getConfigValue(name);
-
-        // Create a new EventInteger w/that value and store it,
-        // while returning the same value to whoever called the function
-        CONFIG_EVENT_VALUES.put(
-
-            name,
-
-            new EventInteger(rawValue, name)
-
-        );
-
-        return CONFIG_EVENT_VALUES.get(name);
-
-    }
-
     // Set a configuration
     public static void setConfigValue(final String name, final int value) {
 
@@ -236,6 +217,42 @@ public final class Configuration {
         } else {
 
             System.out.println("Config entry not found.");
+
+        }
+
+    }
+
+    // Create an EventInteger out of a specific config value
+    public static EventInteger createEventConfigValue(final String name) {
+
+        int rawValue = getConfigValue(name);
+
+        // Create a new EventInteger w/that value and store it,
+        // while returning the same value to whoever called the function
+        CONFIG_EVENT_VALUES.put(
+
+            name,
+
+            new EventInteger(rawValue, name)
+
+        );
+
+        return CONFIG_EVENT_VALUES.get(name);
+
+    }
+
+    // Get an existing EventInteger as a configvalue
+    public static EventInteger getEventConfigValue(final String name) {
+
+        if (CONFIG_EVENT_VALUES.containsKey(name)) {
+
+            return CONFIG_EVENT_VALUES.get(name);
+
+        } else {
+
+            System.out.println("Config entry not found");
+
+            return new EventInteger(0, "Invalid");
 
         }
 

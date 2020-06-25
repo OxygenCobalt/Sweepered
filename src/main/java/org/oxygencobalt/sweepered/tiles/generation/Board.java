@@ -43,7 +43,7 @@ public class Board {
         // cannot be a size lower than 9x9, as that will break
         // StatBar [May be subject to change.]
 
-        if (remainingTiles < 9 || (width < 9 || height < 9)) {
+        if (remainingTiles < 9 || (width < 6 || height < 6)) {
 
             // FIXME: Very unfriendly, may just add a restriction to the custom game option.
 

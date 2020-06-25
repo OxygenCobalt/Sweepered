@@ -20,6 +20,16 @@ may be subject to change if different themes are added
 
 }
 
+/* Style used for the counters */
+.counter {
+
+    -fx-background-color: #000000;
+    -fx-border-width: 2px;
+    -fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;
+    -fx-border-style: solid outside;
+
+}
+
 /* Style used for every button and its pressed states */
 .button {
 
@@ -81,12 +91,8 @@ may be subject to change if different themes are added
 
 }
 
-/* Style used for the counters */
-.counter {
+.invalid-field {
 
-    -fx-background-color: #000000;
-    -fx-border-width: 2px;
-    -fx-border-color: #1d1d1d #565656 #565656 #1d1d1d;
-    -fx-border-style: solid outside;
+    -fx-text-fill: #ce3d3d!important;
 
 }

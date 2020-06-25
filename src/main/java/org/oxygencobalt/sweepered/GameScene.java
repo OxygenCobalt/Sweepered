@@ -54,7 +54,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // Call super to construct Scene()
         super(group);
 
-        mode = Configuration.getEventConfigValue("Mode");
+        mode = Configuration.createEventConfigValue("Mode");
         mode.addListener(modeListener);
         setModeValues(mode.getValue());
 

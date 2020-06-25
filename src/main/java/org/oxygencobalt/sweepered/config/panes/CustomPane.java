@@ -9,6 +9,8 @@ import javafx.scene.layout.Region;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
+import java.util.Arrays;
+
 import config.values.ConfigState;
 import config.ui.ConfigButton;
 import config.ui.ConfigField;
@@ -51,10 +53,14 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
 
         isShown = false;
 
+        // Create each text field for setting the custom
+        // values. Their current placeholder value is zero
+        // until the Configuration values are loaded when
+        // the pane itself is shown
         widthField = new ConfigField(
 
             "Width",
-            Configuration.getConfigValue("tileWidth"),
+            0,
             2, 2,
             56, 24
 
@@ -63,7 +69,7 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
         heightField = new ConfigField(
 
             "Height",
-            Configuration.getConfigValue("tileHeight"),
+            0,
             62, 2,
             56, 24
 
@@ -72,7 +78,7 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
         minesField = new ConfigField(
 
             "Mines",
-            Configuration.getConfigValue("mineCount"),
+            0,
             122, 2,
             56, 24
 
@@ -84,7 +90,7 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
         confirm.getInternalButton().setOnAction(this);
         confirm.getInternalButton().setGraphic(
 
-            TextureAtlas.get(TextureAtlas.ICON_BACK)
+            TextureAtlas.get(TextureAtlas.ICON_CONFIRM)
 
         );
 
@@ -95,7 +101,113 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
 
     public void handle(final ActionEvent event) {
 
+        // TODO: Actually get custom values working
+        // Check if w/h are above six but below 100
+        // Check if w * h - mineCount is above 9
+        // make sure that a value has actually changed.
 
+        // Get the values from each field
+
+        int fieldWidth = widthField.getValue();
+        int fieldHeight = heightField.getValue();
+        int fieldMines = minesField.getValue();
+
+        Boolean different = isDifferent(fieldWidth, fieldHeight, fieldMines);
+
+        // If one or more of the values is different from
+        // the Configuration values, then continue.
+        if (different) {
+
+            Boolean[] valid = isValid(fieldWidth, fieldHeight, fieldMines);
+
+            // If every board value is correct, then actually
+            // set the values and change the board
+            if (valid[3]) {
+
+                widthField.setValid(true);
+                heightField.setValid(true);
+                minesField.setValid(true);
+
+                Configuration.setConfigValue("tileWidth", fieldWidth);
+                Configuration.setConfigValue("tileHeight", fieldHeight);
+                Configuration.setConfigValue("mineCount", fieldMines);
+
+                // Pulse the Mode EventInteger created by GameScene, in
+                // order to notify GameScene to reconstruct the board
+                // without incremening the value past 4.
+                Configuration.getEventConfigValue("Mode").pulse();
+
+                System.out.println("valid");
+
+            } else {
+
+                // Otherwise Use the first 3 values given by isValid() to
+                // set the valid/invalid status of each field and highlight the error
+                widthField.setValid(valid[0]);
+                heightField.setValid(valid[1]);
+                minesField.setValid(valid[2]);
+
+            }
+
+        } else {
+
+            widthField.setValid(true);
+            heightField.setValid(true);
+            minesField.setValid(true);
+
+        }
+
+
+    }
+
+    private Boolean isDifferent(final int fieldWidth,
+                                final int fieldHeight,
+                                final int fieldMines) {
+
+        // Compare the values given with the current
+        // values to make sure that the fields have actually
+        // changed, to prevent redundancy.
+        int[] previousValues = new int[]{
+
+            Configuration.getConfigValue("tileWidth"),
+            Configuration.getConfigValue("tileHeight"),
+            Configuration.getConfigValue("mineCount")
+
+        };
+
+        return !Arrays.equals(
+
+            previousValues,
+
+            new int[]{fieldWidth, fieldHeight, fieldMines}
+
+        );
+
+    }
+
+    private Boolean[] isValid(final int fieldWidth,
+                              final int fieldHeight,
+                              final int fieldMines) {
+
+        // Limit the dimensions of the board to be
+        // higher than 6 [Where StatPane starts breaking]
+        // but lower than 100 [Arbitrary number, thats it]
+        Boolean isWidthValid = fieldWidth >= 6 && fieldWidth <= 100;
+        Boolean isHeightValid = fieldHeight >= 6 && fieldHeight <= 100;
+
+        // Limit the mineCount so that (w * h) - mineCount needs
+        // to be over or equal to 9, so that the Board does not
+        // enter a loop attempting to fill in mines that do not
+        // exist.
+
+        Boolean isMinesValid = ((fieldWidth * fieldHeight) - fieldMines) >= 9;
+
+        // Combine the previous values into one in order to determine
+        // if the board is valid or not
+        Boolean isAllValid = isWidthValid && isHeightValid && isMinesValid;
+
+        // Return all 4 values as an array
+        return new Boolean[]{isWidthValid, isHeightValid, isMinesValid, isAllValid};
 
     }
 
@@ -106,18 +218,19 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
         // to prevent redundancy
         if (newShown != isShown) {
 
-            // Bring the pane to the back and remove
-            // all the nodes from the pane if
-            // the pane should be hidden, do the opposite
-            // if not
             if (!newShown) {
 
+                // If the pane should be hidden,
+                // remove all the nodes from
+                // CustomPane and mode the pane
+                // to the back to prevent it from conflicting
+                // with the other buttons
                 getChildren().removeAll(
 
-                    confirm,
                     widthField,
                     heightField,
-                    minesField
+                    minesField,
+                    confirm
 
                 );
 
@@ -125,12 +238,23 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
 
             } else {
 
+                // If the pane should be shown, update the fields
+                // configuration values and then readd all nodes to
+                // CustomPane, before bringing the pane back up again
+                widthField.setValue(Configuration.getConfigValue("tileWidth"));
+                heightField.setValue(Configuration.getConfigValue("tileHeight"));
+                minesField.setValue(Configuration.getConfigValue("mineCount"));
+
+                widthField.setValid(true);
+                heightField.setValid(true);
+                minesField.setValid(true);
+
                 getChildren().addAll(
 
-                    confirm,
                     widthField,
                     heightField,
-                    minesField
+                    minesField,
+                    confirm
 
                 );
 

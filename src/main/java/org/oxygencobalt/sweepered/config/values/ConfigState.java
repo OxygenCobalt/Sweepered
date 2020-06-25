@@ -10,7 +10,9 @@ public class ConfigState extends Observable<ConfigState> {
     // Possible config states
     public enum State {
 
-        MENU, MENU_CUSTOM, ABOUT
+        MENU, MENU_CUSTOM,
+
+        ABOUT, ABOUT_CUSTOM
 
     }
 
@@ -47,6 +49,39 @@ public class ConfigState extends Observable<ConfigState> {
     public State getState() {
 
         return state;
+
+    }
+
+    // State checking
+    public final Boolean isState(final State... states) {
+
+        // Iterate through all given states and return
+        // true if one matches the current state,
+        // otherwise return false.
+
+        for (State compareState : states) {
+
+            if (state == compareState) {
+
+                return true;
+
+            }
+
+        }
+
+        return false;
+
+    }
+
+    public final Boolean isMenu() {
+
+        return isState(State.MENU, State.MENU_CUSTOM);
+
+    }
+
+    public final Boolean isAbout() {
+
+        return isState(State.ABOUT, State.ABOUT_CUSTOM);
 
     }
 

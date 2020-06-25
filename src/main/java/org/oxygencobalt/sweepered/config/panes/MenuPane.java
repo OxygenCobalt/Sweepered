@@ -130,14 +130,12 @@ public class MenuPane extends Pane {
         Button button = (Button) event.getSource();
         String buttonText = button.getText();
 
-        mode = (mode + 1);
+        mode = Configuration.getConfigValue("Mode") + 1;
 
-        // If the mode is over 4, then revert it back to
-        // the first mode [Easy]. While a modulo could be used
-        // here, the way I custom values are applied causes
-        // mode to be incremented up each time to the point that
-        // a normal modulo would produce incorrect values
-        if (mode > 4) {
+        // If the mode is over 4 [Custom] or just invalid, then revert it back to
+        // the first mode [Easy]. While a modulo could be used, using an if statement
+        // is more versatile as negative values or values above 4 can be loaded in
+        if (mode < 0 || mode > 4) {
 
             mode = 0;
 
@@ -160,7 +158,17 @@ public class MenuPane extends Pane {
 
     EventHandler<ActionEvent> aboutButtonListener = event -> {
 
-        state.setState(ConfigState.State.ABOUT);
+        // If switching the state to ABOUT, make sure that the
+        // CUSTOM flag persists in order to prevent sizing
+        // conflicts in ConfigStage.
+
+        switch (state.getState()) {
+
+            case MENU: state.setState(ConfigState.State.ABOUT); break;
+
+            case MENU_CUSTOM: state.setState(ConfigState.State.ABOUT_CUSTOM); break;
+
+        }
 
     };
 

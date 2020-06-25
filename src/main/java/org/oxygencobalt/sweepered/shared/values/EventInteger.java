@@ -41,6 +41,13 @@ public class EventInteger extends Observable<EventInteger> {
 
     }
 
+    // Pulse is used to notify the listeners w/o changing the value
+    public final void pulse() {
+
+        fireChange(this);
+
+    }
+
     public Integer getValue() {
 
         return value;
