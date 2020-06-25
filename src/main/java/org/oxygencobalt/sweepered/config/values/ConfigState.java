@@ -10,7 +10,7 @@ public class ConfigState extends Observable<ConfigState> {
     // Possible config states
     public enum State {
 
-        MENU, ABOUT
+        MENU, MENU_CUSTOM, ABOUT
 
     }
 

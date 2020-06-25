@@ -73,7 +73,7 @@ public class AboutPane extends Pane implements EventHandler<ActionEvent> {
         logo = new ImageView(new Image("file:src/main/resources/textures/logo.png"));
         logo.relocate(55, 5);
 
-        backButton = new ConfigButton("Back", 17, 51 + (20 * words.length), 201, 26);
+        backButton = new ConfigButton("Back", 17, 51 + (20 * words.length), 205, 30);
         backButton.getInternalButton().setOnAction(this);
         backButton.getInternalButton().setGraphic(
 

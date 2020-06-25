@@ -1,5 +1,5 @@
 // ConfigButton
-// Entity that primarily acts as a button with some extra effects.
+// UI object that primarily acts as a button with some extra effects.
 
 package config.ui;
 
@@ -36,8 +36,9 @@ public class ConfigButton extends Pane implements EventHandler<MouseEvent> {
         this.y = y;
 
         // This pane should be no bigger than the button it contains.
-        this.height = height;
-        this.width = width;
+        // [Excluding the change to accommodate for borders]
+        this.height = height - 4;
+        this.width = width - 4;
 
         relocate(x, y);
         setPrefSize(this.width, this.height);
@@ -45,9 +46,9 @@ public class ConfigButton extends Pane implements EventHandler<MouseEvent> {
 
         internalButton = new Button(name);
 
-        internalButton.setMinSize(width, height);
-        internalButton.setPrefSize(width, height);
-        internalButton.setMaxSize(width, height);
+        internalButton.setMinSize(this.width, this.height);
+        internalButton.setPrefSize(this.width, this.height);
+        internalButton.setMaxSize(this.width, this.height);
 
         internalButton.setOnMousePressed(this);
         internalButton.setOnMouseReleased(this);
