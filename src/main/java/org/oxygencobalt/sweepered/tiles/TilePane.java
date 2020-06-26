@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 import shared.ui.Corner;
-import shared.log.Logger;
 import shared.values.GameState;
 import shared.values.EventInteger;
 import shared.observable.Listener;

@@ -6,13 +6,14 @@ package shared.config;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import java.io.File;
-import java.util.Scanner;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+
 import java.io.IOException;
 
 import shared.values.EventInteger;
@@ -96,7 +97,12 @@ public final class Configuration {
 
         } catch (IOException exception) {
 
-            throw new FileNotFoundException("Configuration not found.")
+            // I am unable to throw an exception like FileNotFoundException, so
+            // simply print out a notice and exit the program instead before anything
+            // bad happens.
+            System.out.println("Cannot find configuration file, aborting...");
+
+            System.exit(1);
 
         }
 

@@ -14,7 +14,6 @@ import javafx.geometry.Rectangle2D;
 
 import media.audio.Audio;
 
-import shared.log.Logger;
 import shared.config.Configuration;
 import shared.values.GameState;
 import shared.values.EventInteger;
@@ -104,8 +103,6 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
                                    tileHeight * 32);
 
         setOnMouseMoved(this);
-
-        Logger.log("Successfully created.", Logger.Level.SUCCESS, this);
 
     }
 
