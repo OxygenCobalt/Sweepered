@@ -1,7 +1,12 @@
 // Configuration file used by the Configuration object
 
+// Mode value
 [Mode] {1}
 
+// Custom values
 [tileWidth] {9}
 [tileHeight] {9}
 [mineCount] {35}
+
+// Set to 1 if verbose logging is needed
+[debugLogs] {0}
