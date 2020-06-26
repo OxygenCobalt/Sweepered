@@ -14,6 +14,7 @@ import javafx.geometry.Rectangle2D;
 
 import media.audio.Audio;
 
+import shared.log.Logger;
 import shared.config.Configuration;
 import shared.values.GameState;
 import shared.values.EventInteger;
@@ -104,6 +105,8 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
         setOnMouseMoved(this);
 
+        Logger.log("Successfully created.", Logger.Level.SUCCESS, this);
+
     }
 
     private void setModeValues(final int newMode) {
@@ -132,6 +135,12 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // from the alternate values stored in configuration. This is also how a custom
         // value would be created.
         } else {
+
+            if (newMode > 4) {
+
+                System.out.println("Mode is out of bounds, defaulting to custom");
+
+            }
 
             tileWidth = Configuration.getConfigValue("tileWidth");
             tileHeight = Configuration.getConfigValue("tileHeight");

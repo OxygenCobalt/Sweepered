@@ -57,7 +57,8 @@ public class UpdatePacket {
         // Run a switch statement w/the length of auxillary.
         // If the length is 0, then the argument was not passed, and auxillary should just be null.
         // If the length is 1, then an auxillary arg was passed, so set the value to that
-        // Otherwise, there are too many auxillary arguments, and an exception must be thrown.
+        // Otherwise, there are too many auxillary arguments, so just pick the first one
+        // and print a warning into the console.
 
         switch (auxillary.length) {
 
@@ -65,7 +66,11 @@ public class UpdatePacket {
 
             case 1: this.auxillary = auxillary[0]; break;
 
-            default: throw new IllegalArgumentException("Too many auxillary arguments.");
+            default: System.out.println(
+
+                        "Too many auxillary arguments, defaulting to the first entry."
+
+                    ); this.auxillary = auxillary[0]; break;
 
         }
 

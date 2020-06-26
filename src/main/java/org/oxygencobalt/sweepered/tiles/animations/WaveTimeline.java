@@ -47,7 +47,8 @@ public class WaveTimeline {
 
             case "CLEARED": waveSprite = TextureAtlas.CLEAR_WAVE; break;
 
-            default: waveSprite = TextureAtlas.INVALID_WAVE; break;
+            default: System.out.println("Wave Type is invalid, defaulting to Invalid Wave.");
+                     waveSprite = TextureAtlas.INVALID_WAVE;
 
         }
 
@@ -103,7 +104,7 @@ public class WaveTimeline {
             case "CLEARED":   tile.loadTexture("Flagged", TextureAtlas.STATE_FLAGGED);
                               break;
 
-            default: System.out.println("This shouldnt happen."); // > mfw this does happen
+            default: System.out.println("Wave Type is invalid, not displaying any tile state");
 
         }
 

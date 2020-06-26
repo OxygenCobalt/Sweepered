@@ -45,8 +45,6 @@ public class Board {
 
         if (remainingTiles < 9 || (width < 6 || height < 6)) {
 
-            // FIXME: Very unfriendly, may just add a restriction to the custom game option.
-
             throw new IllegalArgumentException(
 
                 "Size W"

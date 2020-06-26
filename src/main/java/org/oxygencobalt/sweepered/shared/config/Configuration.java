@@ -96,7 +96,7 @@ public final class Configuration {
 
         } catch (IOException exception) {
 
-            System.out.println("Configuration not found, reverting to default values");
+            throw new FileNotFoundException("Configuration not found.")
 
         }
 
@@ -183,9 +183,9 @@ public final class Configuration {
 
         } else {
 
-            System.out.println("Config entry not found");
+            System.out.println("Config entry not found, defaulting to zero.");
 
-            return -1; // FIXME: may or may not be a liability
+            return 0;
 
         }
 
@@ -216,7 +216,7 @@ public final class Configuration {
 
         } else {
 
-            System.out.println("Config entry not found.");
+            System.out.println("Config entry not found, setting nothing");
 
         }
 
@@ -250,7 +250,7 @@ public final class Configuration {
 
         } else {
 
-            System.out.println("Config entry not found");
+            System.out.println("Config entry not found, defaulting to zero");
 
             return new EventInteger(0, "Invalid");
 

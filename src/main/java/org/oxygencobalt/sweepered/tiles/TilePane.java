@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 import shared.ui.Corner;
+import shared.log.Logger;
 import shared.values.GameState;
 import shared.values.EventInteger;
 import shared.observable.Listener;
@@ -77,7 +78,6 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         state = new GameState(GameState.State.UNSTARTED, "TilePane");
 
-        // FIXME: Eliminate these please.
         safeTiles = Arrays.asList(
 
             TileState.State.UNCOVERED,
@@ -85,7 +85,6 @@ public class TilePane extends Pane implements Listener<TileState> {
             TileState.State.FLAGGED_MINED
 
         );
-
 
         board = new Board(tileWidth, tileHeight, mineCount);
         tiles = new Tile[tileWidth][tileHeight];
@@ -154,6 +153,8 @@ public class TilePane extends Pane implements Listener<TileState> {
             // as a communication line between TilePane and Tile
 
             case "Hover": startHover(originX, originY); break;
+
+            default: System.out.println("Invalid message" + message + ".");
 
         }
 

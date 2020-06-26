@@ -28,10 +28,6 @@ public class SweeperedApp extends Application {
         // Read the configuration file [To be used across the game]
         Configuration.readConfigFile();
 
-        // Also get the logger to read the current time in order
-        // to to be used later
-        Logger.markStartTime();
-
         // Create the main game scene
         GameScene mainScene = new GameScene(new Group());
 
