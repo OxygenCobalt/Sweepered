@@ -55,7 +55,10 @@ public class AboutPane extends Pane implements EventHandler<ActionEvent> {
             "\"8-bit explosion_4.wav\" by",
             "Soundholder",
             "\"8-bit Arcade Start Sound",
-            "Effect\" by FartBiscuit1700"
+            "Effect\" by FartBiscuit1700",
+            "",
+            "Font used is Inconsolata",
+            "by Raph Levien"
 
         };
 
