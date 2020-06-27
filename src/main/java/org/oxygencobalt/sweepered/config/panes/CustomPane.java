@@ -137,8 +137,6 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
                 // without incremening the value past 4.
                 Configuration.getEventConfigValue("Mode").pulse();
 
-                System.out.println("valid");
-
             } else {
 
                 // Otherwise Use the first 3 values given by isValid() to
