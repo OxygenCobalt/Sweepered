@@ -23,9 +23,16 @@ public class TileState extends Observable<TileState> {
 
     }
 
+    // Messages to bind to a pulse operation
+    public enum Message {
+
+        UNCOVER, FLAG, HOVER
+
+    }
+
     private State state;
 
-    private String message;
+    private Message message;
 
     private final int x;
     private final int y;
@@ -41,7 +48,7 @@ public class TileState extends Observable<TileState> {
 
     }
 
-    public final void setState(final State newState, final String newMessage) {
+    public final void setState(final State newState, final Message newMessage) {
 
         if (state != newState) {
 
@@ -57,7 +64,7 @@ public class TileState extends Observable<TileState> {
     }
 
     // Pulse is used to notify listeners w/o changing the value itself.
-    public final void pulse(final String newMessage) {
+    public final void pulse(final Message newMessage) {
 
         message = newMessage;
 
@@ -79,7 +86,7 @@ public class TileState extends Observable<TileState> {
 
     }
 
-    public final String getMessage() {
+    public final Message getMessage() {
 
         return message;
 

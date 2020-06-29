@@ -54,12 +54,6 @@ public class EventInteger extends Observable<EventInteger> {
 
     }
 
-    public String getType() {
-
-        return type;
-
-    }
-
 }
 
 // OxygenCobalt

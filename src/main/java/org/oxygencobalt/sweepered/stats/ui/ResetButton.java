@@ -55,7 +55,7 @@ public class ResetButton extends Pane {
         setPrefSize(width, height);
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
-        state = new GameState(GameState.State.UNSTARTED, "ResetButton");
+        state = new GameState(GameState.State.UNSTARTED);
 
         configStage = new ConfigStage();
 

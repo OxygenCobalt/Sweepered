@@ -75,7 +75,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         flagCount = new EventInteger(mineCount, "Flags");
 
-        state = new GameState(GameState.State.UNSTARTED, "TilePane");
+        state = new GameState(GameState.State.UNSTARTED);
 
         safeTiles = Arrays.asList(
 
@@ -131,7 +131,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
     public void propertyChanged(final TileState changed) {
 
-        String message = changed.getMessage();
+        TileState.Message message = changed.getMessage();
 
         final int originX = changed.getX();
         final int originY = changed.getY();
@@ -143,17 +143,15 @@ public class TilePane extends Pane implements Listener<TileState> {
             // State functions
             // These messages usually result to a change in tile states
 
-            case "Uncover": toChange = startUncover(originX, originY); break;
+            case UNCOVER: toChange = startUncover(originX, originY); break;
 
-            case "Flag": toChange = startFlag(originX, originY); break;
+            case FLAG: toChange = startFlag(originX, originY); break;
 
             // Pulse functions
             // These functions result in no changes to tile states and only serve
             // as a communication line between TilePane and Tile
 
-            case "Hover": startHover(originX, originY); break;
-
-            default: System.out.println("Invalid message" + message + ".");
+            case HOVER: startHover(originX, originY); break;
 
         }
 
@@ -259,7 +257,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         flagCount.setValue(board.getBadFlagCount());
 
-        return board.disableAllTiles("EXPLOSION", originX, originY);
+        return board.disableAllTiles(Board.DisableReason.EXPLOSION, originX, originY);
 
 
     }
@@ -274,7 +272,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         flagCount.setValue(0);
 
-        return board.disableAllTiles("CLEARED", originX, originY);
+        return board.disableAllTiles(Board.DisableReason.CLEARED, originX, originY);
 
     }
 

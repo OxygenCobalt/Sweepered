@@ -22,8 +22,9 @@ import media.images.Sprite;
 import media.audio.Audio;
 
 import tiles.values.TileState;
-import tiles.generation.UpdatePacket;
 import tiles.animations.WaveTimeline;
+import tiles.generation.UpdatePacket;
+import tiles.generation.Board.DisableReason;
 
 public class Tile extends Pane {
 
@@ -105,7 +106,7 @@ public class Tile extends Pane {
         if (isInBox) {
 
             // If so, then notify TilePane that the mouse is hovering on this tile
-            state.pulse("Hover");
+            state.pulse(TileState.Message.HOVER);
 
         }
 
@@ -161,7 +162,7 @@ public class Tile extends Pane {
 
             }
 
-            state.setState(TileState.State.UNCOVERED, "Uncover");
+            state.setState(TileState.State.UNCOVERED, TileState.Message.UNCOVER);
 
         } else { // Otherwise, revert to the normal covered tile appearence
 
@@ -184,7 +185,7 @@ public class Tile extends Pane {
 
             // Run the pulse function in order to notify the listeners
             // that the tile needs to be flagged, without changing the value.
-            state.pulse("Flag");
+            state.pulse(TileState.Message.FLAG);
 
         }
 
@@ -241,6 +242,9 @@ public class Tile extends Pane {
 
         // Get the auxillary element from nearMines and
         // first check if its an actual instance of Integer
+
+        // This is probably bad OO code but I dont know
+        // what else I could do
 
         if (packet.getAuxillary() instanceof Integer) {
 
@@ -312,7 +316,7 @@ public class Tile extends Pane {
         Audio.FLAG_SOUND.play();
 
         // Pulse hover again, to update the GameState
-        state.pulse("Hover");
+        state.pulse(TileState.Message.HOVER);
 
     }
 
@@ -321,17 +325,17 @@ public class Tile extends Pane {
         int originX = packet.getOriginX();
         int originY = packet.getOriginY();
 
-        String type;
+        DisableReason type;
 
         // Like uncover(), check if this auxillary value is an instance of String.
-        if (packet.getAuxillary() instanceof String) {
+        if (packet.getAuxillary() instanceof DisableReason) {
 
             // If so, cast it to String as its safe to do so.
-            type = (String) packet.getAuxillary();
+            type = (DisableReason) packet.getAuxillary();
 
         } else {
 
-            throw new IllegalArgumentException("Given type is not a String.");
+            throw new IllegalArgumentException("Given reason is not of a valid type.");
 
         }
 

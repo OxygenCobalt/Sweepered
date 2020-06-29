@@ -26,13 +26,9 @@ public class GameState extends Observable<GameState> {
 
     private State state;
 
-    private final String owner;
-
-    public GameState(final State state, final String owner) {
+    public GameState(final State state) {
 
         this.state = state;
-
-        this.owner = owner;
 
     }
 
@@ -63,13 +59,6 @@ public class GameState extends Observable<GameState> {
         return state;
 
     }
-
-    public final String getOwner() {
-
-        return owner;
-
-    }
-
     public final Boolean isState(final State... states) {
 
         // Iterate through all given states and return

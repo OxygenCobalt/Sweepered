@@ -13,6 +13,10 @@ import shared.config.Configuration;
 import shared.observable.Listener;
 import shared.values.EventInteger;
 
+// TODO:
+// - Old yeller the Configuration class and replace it w/preferences api
+// - Add Validator [Even if it takes like 400 years]
+
 public class SweeperedApp extends Application {
 
     private Stage window;

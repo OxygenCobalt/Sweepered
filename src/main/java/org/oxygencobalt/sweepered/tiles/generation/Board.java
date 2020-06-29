@@ -12,6 +12,13 @@ import tiles.values.TileState;
 
 public class Board {
 
+    // Given list of valid disabling reasons
+    public enum DisableReason {
+
+        EXPLOSION, CLEARED
+
+    }
+
     private TileState.State[][] board;
 
     private final int width;
@@ -172,14 +179,10 @@ public class Board {
         ArrayList<UpdatePacket> changedTiles = new ArrayList<UpdatePacket>();
         ArrayList<int[]> recursiveList = new ArrayList<int[]>();
 
-        TileState.State nearTile;
-
         TileState.State originTile;
         UpdatePacket.Change originChange;
 
         int foundMines = 0;
-
-        Boolean isNotOutOfBounds;
 
         originTile = board[originX][originY];
 
@@ -197,40 +200,29 @@ public class Board {
 
         } else { // Otherwise, continue.
 
-            for (int nearX = (originX - 1); nearX <  (originX + 2); nearX++) {
+            // Get the bounds of the surrounding tiles to check,
+            // preventing them from exceeding the size of the board
+            // or being negative
 
-                for (int nearY = (originY - 1); nearY < (originY + 2); nearY++) {
+            int originBeginX = Math.max(originX - 1, 0);
+            int originBeginY = Math.max(originY - 1, 0);
 
-                    // Also check if surrounding tile is not outside the bounds of the board
-                    // before running any functions on it
-                    isNotOutOfBounds = (
+            int originEndX = Math.min(originX + 2, width);
+            int originEndY = Math.min(originY + 2, height);
 
-                        (nearX != width && nearX >= 0) && (nearY != height && nearY >= 0)
+            TileState.State nearTile;
 
-                    );
+            for (int nearX = originBeginX; nearX < originEndX; nearX++) {
 
-                    if (isNotOutOfBounds) {
+                for (int nearY = originBeginY; nearY < originEndY; nearY++) {
 
                         nearTile = board[nearX][nearY];
 
                         // Add to mineCount if tile does contain a mine
                         // [Or its flagged or disabled equivelents]
                         if (minedTiles.contains(nearTile)) {
+
                             foundMines++;
-                        }
-
-                        // Blacklist any tile that is not covered from the recursivelist,
-                        // to prevent flags from being destroyed and an infinite loop
-                        // w/uncovered tiles
-
-                        // FIXME: The mines are being removed recursively
-                        // multiple times, but im not sure if thats possible to be fixed.
-
-                        if (nearTile == TileState.State.COVERED) {
-
-                            recursiveList.add(new int[]{nearX, nearY});
-
-                        }
 
                     }
 
@@ -242,16 +234,25 @@ public class Board {
             originTile = TileState.State.UNCOVERED;
 
             // To prevent a StackOverflowError, the board tile
-            // has to be updated seperately in both cases.
+            // has to be updated separately in both cases.
             board[originX][originY] = originTile;
 
             // If there are no nearby mines, iterate
-            // recursively and add the list of changed tiles
+            // recursively and uncover each covered tile.
+
             if (foundMines == 0) {
 
-                for (int[] coords : recursiveList) {
+                for (int nearX = originBeginX; nearX < originEndX; nearX++) {
 
-                    changedTiles.addAll(uncoverTile(coords[0], coords[1]));
+                    for (int nearY = originBeginY; nearY < originEndY; nearY++) {
+
+                        if (board[nearX][nearY] == TileState.State.COVERED) {
+
+                            changedTiles.addAll(uncoverTile(nearX, nearY));
+
+                        }
+
+                    }
 
                 }
 
@@ -364,9 +365,11 @@ public class Board {
 
     }
 
-    public final ArrayList<UpdatePacket> disableAllTiles(final String reason,
+    public final ArrayList<UpdatePacket> disableAllTiles(final DisableReason reason,
                                                          final int originX,
                                                          final int originY) {
+
+
 
         ArrayList<UpdatePacket> changedTiles = new ArrayList<UpdatePacket>();
 

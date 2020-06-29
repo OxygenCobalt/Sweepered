@@ -84,7 +84,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         coverPane = new Pane();
 
         // Set up every gamestate and add GameScene as a listener
-        masterState = new GameState(GameState.State.UNSTARTED, "GameScene");
+        masterState = new GameState(GameState.State.UNSTARTED);
 
         masterState.addListener(gameStateListener);
 
@@ -153,7 +153,6 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
         // Get information from changed object
         GameState.State newState = changed.getState();
-        String owner = changed.getOwner();
 
         // Update every nodes state indiscriminately
         stats.updateGameState(newState);

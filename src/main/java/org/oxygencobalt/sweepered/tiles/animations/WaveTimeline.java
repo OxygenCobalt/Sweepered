@@ -12,6 +12,7 @@ import javafx.geometry.Point2D;
 import media.images.TextureAtlas;
 import media.images.Sprite;
 
+import tiles.generation.Board.DisableReason;
 import tiles.values.TileState;
 import tiles.ui.Tile;
 
@@ -22,14 +23,14 @@ public class WaveTimeline {
     private Tile tile;
     private TileState tileState;
 
-    private String type;
+    private DisableReason type;
 
     private Sprite waveSprite;
 
     public WaveTimeline(final Tile tile,
                         final Point2D location,
                         final Point2D origin,
-                        final String type) {
+                        final DisableReason type) {
 
         // Distance is measured in the time it will take for the shockwave to reach the tile itself.
         double distanceTime = location.distance(origin) * 0.1;
@@ -43,12 +44,9 @@ public class WaveTimeline {
 
         switch (type) {
 
-            case "EXPLOSION": waveSprite = TextureAtlas.EXPLODE_WAVE; break;
+            case EXPLOSION: waveSprite = TextureAtlas.EXPLODE_WAVE; break;
 
-            case "CLEARED": waveSprite = TextureAtlas.CLEAR_WAVE; break;
-
-            default: System.out.println("Wave Type is invalid, defaulting to Invalid Wave.");
-                     waveSprite = TextureAtlas.INVALID_WAVE;
+            case CLEARED: waveSprite = TextureAtlas.CLEAR_WAVE; break;
 
         }
 
@@ -97,14 +95,12 @@ public class WaveTimeline {
         switch (type) {
 
             // Any mined tile should have their mine shown if a mine explodes
-            case "EXPLOSION": tile.loadTexture("Mined", TextureAtlas.STATE_MINED);
-                              break;
+            case EXPLOSION: tile.loadTexture("Mined", TextureAtlas.STATE_MINED);
+                            break;
 
             // Any remaining mines should be flagged if the board is cleared
-            case "CLEARED":   tile.loadTexture("Flagged", TextureAtlas.STATE_FLAGGED);
-                              break;
-
-            default: System.out.println("Wave Type is invalid, not displaying any tile state");
+            case CLEARED:   tile.loadTexture("Flagged", TextureAtlas.STATE_FLAGGED);
+                            break;
 
         }
 

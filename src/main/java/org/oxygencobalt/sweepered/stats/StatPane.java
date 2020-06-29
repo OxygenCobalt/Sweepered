@@ -52,7 +52,7 @@ public class StatPane extends Pane implements Listener<GameState> {
         // Set Style for the background and the borders
         getStyleClass().add("game-pane");
 
-        state = new GameState(GameState.State.UNSTARTED, "StatPane");
+        state = new GameState(GameState.State.UNSTARTED);
 
         flags = new FlagCounter(6, 3, mineCount);
         reset = new ResetButton((width - 36) / 2, x, y);
