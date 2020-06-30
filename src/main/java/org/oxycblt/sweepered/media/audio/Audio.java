@@ -47,7 +47,7 @@ public final class Audio {
 
     public static final AudioClip CLEAR_SOUND = new AudioClip(
 
-        Audio.class.getResource("/audio/tap.wav").toString()
+        Audio.class.getResource("/audio/arcade_start.wav").toString()
 
     );
 
