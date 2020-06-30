@@ -73,7 +73,7 @@ public class TilePane extends Pane implements Listener<TileState> {
 
         this.mineCount = mineCount;
 
-        flagCount = new EventInteger(mineCount, "Flags");
+        flagCount = new EventInteger(mineCount);
 
         state = new GameState(GameState.State.UNSTARTED);
 

@@ -62,7 +62,7 @@ public class MenuPane extends Pane {
 
         state = new ConfigState(ConfigState.State.MENU);
 
-        mode = Configuration.getConfigValue("Mode");
+        mode = Configuration.getConfigValue("mode");
 
         // modeNames and modeGraphics are values used to
         // set the buttons text based of the current mode
@@ -130,7 +130,7 @@ public class MenuPane extends Pane {
         Button button = (Button) event.getSource();
         String buttonText = button.getText();
 
-        mode = Configuration.getConfigValue("Mode") + 1;
+        mode = Configuration.getConfigValue("mode") + 1;
 
         // If the mode is over 4 [Custom] or just invalid, then revert it back to
         // the first mode [Easy]. While a modulo could be used, using an if statement
@@ -141,7 +141,7 @@ public class MenuPane extends Pane {
 
         }
 
-        Configuration.setConfigValue("Mode", mode);
+        Configuration.setConfigValue("mode", mode);
 
         // Now update the mode button with the new mode value
         updateModeButton();

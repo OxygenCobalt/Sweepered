@@ -13,10 +13,6 @@ import shared.config.Configuration;
 import shared.observable.Listener;
 import shared.values.EventInteger;
 
-// TODO:
-// - Old yeller the Configuration class and replace it w/preferences api
-// - Add Validator [Even if it takes like 400 years]
-
 public class SweeperedApp extends Application {
 
     private Stage window;
@@ -30,7 +26,7 @@ public class SweeperedApp extends Application {
         window.setTitle("Sweepered");
 
         // Read the configuration file [To be used across the game]
-        Configuration.readConfigFile();
+        Configuration.init();
 
         // Create the main game scene
         GameScene mainScene = new GameScene(new Group());
@@ -54,7 +50,7 @@ public class SweeperedApp extends Application {
         // Make sure to write any config changes when the window is closed
         window.setOnHidden(event -> {
 
-            Configuration.writeToConfigFile();
+            Configuration.end();
 
         });
 

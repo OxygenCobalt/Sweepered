@@ -1,36 +1,15 @@
 // Configuration
-// Class that stores the configuration values used across the game,
-// but they're not global variables, I swear.
+// Wrapper around the preferences api that reduces the amount of write operations
+// and allows the creation of eventintegers.
 
 package shared.config;
 
+import java.util.prefs.Preferences;
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Scanner;
-
-import java.io.File;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-
-import java.io.IOException;
 
 import shared.values.EventInteger;
 
 public final class Configuration {
-
-    private static final HashMap<String, Integer> CONFIG_VALUES = new HashMap<String, Integer>();
-
-    private static final HashMap<String, EventInteger> CONFIG_EVENT_VALUES = (
-
-        new HashMap<String, EventInteger>()
-
-    );
-
-    private static final HashMap<Integer, String> CONFIG_LINES = new HashMap<Integer, String>();
-
-    private static final String CONFIGURATION_PATH = "src/main/resources/config/configuration";
 
     private Configuration() {
 
@@ -38,143 +17,54 @@ public final class Configuration {
 
     }
 
-    public static void readConfigFile() {
+    private static final String PREF_NODE = "/org/oxygencobalt/sweepered";
+    private static final String[] PREF_KEYS = new String[]{
 
-        try {
+        "mode", "tileWidth", "tileHeight", "mineCount"
 
-            // Open the configuration file, and its respective scanner to read it
-            File configurationFile = new File(CONFIGURATION_PATH);
-            Scanner configScanner = new Scanner(configurationFile);
+    };
 
-            Boolean isValid;
-            Boolean hasName;
-            Boolean hasValue;
+    private static final int[] PREF_DEFAULTS = new int[]{
 
-            String line;
+        1, 9, 9, 35
 
-            String name;
-            String value;
+    };
 
-            int lineNumber = 0;
+    private static final HashMap<String, Integer> CONFIG_VALUES = new HashMap<String, Integer>();
+    private static final HashMap<String, EventInteger> CONFIG_EVENT_VALUES = (
 
-            while (configScanner.hasNextLine()) {
+        new HashMap<String, EventInteger>()
 
-                line = configScanner.nextLine();
+    );
 
-                // Ignore all lines that are comments [//] or newlines
-                isValid = !line.contains("//") && !line.isEmpty();
+    // Read the config values and add them to the Map
+    public static void init() {
 
-                // Also check if the correct brackets are actually present
+        Preferences preferences = Preferences.userRoot().node(PREF_NODE);
 
-                // FIXME: This does not account for bracket placement
-                // or the contents between the brackets, but I have no
-                // idea how I would do that w/regex
-                hasName = line.contains("[") && line.contains("]");
-                hasValue = line.contains("{") && line.contains("}");
+        int val;
 
-                if (isValid && hasName && hasValue) {
+        for (int i = 0; i < PREF_KEYS.length; i++) {
 
-                    // Get the index of the brackets and
-                    // capture the string underneath them
+            // Get the specific value [or its default if not present],
+            // the value itself will be written at the end.
+            val = preferences.getInt(PREF_KEYS[i], PREF_DEFAULTS[i]);
 
-                    // 1 is added to the beginning index as otherwise the
-                    // extracted string would show the first bracket.
-                    name = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
-                    value = line.substring(line.indexOf("{") + 1, line.indexOf("}"));
-
-                    // Add this value to the dictionary
-                    CONFIG_VALUES.put(name, Integer.parseInt(value));
-
-                    // In another dictionary, log the line number this value was at
-                    // in the case that the value needs to be rewritten
-                    CONFIG_LINES.put(lineNumber, name);
-
-                }
-
-                lineNumber++;
-
-            }
-
-        } catch (IOException exception) {
-
-            // I am unable to throw an exception like FileNotFoundException, so
-            // simply print out a notice and exit the program instead before anything
-            // bad happens.
-            System.out.println("Cannot find configuration file, aborting...");
-
-            System.exit(1);
+            CONFIG_VALUES.put(PREF_KEYS[i], val);
 
         }
 
     }
 
-    public static void writeToConfigFile() {
+    // Write the config values, usually called at the end of the program
+    // to reduce the number of preference calls [Which tends to be taxing]
+    public static void end() {
 
-        try {
+        Preferences preferences = Preferences.userRoot().node(PREF_NODE);
 
-            // Open the configuration file, and its respective scanner to read it
-            File configurationFile = new File(CONFIGURATION_PATH);
-            Scanner configScanner = new Scanner(configurationFile);
+        for (String key : CONFIG_VALUES.keySet()) {
 
-            ArrayList<String> lines = new ArrayList<String>();
-
-            // Iterate through the entire file, adding each line to an ArrayList of lines
-            while (configScanner.hasNextLine()) {
-
-                lines.add(configScanner.nextLine());
-
-            }
-
-            // Then, write those lines back with the new information
-            PrintWriter writer = new PrintWriter(
-
-                new BufferedWriter(
-
-                    new FileWriter(CONFIGURATION_PATH)
-
-                )
-
-            );
-
-            String newLine;
-
-            String name;
-            int value;
-
-            int lineNumber = 0;
-
-            for (String line : lines) {
-
-                // If the line number matches one stored from
-                // openConfigFile(), create a new line with the
-                // [ValueName] {Value} syntax in order to be read later.
-                if (CONFIG_LINES.containsKey(lineNumber)) {
-
-                    name = CONFIG_LINES.get(lineNumber);
-                    value = CONFIG_VALUES.get(name);
-
-                    newLine = "[" + name + "]" + " " + "{" + value + "}";
-
-                // Otherwise, just write the same line again
-                } else {
-
-                    newLine = line;
-
-                }
-
-                writer.println(newLine);
-
-                lineNumber++;
-
-            }
-
-            // Once everything is done, close the writer,
-            // therefore saving the changes made.
-            writer.close();
-
-        } catch (IOException exception) {
-
-            System.out.println("Failed writing configuration to file");
+            preferences.putInt(key, CONFIG_VALUES.get(key));
 
         }
 
@@ -189,7 +79,7 @@ public final class Configuration {
 
         } else {
 
-            System.out.println("Config entry not found, defaulting to zero.");
+            System.out.println("Config entry " + name + " not found, defaulting to zero.");
 
             return 0;
 
@@ -222,7 +112,7 @@ public final class Configuration {
 
         } else {
 
-            System.out.println("Config entry not found, setting nothing");
+            System.out.println("Config entry " + name + " not found, setting nothing");
 
         }
 
@@ -239,7 +129,7 @@ public final class Configuration {
 
             name,
 
-            new EventInteger(rawValue, name)
+            new EventInteger(rawValue)
 
         );
 
@@ -256,9 +146,9 @@ public final class Configuration {
 
         } else {
 
-            System.out.println("Config entry not found, defaulting to zero");
+            System.out.println("Config entry " + name + " not found, defaulting to zero");
 
-            return new EventInteger(0, "Invalid");
+            return new EventInteger(0);
 
         }
 

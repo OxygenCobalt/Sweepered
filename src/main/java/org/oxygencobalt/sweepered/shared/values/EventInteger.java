@@ -9,14 +9,9 @@ public class EventInteger extends Observable<EventInteger> {
 
     private Integer value;
 
-    private final String type;
-
-    public EventInteger(final Integer value, final String type) {
+    public EventInteger(final Integer value) {
 
         this.value = value;
-
-        this.type = type;
-
     }
 
     public void setValue(final Integer newValue) {

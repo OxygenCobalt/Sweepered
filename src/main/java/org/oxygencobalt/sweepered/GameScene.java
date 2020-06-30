@@ -54,7 +54,7 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         // Call super to construct Scene()
         super(group);
 
-        mode = Configuration.createEventConfigValue("Mode");
+        mode = Configuration.createEventConfigValue("mode");
         mode.addListener(modeListener);
         setModeValues(mode.getValue());
 
@@ -64,8 +64,8 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
         // Width is only stored after the scene is set up
         // as the super constructor has to be called first
-        width = new EventInteger((tileWidth * 32) + (18 + offset), "Width");
-        height = new EventInteger((tileHeight * 32) + (76 + offset), "Height");
+        width = new EventInteger((tileWidth * 32) + (18 + offset));
+        height = new EventInteger((tileHeight * 32) + (76 + offset));
 
         // Also set up the stylesheet that is used throughout the program
         getStylesheets().add("file:src/main/resources/style/main.css");

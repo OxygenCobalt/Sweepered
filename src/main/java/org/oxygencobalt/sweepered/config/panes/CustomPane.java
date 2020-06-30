@@ -135,7 +135,7 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
                 // Pulse the Mode EventInteger created by GameScene, in
                 // order to notify GameScene to reconstruct the board
                 // without incremening the value past 4.
-                Configuration.getEventConfigValue("Mode").pulse();
+                Configuration.getEventConfigValue("mode").pulse();
 
             } else {
 
