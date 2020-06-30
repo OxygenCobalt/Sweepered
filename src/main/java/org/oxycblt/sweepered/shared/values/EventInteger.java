@@ -1,9 +1,9 @@
 // EventInteger
 // An observable integer value.
 
-package shared.values;
+package org.oxycblt.sweepered.shared.values;
 
-import shared.observable.Observable;
+import org.oxycblt.sweepered.shared.observable.Observable;
 
 public class EventInteger extends Observable<EventInteger> {
 

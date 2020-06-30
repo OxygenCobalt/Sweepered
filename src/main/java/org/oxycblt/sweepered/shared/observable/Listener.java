@@ -1,7 +1,7 @@
 // Listener
 // Base interface to listen to value changes w/observable.
 
-package shared.observable;
+package org.oxycblt.sweepered.shared.observable;
 
 public interface Listener<T> {
 

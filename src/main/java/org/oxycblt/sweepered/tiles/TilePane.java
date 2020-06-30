@@ -1,7 +1,7 @@
 // MinePane
 // Pane where Tiles and mines are generated,
 
-package tiles;
+package org.oxycblt.sweepered.tiles;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-import shared.ui.Corner;
-import shared.values.GameState;
-import shared.values.EventInteger;
-import shared.observable.Listener;
+import org.oxycblt.sweepered.shared.ui.Corner;
+import org.oxycblt.sweepered.shared.values.GameState;
+import org.oxycblt.sweepered.shared.values.EventInteger;
+import org.oxycblt.sweepered.shared.observable.Listener;
 
-import tiles.ui.Tile;
-import tiles.values.TileState;
-import tiles.generation.Board;
-import tiles.generation.UpdatePacket;
+import org.oxycblt.sweepered.tiles.ui.Tile;
+import org.oxycblt.sweepered.tiles.values.TileState;
+import org.oxycblt.sweepered.tiles.generation.Board;
+import org.oxycblt.sweepered.tiles.generation.UpdatePacket;
 
 public class TilePane extends Pane implements Listener<TileState> {
 

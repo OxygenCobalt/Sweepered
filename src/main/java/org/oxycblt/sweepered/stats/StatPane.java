@@ -1,19 +1,19 @@
 // StatPane
 // Pane where information about the current game and the reset button is shown
 
-package stats;
+package org.oxycblt.sweepered.stats;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-import shared.ui.Corner;
-import shared.values.GameState;
-import shared.observable.Listener;
+import org.oxycblt.sweepered.shared.ui.Corner;
+import org.oxycblt.sweepered.shared.values.GameState;
+import org.oxycblt.sweepered.shared.observable.Listener;
 
-import stats.counter.Timer;
-import stats.counter.FlagCounter;
+import org.oxycblt.sweepered.stats.counter.Timer;
+import org.oxycblt.sweepered.stats.counter.FlagCounter;
 
-import stats.ui.ResetButton;
+import org.oxycblt.sweepered.stats.ui.ResetButton;
 
 public class StatPane extends Pane implements Listener<GameState> {
 

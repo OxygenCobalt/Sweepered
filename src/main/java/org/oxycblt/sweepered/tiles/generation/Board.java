@@ -1,14 +1,14 @@
 // Board
 // Object that handles interactions between tiles
 
-package tiles.generation;
+package org.oxycblt.sweepered.tiles.generation;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-import tiles.values.TileState;
+import org.oxycblt.sweepered.tiles.values.TileState;
 
 public class Board {
 

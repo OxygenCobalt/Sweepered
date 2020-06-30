@@ -2,12 +2,12 @@
 // Wrapper around the preferences api that reduces the amount of write operations
 // and allows the creation of eventintegers.
 
-package shared.config;
+package org.oxycblt.sweepered.shared.config;
 
 import java.util.prefs.Preferences;
 import java.util.HashMap;
 
-import shared.values.EventInteger;
+import org.oxycblt.sweepered.shared.values.EventInteger;
 
 public final class Configuration {
 

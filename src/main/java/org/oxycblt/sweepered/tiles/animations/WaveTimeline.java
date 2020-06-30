@@ -1,7 +1,7 @@
 // ShockwaveTimeline
 // Timeline that handles game end event shockwaves.
 
-package tiles.animations;
+package org.oxycblt.sweepered.tiles.animations;
 
 import javafx.util.Duration;
 import javafx.animation.Timeline;
@@ -9,12 +9,12 @@ import javafx.animation.KeyFrame;
 
 import javafx.geometry.Point2D;
 
-import media.images.TextureAtlas;
-import media.images.Sprite;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.Sprite;
 
-import tiles.generation.Board.DisableReason;
-import tiles.values.TileState;
-import tiles.ui.Tile;
+import org.oxycblt.sweepered.tiles.generation.Board.DisableReason;
+import org.oxycblt.sweepered.tiles.values.TileState;
+import org.oxycblt.sweepered.tiles.ui.Tile;
 
 public class WaveTimeline {
 

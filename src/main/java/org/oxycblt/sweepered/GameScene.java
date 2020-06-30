@@ -12,15 +12,15 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.geometry.Rectangle2D;
 
-import media.audio.Audio;
+import org.oxycblt.sweepered.media.audio.Audio;
 
-import shared.config.Configuration;
-import shared.values.GameState;
-import shared.values.EventInteger;
-import shared.observable.Listener;
+import org.oxycblt.sweepered.shared.config.Configuration;
+import org.oxycblt.sweepered.shared.values.GameState;
+import org.oxycblt.sweepered.shared.values.EventInteger;
+import org.oxycblt.sweepered.shared.observable.Listener;
 
-import stats.StatPane;
-import tiles.TilePane;
+import org.oxycblt.sweepered.stats.StatPane;
+import org.oxycblt.sweepered.tiles.TilePane;
 
 public class GameScene extends Scene implements EventHandler<MouseEvent> {
 
@@ -68,7 +68,15 @@ public class GameScene extends Scene implements EventHandler<MouseEvent> {
         height = new EventInteger((tileHeight * 32) + (76 + offset));
 
         // Also set up the stylesheet that is used throughout the program
-        getStylesheets().add(getClass().getResource("/style/main.css").toString());
+        getStylesheets().add(
+
+            getClass().getResource(
+
+                "/org/oxycblt/sweepered/style/main.css"
+
+            ).toString()
+
+        );
 
         setFill(Color.web("3d3d3d")); // Background color matches w/the tile color, mostly
 

@@ -1,7 +1,7 @@
 // AboutPane
 // Pane that contains about page for sweepered
 
-package config.panes;
+package org.oxycblt.sweepered.config.panes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -13,12 +13,12 @@ import javafx.event.ActionEvent;
 
 import javafx.scene.control.Label;
 
-import config.ui.ConfigButton;
-import config.values.ConfigState;
+import org.oxycblt.sweepered.config.ui.ConfigButton;
+import org.oxycblt.sweepered.config.values.ConfigState;
 
-import media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
 
-import shared.ui.Corner;
+import org.oxycblt.sweepered.shared.ui.Corner;
 
 public class AboutPane extends Pane implements EventHandler<ActionEvent> {
 
@@ -73,7 +73,15 @@ public class AboutPane extends Pane implements EventHandler<ActionEvent> {
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Create the logo and the back button
-        logo = new ImageView(new Image(getClass().getResource("/textures/logo.png").toString()));
+        logo = new ImageView(new Image(
+
+            getClass().getResource(
+
+                "/org/oxycblt/sweepered/textures/logo.png"
+
+            ).toString()
+
+        ));
         logo.relocate(55, 5);
 
         backButton = new ConfigButton("Back", 17, 51 + (20 * words.length), 205, 30);

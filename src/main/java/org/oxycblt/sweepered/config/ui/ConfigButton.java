@@ -1,7 +1,7 @@
 // ConfigButton
 // UI object that primarily acts as a button with some extra effects.
 
-package config.ui;
+package org.oxycblt.sweepered.config.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -12,7 +12,7 @@ import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 
-import shared.ui.Corner;
+import org.oxycblt.sweepered.shared.ui.Corner;
 
 public class ConfigButton extends Pane implements EventHandler<MouseEvent> {
 

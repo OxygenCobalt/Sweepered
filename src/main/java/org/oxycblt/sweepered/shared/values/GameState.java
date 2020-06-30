@@ -1,9 +1,9 @@
 // GameState
 // An Observable enum for the Game State
 
-package shared.values;
+package org.oxycblt.sweepered.shared.values;
 
-import shared.observable.Observable;
+import org.oxycblt.sweepered.shared.observable.Observable;
 
 public class GameState extends Observable<GameState> {
 

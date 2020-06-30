@@ -1,14 +1,14 @@
 // Corner
 // Largely decorative object
 
-package shared.ui;
+package org.oxycblt.sweepered.shared.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.image.ImageView;
 
-import media.images.TextureAtlas;
-import media.images.Sprite;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.Sprite;
 
 public class Corner extends Pane {
 

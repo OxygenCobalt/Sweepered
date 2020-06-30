@@ -1,7 +1,7 @@
 // MenuPane
 // Pane that contains the mode selector and the about button
 
-package config.panes;
+package org.oxycblt.sweepered.config.panes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -10,14 +10,14 @@ import javafx.scene.control.Button;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
-import config.values.ConfigState;
-import config.ui.ConfigButton;
+import org.oxycblt.sweepered.config.values.ConfigState;
+import org.oxycblt.sweepered.config.ui.ConfigButton;
 
-import media.images.TextureAtlas;
-import media.images.Sprite;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.Sprite;
 
-import shared.config.Configuration;
-import shared.ui.Corner;
+import org.oxycblt.sweepered.shared.config.Configuration;
+import org.oxycblt.sweepered.shared.ui.Corner;
 
 public class MenuPane extends Pane {
 

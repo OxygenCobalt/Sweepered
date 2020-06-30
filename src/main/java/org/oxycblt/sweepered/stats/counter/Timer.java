@@ -1,7 +1,7 @@
 // Timer
 // Counter that keeps track of the time that has elapsed in the game.
 
-package stats.counter;
+package org.oxycblt.sweepered.stats.counter;
 
 import javafx.animation.AnimationTimer;
 
@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import shared.values.GameState;
+import org.oxycblt.sweepered.shared.values.GameState;
 
 public class Timer extends Counter {
 

@@ -1,7 +1,7 @@
 // Observable
 // Base class for all observable values.
 
-package shared.observable;
+package org.oxycblt.sweepered.shared.observable;
 
 public abstract class Observable<T> {
 

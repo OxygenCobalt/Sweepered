@@ -1,9 +1,9 @@
 // ConfigState
 // An Observable enum for the state of the Config Menu
 
-package config.values;
+package org.oxycblt.sweepered.config.values;
 
-import shared.observable.Observable;
+import org.oxycblt.sweepered.shared.observable.Observable;
 
 public class ConfigState extends Observable<ConfigState> {
 

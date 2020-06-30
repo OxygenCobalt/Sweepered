@@ -1,9 +1,9 @@
 // TileState
 // Observable enum for the Tile State
 
-package tiles.values;
+package org.oxycblt.sweepered.tiles.values;
 
-import shared.observable.Observable;
+import org.oxycblt.sweepered.shared.observable.Observable;
 
 public class TileState extends Observable<TileState> {
 

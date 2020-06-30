@@ -1,7 +1,7 @@
 // ConfigField
 // UI object that primarily acts as a TextField with some extra effects.
 
-package config.ui;
+package org.oxycblt.sweepered.config.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -11,7 +11,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 
-import shared.ui.Corner;
+import org.oxycblt.sweepered.shared.ui.Corner;
 
 public class ConfigField extends Pane implements EventHandler<KeyEvent> {
 

@@ -1,7 +1,7 @@
 // FlagCounter
 // Counter that keeps track of the amount of flags have been placed.
 
-package stats.counter;
+package org.oxycblt.sweepered.stats.counter;
 
 import java.util.ArrayList;
 import java.util.Collections;

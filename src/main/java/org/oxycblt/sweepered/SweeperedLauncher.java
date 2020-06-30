@@ -8,7 +8,7 @@ public final class SweeperedLauncher {
 
     private SweeperedLauncher() {
 
-
+        // Not called
 
     }
 

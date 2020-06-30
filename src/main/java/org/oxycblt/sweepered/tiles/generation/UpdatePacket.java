@@ -1,9 +1,9 @@
 // ChangePacket
 // Small class for communicating changed tiles from board to tilepane
 
-package tiles.generation;
+package org.oxycblt.sweepered.tiles.generation;
 
-import tiles.values.TileState;
+import org.oxycblt.sweepered.tiles.values.TileState;
 
 public class UpdatePacket {
 

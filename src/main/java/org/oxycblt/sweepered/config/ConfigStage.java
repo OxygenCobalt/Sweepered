@@ -1,7 +1,7 @@
 // AboutStage
 // Window for the settings of this game
 
-package config;
+package org.oxycblt.sweepered.config;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,13 +13,13 @@ import javafx.stage.Screen;
 import javafx.scene.paint.Color;
 import javafx.geometry.Rectangle2D;
 
-import config.panes.MenuPane;
-import config.panes.AboutPane;
-import config.values.ConfigState;
+import org.oxycblt.sweepered.config.panes.MenuPane;
+import org.oxycblt.sweepered.config.panes.AboutPane;
+import org.oxycblt.sweepered.config.values.ConfigState;
 
-import media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
 
-import shared.observable.Listener;
+import org.oxycblt.sweepered.shared.observable.Listener;
 
 public class ConfigStage extends Stage implements Listener<ConfigState> {
 
@@ -42,8 +42,16 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
         // Group and the Scene instead of calling the super constructor
         root = new Group();
         internalScene = new Scene(root);
-        internalScene.getStylesheets().add(getClass().getResource("/style/main.css").toString());
         internalScene.setFill(Color.web("3d3d3d"));
+        internalScene.getStylesheets().add(
+
+            getClass().getResource(
+
+                "/org/oxycblt/sweepered/style/main.css"
+
+            ).toString()
+
+        );
 
         setTitle("Settings");
         setScene(internalScene);

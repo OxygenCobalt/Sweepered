@@ -1,7 +1,7 @@
 // TextureAtlas
 // Class containing all image coordinates and the function to turn them into ImageViews.
 
-package media.images;
+package org.oxycblt.sweepered.media.images;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,7 +34,11 @@ public final class TextureAtlas {
     // Basic UI elements
     private static final Image UI_ATLAS = new Image(
 
-        TextureAtlas.class.getResource("/textures/uiAtlas.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/uiAtlas.png"
+
+        ).toString()
 
     );
     public static final Sprite TILE_NORMAL = new Sprite(UI_ATLAS, 0, 0);
@@ -46,7 +50,11 @@ public final class TextureAtlas {
     // Tile States
     private static final Image STATE_ATLAS = new Image(
 
-        TextureAtlas.class.getResource("/textures/stateAtlas.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/stateAtlas.png"
+
+        ).toString()
 
     );
     public static final Sprite STATE_FLAGGED = new Sprite(STATE_ATLAS, 0, 0);
@@ -76,7 +84,11 @@ public final class TextureAtlas {
     // Waves
     private static final Image WAVE_ATLAS = new Image(
 
-        TextureAtlas.class.getResource("/textures/waveAtlas.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/waveAtlas.png"
+
+        ).toString()
 
     );
     public static final Sprite CLEAR_WAVE = new Sprite(WAVE_ATLAS, 0, 0);
@@ -86,7 +98,11 @@ public final class TextureAtlas {
     // Faces [For the reset button]
     public static final Image FACE_ATLAS = new Image(
 
-        TextureAtlas.class.getResource("/textures/faceAtlas.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/faceAtlas.png"
+
+        ).toString()
 
     );
     public static final Sprite FACE_NORMAL = new Sprite(FACE_ATLAS, 0, 0, 36, 36);
@@ -98,7 +114,11 @@ public final class TextureAtlas {
     // Digits [Used w/the timer and flag count]
     public static final Image DIGIT_ATLAS = new Image(
 
-        TextureAtlas.class.getResource("/textures/digitAtlas.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/digitAtlas.png"
+
+        ).toString()
 
     );
     public static final Sprite[] DIGITS = new Sprite[]{
@@ -121,7 +141,11 @@ public final class TextureAtlas {
     // Icons [Used in the ConfigMenu]
     public static final Image ICON_ATLAS = new Image(
 
-        TextureAtlas.class.getResource("/textures/iconAtlas.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/iconAtlas.png"
+
+        ).toString()
 
     );
     public static final Sprite ICON_BACK = new Sprite(ICON_ATLAS, 0, 0);
@@ -136,19 +160,31 @@ public final class TextureAtlas {
     // Grid/Corners are special cases, as their respective nodes generate their own sprite objects
     public static final Image GRID_ATLAS = new Image(
 
-        TextureAtlas.class.getResource("/textures/gridAtlas.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/gridAtlas.png"
+
+        ).toString()
 
     );;
     public static final Image CORNER_ATLAS = new Image(
 
-        TextureAtlas.class.getResource("/textures/cornerAtlas.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/cornerAtlas.png"
+
+        ).toString()
 
     );
 
     // Or in the case of WINDOW_ICON, its loaded as an icon
     public static final Image WINDOW_ICON = new Image(
 
-        TextureAtlas.class.getResource("/textures/windowIcon.png").toString()
+        TextureAtlas.class.getResource(
+
+            "/org/oxycblt/sweepered/textures/windowIcon.png"
+
+        ).toString()
 
     );;
 

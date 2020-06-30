@@ -1,7 +1,7 @@
 // Tile
 // Main button-like object, may or may not contain a mine
 
-package tiles.ui;
+package org.oxycblt.sweepered.tiles.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -17,14 +17,14 @@ import javafx.geometry.Point2D;
 
 import java.util.HashMap;
 
-import media.images.TextureAtlas;
-import media.images.Sprite;
-import media.audio.Audio;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.Sprite;
+import org.oxycblt.sweepered.media.audio.Audio;
 
-import tiles.values.TileState;
-import tiles.animations.WaveTimeline;
-import tiles.generation.UpdatePacket;
-import tiles.generation.Board.DisableReason;
+import org.oxycblt.sweepered.tiles.values.TileState;
+import org.oxycblt.sweepered.tiles.animations.WaveTimeline;
+import org.oxycblt.sweepered.tiles.generation.UpdatePacket;
+import org.oxycblt.sweepered.tiles.generation.Board.DisableReason;
 
 public class Tile extends Pane {
 

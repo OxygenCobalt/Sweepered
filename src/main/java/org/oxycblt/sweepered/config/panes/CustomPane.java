@@ -1,7 +1,7 @@
 // CustomPane
 // Pane that contains about page for sweepered
 
-package config.panes;
+package org.oxycblt.sweepered.config.panes;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -11,13 +11,13 @@ import javafx.event.ActionEvent;
 
 import java.util.Arrays;
 
-import config.values.ConfigState;
-import config.ui.ConfigButton;
-import config.ui.ConfigField;
+import org.oxycblt.sweepered.config.values.ConfigState;
+import org.oxycblt.sweepered.config.ui.ConfigButton;
+import org.oxycblt.sweepered.config.ui.ConfigField;
 
-import shared.config.Configuration;
+import org.oxycblt.sweepered.shared.config.Configuration;
 
-import media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
 
 public class CustomPane extends Pane implements EventHandler<ActionEvent> {
 
@@ -100,13 +100,6 @@ public class CustomPane extends Pane implements EventHandler<ActionEvent> {
     }
 
     public void handle(final ActionEvent event) {
-
-        // TODO: Actually get custom values working
-        // Check if w/h are above six but below 100
-        // Check if w * h - mineCount is above 9
-        // make sure that a value has actually changed.
-
-        // Get the values from each field
 
         int fieldWidth = widthField.getValue();
         int fieldHeight = heightField.getValue();

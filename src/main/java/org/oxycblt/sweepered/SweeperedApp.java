@@ -7,11 +7,11 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 
-import media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
 
-import shared.config.Configuration;
-import shared.observable.Listener;
-import shared.values.EventInteger;
+import org.oxycblt.sweepered.shared.config.Configuration;
+import org.oxycblt.sweepered.shared.observable.Listener;
+import org.oxycblt.sweepered.shared.values.EventInteger;
 
 public class SweeperedApp extends Application {
 

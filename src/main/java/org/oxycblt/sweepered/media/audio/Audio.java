@@ -1,7 +1,7 @@
 // Audio
 // Very small class holding static AudioClips.
 
-package media.audio;
+package org.oxycblt.sweepered.media.audio;
 
 import javafx.scene.media.AudioClip;
 
@@ -29,25 +29,25 @@ public final class Audio {
 
     public static final AudioClip CLICK_SOUND = new AudioClip(
 
-        Audio.class.getResource("/audio/click.wav").toString()
+        Audio.class.getResource("/org/oxycblt/sweepered/audio/click.wav").toString()
 
     );
 
     public static final AudioClip FLAG_SOUND = new AudioClip(
 
-        Audio.class.getResource("/audio/tap.wav").toString()
+        Audio.class.getResource("/org/oxycblt/sweepered/audio/tap.wav").toString()
 
     );
 
     public static final AudioClip EXPLODE_SOUND = new AudioClip(
 
-        Audio.class.getResource("/audio/explosion.wav").toString()
+        Audio.class.getResource("/org/oxycblt/sweepered/audio/explosion.wav").toString()
 
     );
 
     public static final AudioClip CLEAR_SOUND = new AudioClip(
 
-        Audio.class.getResource("/audio/arcade_start.wav").toString()
+        Audio.class.getResource("/org/oxycblt/sweepered/audio/arcade_start.wav").toString()
 
     );
 

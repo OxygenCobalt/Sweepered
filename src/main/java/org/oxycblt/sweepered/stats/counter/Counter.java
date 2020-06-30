@@ -1,7 +1,7 @@
 // Counter
 // Abstract class that serves as the base of Timer & FlagCount
 
-package stats.counter;
+package org.oxycblt.sweepered.stats.counter;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -10,9 +10,9 @@ import javafx.scene.image.ImageView;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-import media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
 
-import shared.ui.Corner;
+import org.oxycblt.sweepered.shared.ui.Corner;
 
 public abstract class Counter extends Pane {
 

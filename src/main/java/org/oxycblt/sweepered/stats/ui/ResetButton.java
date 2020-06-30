@@ -1,7 +1,7 @@
 // ResetButton
 // Button that displays the GameState but also has the ability to restart the game.
 
-package stats.ui;
+package org.oxycblt.sweepered.stats.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -15,13 +15,13 @@ import javafx.geometry.Rectangle2D;
 
 import java.util.HashMap;
 
-import config.ConfigStage;
+import org.oxycblt.sweepered.config.ConfigStage;
 
-import media.images.TextureAtlas;
-import media.images.Sprite;
-import media.audio.Audio;
+import org.oxycblt.sweepered.media.images.TextureAtlas;
+import org.oxycblt.sweepered.media.images.Sprite;
+import org.oxycblt.sweepered.media.audio.Audio;
 
-import shared.values.GameState;
+import org.oxycblt.sweepered.shared.values.GameState;
 
 public class ResetButton extends Pane {
 
