@@ -7,3 +7,7 @@ target/
 *.class
 *.lst
 *.args
+
+# Sometimes maven reduces the dependencies when
+# packaging into a jar, so remove that as well
+dependency-reduced-pom.xml

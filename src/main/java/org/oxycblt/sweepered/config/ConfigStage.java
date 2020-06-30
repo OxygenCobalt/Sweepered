@@ -42,7 +42,7 @@ public class ConfigStage extends Stage implements Listener<ConfigState> {
         // Group and the Scene instead of calling the super constructor
         root = new Group();
         internalScene = new Scene(root);
-        internalScene.getStylesheets().add("file:src/main/resources/style/main.css");
+        internalScene.getStylesheets().add(getClass().getResource("/style/main.css").toString());
         internalScene.setFill(Color.web("3d3d3d"));
 
         setTitle("Settings");

@@ -73,7 +73,7 @@ public class AboutPane extends Pane implements EventHandler<ActionEvent> {
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
         // Create the logo and the back button
-        logo = new ImageView(new Image("file:src/main/resources/textures/logo.png"));
+        logo = new ImageView(new Image(getClass().getResource("/textures/logo.png").toString()));
         logo.relocate(55, 5);
 
         backButton = new ConfigButton("Back", 17, 51 + (20 * words.length), 205, 30);

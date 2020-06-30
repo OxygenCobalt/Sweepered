@@ -27,13 +27,29 @@ public final class Audio {
 
     }
 
-    private static final String RES_PATH = "file:src/main/resources/audio/";
+    public static final AudioClip CLICK_SOUND = new AudioClip(
 
-    public static final AudioClip CLICK_SOUND = new AudioClip(RES_PATH + "click.wav");
-    public static final AudioClip FLAG_SOUND = new AudioClip(RES_PATH + "tap.wav");
+        Audio.class.getResource("/audio/click.wav").toString()
 
-    public static final AudioClip EXPLODE_SOUND = new AudioClip(RES_PATH + "explosion.wav");
-    public static final AudioClip CLEAR_SOUND = new AudioClip(RES_PATH + "arcade_start.wav");
+    );
+
+    public static final AudioClip FLAG_SOUND = new AudioClip(
+
+        Audio.class.getResource("/audio/tap.wav").toString()
+
+    );
+
+    public static final AudioClip EXPLODE_SOUND = new AudioClip(
+
+        Audio.class.getResource("/audio/explosion.wav").toString()
+
+    );
+
+    public static final AudioClip CLEAR_SOUND = new AudioClip(
+
+        Audio.class.getResource("/audio/tap.wav").toString()
+
+    );
 
 }
 

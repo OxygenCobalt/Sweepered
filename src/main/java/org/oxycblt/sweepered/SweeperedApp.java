@@ -1,7 +1,7 @@
 // Sweepered
 // A Minesweeper clone in Java
 
-package org.oxygencobalt.sweepered;
+package org.oxycblt.sweepered;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
