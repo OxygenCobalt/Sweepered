@@ -1,13 +1,13 @@
-[<img src="markdownData/markdownLogo.png">](markdownData/markdownLogo.png)
+[<img src="markdown/logo.png">](markdown/logo.png)
 ------
 
-Sweepered is a simple clone of minesweeper in Java/JavaFX that I created as a learning project.
+Sweepered is a clone of minesweeper in Java/JavaFX that I created as a learning project.
 
 All the normal features of Minesweeper are here, along with some of my own personal design choices.
 
-[<img src="markdownData/gameStarted.png" width=187>](markdownData/gameStarted.png)
-[<img src="markdownData/gameExploded.png" width=187>](markdownData/gameExploded.png)
-[<img src="markdownData/gameCleared.png" width=187>](markdownData/gameCleared.png)
+[<img src="markdown/gameStarted.png" width=187>](markdown/gameStarted.png)
+[<img src="markdown/gameExploded.png" width=187>](markdown/gameExploded.png)
+[<img src="markdown/gameCleared.png" width=187>](markdown/gameCleared.png)
 
 To run it, enter the project directory and run the Maven command:
 
